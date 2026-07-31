@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>국가유산 탐험대 — 초등학생을 위한 쉬운 국가유산 탐구 데이터베이스</title>
+<style>
+:root{
+  --bg:#fbf7f0; --panel:#ffffff; --ink:#2b2118; --ink2:#6b5b4b;
+  --line:#e6dccd; --accent:#b4342c; --accent2:#1f5f8b; --gold:#c8922a;
+  --green:#3f7a4d; --shadow:0 2px 10px rgba(90,70,40,.10); --r:14px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Pretendard","Malgun Gothic","맑은 고딕",-apple-system,"Apple SD Gothic Neo",sans-serif;
+  font-size:16px; line-height:1.75; word-break:keep-all;
+}
+button{font-family:inherit}
+body.low{font-size:17px; line-height:1.85}
+
+/* ---------- 헤더 ---------- */
+header{background:linear-gradient(135deg,#8f2820,#b4342c 55%,#c8922a);color:#fff;padding:18px 18px 0}
+.hwrap{max-width:1120px;margin:0 auto}
+.htop{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.htitle{font-size:24px;font-weight:800;letter-spacing:-.5px;margin:0}
+.hsub{margin:5px 0 14px;opacity:.92;font-size:14px}
+.whoami{
+  background:rgba(255,255,255,.18);border-radius:12px;padding:9px 14px;
+  font-size:14px;font-weight:700;display:flex;align-items:center;gap:12px;flex-wrap:wrap
+}
+.whoami .tok{background:var(--gold);color:#3a2a00;border-radius:999px;padding:2px 12px;font-size:15px}
+.whoami button{background:rgba(255,255,255,.25);border:0;color:#fff;border-radius:8px;padding:3px 10px;font-size:12.5px;cursor:pointer;font-weight:700}
+.whoami button:hover{background:rgba(255,255,255,.45)}
+nav{display:flex;gap:5px;flex-wrap:wrap}
+nav button{background:rgba(255,255,255,.16);color:#fff;border:0;padding:11px 16px;border-radius:12px 12px 0 0;font-size:14.5px;font-weight:700;cursor:pointer}
+nav button:hover{background:rgba(255,255,255,.28)}
+nav button.on{background:var(--bg);color:var(--accent)}
+
+main{max-width:1120px;margin:0 auto;padding:22px 18px 80px}
+.view{display:none}
+.view.on{display:block}
+h2.sec{font-size:20px;margin:0 0 4px}
+p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
+
+.btn{border:2px solid var(--line);background:#fff;color:var(--ink);padding:11px 16px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:#8f2820;color:#fff}
+.btn.blue{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.btn.blue:hover{background:#164a6d;color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- 시작 창 ---------- */
+#gate{position:fixed;inset:0;background:linear-gradient(135deg,#8f2820,#b4342c 60%,#c8922a);display:none;z-index:120;overflow-y:auto;padding:24px 16px}
+#gate.on{display:block}
+.gbox{background:var(--bg);max-width:520px;margin:0 auto;border-radius:20px;padding:26px 26px 24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.gbox h1{margin:0 0 4px;font-size:25px;color:var(--accent);text-align:center}
+.gbox .gs{text-align:center;color:var(--ink2);font-size:14px;margin:0 0 20px}
+.gstep{font-weight:800;font-size:15px;margin:0 0 9px;display:flex;align-items:center;gap:7px}
+.gstep i{background:var(--accent2);color:#fff;border-radius:50%;width:23px;height:23px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-style:normal}
+.lvpick{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:22px}
+.lvpick button{
+  background:#fff;border:3px solid var(--line);border-radius:16px;padding:18px 12px;
+  cursor:pointer;font-size:17px;font-weight:800;line-height:1.5;color:var(--ink)
+}
+.lvpick button span{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin-top:5px}
+.lvpick button:hover{border-color:var(--accent2)}
+.lvpick button.on{border-color:var(--accent);background:#fdf3f2;color:var(--accent)}
+.grow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.gf label{display:block;font-weight:800;font-size:13.5px;margin-bottom:4px}
+.gf input,.gf select{width:100%;padding:11px 13px;font-size:16px;border:2px solid var(--line);border-radius:11px;font-family:inherit;background:#fff}
+.gf input:focus,.gf select:focus{outline:0;border-color:var(--accent2)}
+#gateMsg{color:var(--accent);font-size:13.5px;font-weight:700;min-height:20px;margin:4px 0 0}
+.gbox .go{width:100%;margin-top:14px;padding:15px;font-size:17px}
+.gnote{font-size:12.5px;color:var(--ink2);margin:14px 0 0;text-align:center;line-height:1.6}
+
+/* ---------- 검색 / 필터 ---------- */
+.searchbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.searchbar input{flex:1;min-width:200px;padding:13px 16px;font-size:16px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.searchbar input:focus{outline:0;border-color:var(--accent)}
+.filters{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:6px 16px 14px;margin-bottom:16px;box-shadow:var(--shadow)}
+.mainfilter{padding:14px 0 12px;border-bottom:2px solid var(--line)}
+.mainfilter .flabel{font-size:15.5px;color:var(--ink);margin-bottom:9px}
+.mainfilter .chip{padding:10px 20px;font-size:16px}
+.subwrap{padding-top:10px}
+.subtoggle{background:none;border:0;font-size:14.5px;font-weight:800;color:var(--accent2);cursor:pointer;padding:5px 0;display:flex;align-items:center;gap:6px}
+.subbody{display:none;padding-top:6px}
+.subbody.on{display:block}
+.subnote{font-size:13px;color:var(--ink2);background:#f5efe4;border-radius:10px;padding:9px 13px;margin:4px 0 12px;line-height:1.6}
+.frow{display:flex;gap:10px;align-items:flex-start;padding:7px 0;flex-wrap:wrap}
+.flabel{min-width:150px;font-weight:800;font-size:14px;color:var(--ink2);padding-top:5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer;font-weight:600;color:var(--ink)}
+.chip:hover{border-color:var(--accent2)}
+.chip.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.chip.on.c1{background:var(--accent);border-color:var(--accent)}
+.count{font-size:14px;color:var(--ink2);margin:0 0 12px}
+.count b{color:var(--accent);font-size:17px}
+
+/* ---------- 카드 ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;box-shadow:var(--shadow);text-align:left;width:100%;display:flex;flex-direction:column;gap:8px;transition:transform .12s,border-color .12s;color:var(--ink)}
+.card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.thumb{position:relative;display:block;border-radius:10px;overflow:hidden;background:#dfeaf2;line-height:0}
+.thumb svg,.thumb img{width:100%;height:auto;aspect-ratio:200/130;object-fit:cover;display:block}
+.kind{position:absolute;left:7px;bottom:7px;background:rgba(35,25,15,.62);color:#fff;font-size:11px;
+  font-style:normal;padding:2px 8px;border-radius:7px;font-weight:700;letter-spacing:.2px}
+.bigart{position:relative;border-radius:var(--r);overflow:hidden;margin-bottom:10px;background:#dfeaf2;line-height:0}
+.bigart svg,.bigart img{width:100%;height:auto;aspect-ratio:200/130;object-fit:cover;display:block}
+.bigart .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;color:#fff;font-size:19px;
+  font-weight:800;line-height:1.3;background:linear-gradient(transparent,rgba(30,20,12,.72))}
+.bigart .phbtn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border:0;border-radius:9px;
+  padding:6px 11px;font-size:12.5px;font-weight:800;cursor:pointer;color:var(--accent2);line-height:1.4}
+.bigart .phbtn.del{top:44px;color:var(--accent)}
+.bigart .phbtn:hover{background:#fff}
+.artnote{font-size:13px;color:var(--ink2);background:#f5efe4;border-radius:10px;padding:9px 13px;margin:0 0 12px;line-height:1.65}
+.card h3{margin:0;font-size:17.5px;font-weight:800;line-height:1.4}
+.card .era{font-size:13.5px;color:var(--accent2);font-weight:700}
+.card .oneline{font-size:14.5px;color:var(--ink2);margin:0;flex:1}
+.bigtag{align-self:flex-start;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:9px;padding:4px 11px}
+.card.locked .bigtag{background:var(--ink2)}
+.subtags{font-size:12.5px;color:var(--ink2);line-height:1.6}
+.subtags b{color:var(--accent2);font-weight:700}
+.lockrow{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:800;border-top:1px dashed var(--line);padding-top:9px}
+.lockrow.lk{color:var(--ink2)} .lockrow.op{color:var(--green)}
+.empty{background:#fff;border:2px dashed var(--line);border-radius:var(--r);padding:44px 20px;text-align:center;color:var(--ink2)}
+
+/* ---------- 모달 ---------- */
+.modal{position:fixed;inset:0;background:rgba(43,33,24,.55);display:none;z-index:60;padding:20px;overflow-y:auto}
+.modal.on{display:block}
+.sheet{background:var(--bg);max-width:800px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.sheet-hd{background:linear-gradient(135deg,#8f2820,#b4342c);color:#fff;padding:20px 24px;position:relative}
+.sheet-hd h2{margin:0;font-size:23px;font-weight:800;padding-right:44px}
+.sheet-hd .sub{opacity:.9;font-size:14px;margin-top:5px}
+.closeX{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.2);border:0;color:#fff;width:34px;height:34px;border-radius:10px;font-size:19px;cursor:pointer;line-height:1}
+.closeX:hover{background:rgba(255,255,255,.4)}
+.sheet-bd{padding:20px 24px 26px}
+.blk{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;margin-bottom:12px}
+.blk > h4{margin:0 0 9px;font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.blk p{margin:0 0 8px} .blk p:last-child{margin-bottom:0}
+.blk.unknown{background:#fffaf0;border:2px solid var(--gold)}
+.blk.unknown > h4{color:#8a6110}
+.kv{display:grid;grid-template-columns:118px 1fr;gap:6px 12px;font-size:15px}
+.kv dt{font-weight:700;color:var(--ink2)} .kv dd{margin:0}
+.classbox{background:#f4f8fb;border:1px solid #cfe0ec;border-radius:12px;padding:12px 15px}
+.classbox .main{font-size:17px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.classbox ul{margin:0;padding-left:18px;font-size:14.5px}
+.classbox li{margin-bottom:5px}
+.classbox li b{color:var(--accent2)}
+.classbox .cnote{font-size:12.5px;color:var(--ink2);margin:9px 0 0;line-height:1.6}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:flex;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.tl li:last-child{border-bottom:0}
+.tl .yr{min-width:78px;font-weight:800;color:var(--accent2);font-size:14.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.side{border-radius:12px;padding:13px 15px}
+.side.pro{background:#eef6ef;border:1px solid #b9d6be}
+.side.con{background:#fdeeee;border:1px solid #e5bcbc}
+.side h5{margin:0 0 8px;font-size:14.5px;font-weight:800}
+.side.pro h5{color:var(--green)} .side.con h5{color:var(--accent)}
+.side ul{margin:0;padding-left:19px;font-size:14.5px}
+.side li{margin-bottom:6px}
+.blk.unknown ul{margin:0;padding-left:19px}
+.blk.unknown li{margin-bottom:7px}
+.src{font-size:13.5px;color:var(--ink2)} .src a{color:var(--accent2)}
+.missionbox{background:#eef4f9;border:2px dashed var(--accent2);border-radius:12px;padding:13px 16px;margin-bottom:12px}
+.missionbox h4{margin:0 0 6px;color:var(--accent2);font-size:15px;font-weight:800}
+.missionbox p{margin:0;font-size:14.5px}
+
+/* ---------- 어휘 ---------- */
+.term{border-bottom:2px dotted var(--gold);cursor:help;color:#8a6110;font-weight:700;background:rgba(200,146,42,.09);border-radius:3px;padding:0 1px}
+.term:hover{background:rgba(200,146,42,.25)}
+#tip{position:fixed;z-index:130;max-width:300px;background:#2b2118;color:#fff;padding:11px 14px;border-radius:10px;font-size:14px;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none}
+#tip b{color:var(--gold);display:block;margin-bottom:3px;font-size:14.5px}
+
+/* ---------- 어휘 탐험 ---------- */
+.qwrap{max-width:660px}
+.tokbar{background:linear-gradient(135deg,var(--gold),#e0b25a);color:#3a2a00;border-radius:var(--r);padding:16px 20px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.tokbar .big{font-size:30px;font-weight:800;line-height:1.2}
+.tokbar .lab{font-size:13.5px;font-weight:700}
+.tokbar .stat{font-size:13.5px;font-weight:700;text-align:right;line-height:1.7}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.qno{font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:8px}
+.qtext{font-size:19px;font-weight:800;line-height:1.6;margin:0 0 18px}
+.qtext em{font-style:normal;color:var(--accent);background:#fdf3f2;border-radius:6px;padding:1px 7px}
+.opts{display:grid;gap:9px}
+.opt{border:2px solid var(--line);background:#fff;border-radius:12px;padding:13px 16px;font-size:16px;text-align:left;cursor:pointer;font-weight:600;line-height:1.6;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--accent2);background:#f4f8fb}
+.opt.right{border-color:var(--green);background:#eef6ef;color:var(--green);font-weight:800}
+.opt.wrong{border-color:var(--accent);background:#fdeeee;color:var(--accent)}
+.qfb{margin-top:15px;border-radius:12px;padding:13px 16px;font-size:15px;display:none;line-height:1.7}
+.qfb.on{display:block}
+.qfb.ok{background:#eef6ef;border:2px solid #b9d6be}
+.qfb.no{background:#fdeeee;border:2px solid #e5bcbc}
+.qfb b{display:block;margin-bottom:3px}
+
+/* ---------- 미션 ---------- */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.mcard{background:#fff;border:1px solid var(--line);border-left:6px solid var(--accent2);border-radius:var(--r);padding:17px;box-shadow:var(--shadow)}
+.mcard h3{margin:7px 0 0;font-size:17px;font-weight:800}
+.mcard .lvl{font-size:12px;background:var(--accent2);color:#fff;border-radius:7px;padding:2px 8px;font-weight:700}
+.mcard p{margin:9px 0 0;font-size:14.5px;color:var(--ink2)}
+.hintbox{margin-top:11px;background:#fbf7f0;border-radius:10px;padding:10px 13px;font-size:14px;display:none}
+.hintbox.on{display:block}
+.mcard .row{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.mini{border:2px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font-size:13.5px;font-weight:700;cursor:pointer;color:var(--ink)}
+.mini:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* ---------- 어휘 탐험 잠금 ---------- */
+.qlock{background:#fff;border:3px solid var(--accent);border-radius:var(--r);padding:26px 22px;text-align:center;box-shadow:var(--shadow)}
+.qlock .ic{font-size:44px;line-height:1}
+.qlock h3{margin:8px 0 6px;font-size:21px;color:var(--accent)}
+.qlock p{margin:0 0 18px;font-size:15px;color:var(--ink2);line-height:1.8}
+.qlock .prog{max-width:340px;margin:0 auto 18px}
+.qlock .bar{height:16px;background:#f0e6d6;border-radius:999px;overflow:hidden}
+.qlock .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:999px;transition:width .3s}
+.qlock .pt{font-size:14px;font-weight:800;margin-top:7px}
+.qlock.done{border-color:var(--green)}
+.qlock.done h3{color:var(--green)}
+
+/* ---------- 사전 ---------- */
+#studyBanner{border-radius:var(--r);padding:14px 18px;margin-bottom:14px;font-size:14.5px;line-height:1.75;font-weight:600}
+#studyBanner.need{background:#fdeeee;border:2px solid var(--accent);color:#8f2820}
+#studyBanner.done{background:#eef6ef;border:2px solid var(--green);color:#2f5c39}
+#studyBanner b{font-weight:800}
+#studyBanner button{margin-top:9px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:11px}
+.dcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 16px;text-align:left;width:100%;font-family:inherit;color:inherit}
+.dcard b{display:block;font-size:16px;color:#8a6110;margin-bottom:3px}
+.dcard span{font-size:14.5px;color:var(--ink2)}
+.dcard.pick{cursor:pointer}
+.dcard.pick:hover{border-color:var(--accent2);background:#f7fafc}
+.dcard.studied{border-color:var(--green);background:#f4faf5}
+.dcard.studied b::after{content:" ✓";color:var(--green)}
+
+/* ---------- 보고서 ---------- */
+.rlayout{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.form{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-weight:800;font-size:14px;margin-bottom:5px}
+.fld input,.fld select,.fld textarea{width:100%;padding:10px 12px;font-size:15px;border:2px solid var(--line);border-radius:10px;font-family:inherit;background:#fff;line-height:1.6;color:var(--ink)}
+.fld textarea{min-height:74px;resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:0;border-color:var(--accent2)}
+.fld .hint{font-size:12.5px;color:var(--ink2);margin-top:4px}
+/* 작성 예시 상태 */
+.fld textarea.example{color:#1f5f8b;background:#f3f8fc;border-color:#bcd6e8;font-style:italic}
+.exsample{color:var(--accent2)}
+.exhelp{font-size:13px;color:var(--ink2);background:#f3f8fc;border:1px solid #cfe0ec;border-radius:10px;
+  padding:9px 13px;margin:-4px 0 14px;line-height:1.65}
+.clist{background:#fffaf0;border:2px solid var(--gold);border-radius:12px;padding:12px 15px;margin-bottom:12px;font-size:14px}
+.clist.done{background:#eef6ef;border-color:var(--green);color:#2f5c39;font-size:15px}
+.clist > b{display:block;margin-bottom:6px;color:#8a6110}
+.clist ul{margin:0;padding-left:2px;list-style:none}
+.clist li{padding:2px 0;line-height:1.6}
+.clist li.y{color:var(--green);font-weight:700}
+.clist li.n{color:var(--ink2)}
+.half{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.whobox{background:#f4f8fb;border:1px solid #cfe0ec;border-radius:11px;padding:11px 14px;margin-bottom:14px;font-size:14.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.sticky{position:sticky;top:16px}
+.saved{font-size:13px;color:var(--green);font-weight:700;min-height:18px}
+#overflowWarn{display:none;background:#fdeeee;border:2px solid var(--accent);color:#8f2820;border-radius:12px;padding:11px 15px;margin-bottom:10px;font-size:14px;font-weight:600}
+#overflowWarn.on{display:block}
+#sheetWrap{background:#e8e0d3;border-radius:var(--r);padding:16px}
+#reportSheet{background:#fff;width:100%;aspect-ratio:1/1.414;padding:26px 28px;box-shadow:0 4px 18px rgba(0,0,0,.15);font-size:11px;line-height:1.55;display:flex;flex-direction:column;overflow:hidden;color:#000}
+#reportSheet .rh{border-bottom:3px double var(--accent);padding-bottom:8px;margin-bottom:10px}
+#reportSheet .rh h1{margin:0;font-size:19px;font-weight:800;color:var(--accent);text-align:center;letter-spacing:-.5px}
+#reportSheet .rh .who{display:flex;justify-content:space-between;font-size:11px;margin-top:7px;color:#444}
+#reportSheet .rt{font-size:15px;font-weight:800;text-align:center;margin:2px 0 10px;padding:7px;background:#fbf7f0;border-radius:8px}
+#reportSheet .rsec{margin-bottom:8px}
+#reportSheet .rsec h3{margin:0 0 3px;font-size:11.5px;font-weight:800;color:var(--accent2);border-left:4px solid var(--accent2);padding-left:6px}
+#reportSheet .rsec .txt{white-space:pre-wrap;min-height:26px;border-bottom:1px dotted #bbb;padding:2px 2px 4px}
+#reportSheet .rtwo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#reportSheet .box{border:1px solid #ccc;border-radius:6px;padding:6px 8px;min-height:44px;white-space:pre-wrap}
+#reportSheet .box.p{background:#f2f8f3;border-color:#b9d6be}
+#reportSheet .box.c{background:#fdf2f2;border-color:#e5bcbc}
+#reportSheet .box.u{background:#fffaf0;border:1.5px solid var(--gold)}
+#reportSheet .box b{font-size:10.5px;display:block;margin-bottom:2px}
+#reportSheet .rf{margin-top:auto;border-top:1px solid #ddd;padding-top:6px;font-size:9.5px;color:#666;display:flex;justify-content:space-between;gap:10px}
+
+/* ---------- 교사 ---------- */
+.lock{max-width:420px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--shadow);text-align:center}
+.lock h3{margin:0 0 6px;font-size:19px}
+.lock p{color:var(--ink2);font-size:14px;margin:0 0 16px}
+.lock input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:8px;border:2px solid var(--line);border-radius:11px;font-family:inherit}
+.lock input:focus{outline:0;border-color:var(--accent)}
+.lock .msg{color:var(--accent);font-weight:700;font-size:14px;min-height:20px;margin:8px 0 0}
+.tbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.ttable{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);font-size:14.5px}
+.ttable th{background:#f4ece0;padding:11px 10px;text-align:left;font-size:13.5px;font-weight:800;color:var(--ink2);white-space:nowrap}
+.ttable td{padding:10px;border-top:1px solid var(--line);vertical-align:top}
+.ttable tr:hover td{background:#fbf7f0}
+.ttable .nm{font-weight:800}
+.ttable button{border:2px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink)}
+.ttable button:hover{border-color:var(--accent2);color:var(--accent2)}
+.tscroll{overflow-x:auto}
+.tnote{background:#fffaf0;border:2px solid var(--gold);border-radius:var(--r);padding:14px 17px;margin-bottom:16px;font-size:14px;line-height:1.75}
+.tnote b{color:#8a6110}
+#codeIn{width:100%;min-height:80px;padding:11px;border:2px solid var(--line);border-radius:11px;font-family:ui-monospace,Consolas,monospace;font-size:12px;resize:vertical}
+
+@media (max-width:820px){
+  .rlayout,.two,.grow,.lvpick{grid-template-columns:1fr}
+  .sticky{position:static}
+  .flabel{min-width:100%}
+  #reportSheet{font-size:10px;padding:20px}
+  .kv{grid-template-columns:96px 1fr}
+}
+
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}
+  header,nav,.modal,#tip,.noprint,
+  #v-report .form,#v-report h2.sec,#v-report p.lead{display:none !important}
+  main > .view{display:none !important}
+  main > #v-report{display:block !important}
+  main{padding:0;max-width:none}
+  .rlayout{display:block}
+  .sticky{position:static}
+  #sheetWrap{background:none;padding:0;border-radius:0}
+  #reportSheet{width:100%;aspect-ratio:auto;min-height:270mm;box-shadow:none;font-size:11.5px;overflow:visible;padding:0}
+  .term{border:0;background:none;color:#000;font-weight:400}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 시작 창 ============ -->
+<div id="gate">
+  <div class="gbox">
+    <h1>🏯 국가유산 탐험대</h1>
+    <p class="gs">탐험을 시작하기 전에 두 가지만 알려 주세요.</p>
+
+    <p class="gstep"><i>1</i> 나는 몇 학년인가요?</p>
+    <div class="lvpick">
+      <button data-lv="low">나는 3~4학년입니다<span>더 쉬운 말로 알려 줄게요</span></button>
+      <button data-lv="high">나는 5~6학년입니다<span>자세한 말로 알려 줄게요</span></button>
+    </div>
+
+    <p class="gstep"><i>2</i> 나는 누구인가요?</p>
+    <div class="grow">
+      <div class="gf"><label>학년</label><select id="g_grade"></select></div>
+      <div class="gf"><label>반</label><input id="g_class" type="number" min="1" max="30" inputmode="numeric" placeholder="3"></div>
+    </div>
+    <div class="grow">
+      <div class="gf"><label>번호</label><input id="g_no" type="number" min="1" max="50" inputmode="numeric" placeholder="12"></div>
+      <div class="gf"><label>이름</label><input id="g_name" maxlength="12" placeholder="김탐험"></div>
+    </div>
+    <p id="gateMsg"></p>
+    <button class="btn primary go" id="gateGo">탐험 시작하기 →</button>
+    <p class="gnote">여기에 쓴 내용은 보고서에 자동으로 들어가요.<br>인터넷으로 보내지 않고 이 컴퓨터에만 저장됩니다.</p>
+  </div>
+</div>
+
+<header>
+  <div class="hwrap">
+    <div class="htop">
+      <div>
+        <h1 class="htitle">🏯 국가유산 탐험대</h1>
+        <p class="hsub" id="hsub">초등학생을 위한 쉬운 국가유산 탐구 데이터베이스</p>
+      </div>
+      <div class="whoami" id="whoami"></div>
+    </div>
+    <nav>
+      <button class="on" data-v="browse">🔎 유산 찾아보기</button>
+      <button data-v="quest">🎒 어휘 탐험</button>
+      <button data-v="mission">🕵️ 웹 탐정 미션</button>
+      <button data-v="report">📝 보고서 만들기</button>
+      <button data-v="dict">📖 어휘 사전</button>
+      <button data-v="teacher">🧑‍🏫 선생님</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 찾아보기 ============ -->
+<section class="view on" id="v-browse">
+  <h2 class="sec">유산 찾아보기</h2>
+  <p class="lead" id="browseLead"></p>
+
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="이름·낱말로 검색 (띄어 쓰면 하나만 맞아도 찾아요)">
+    <button class="btn" id="resetBtn">↺ 조건 지우기</button>
+  </div>
+
+  <div class="filters">
+    <div class="mainfilter">
+      <div class="flabel">📚 교과서에서 배우는 분류 — 여기서 먼저 골라 보세요</div>
+      <div class="chips" id="f1"></div>
+    </div>
+    <div class="subwrap">
+      <button class="subtoggle" id="subToggle">▸ 더 자세히 나누어 보기 (세부 분류)</button>
+      <div class="subbody" id="subBody">
+        <p class="subnote">아래 기준은 모두 <b>위 세 가지 분류 안에서 더 잘게 나눈 세부 분류</b>예요. 그래서 유산에는 <b>‘문화유산 중 사적’</b>처럼 붙어서 나옵니다.</p>
+        <div class="frow"><div class="flabel">🏷️ 나라가 정한 종목</div><div class="chips" id="f0"></div></div>
+        <div class="frow"><div class="flabel">🔷 유산의 형태</div><div class="chips" id="f2"></div></div>
+        <div class="frow"><div class="flabel">🎯 유산의 쓰임</div><div class="chips" id="f3"></div></div>
+        <div class="frow"><div class="flabel">🌍 그 밖에</div><div class="chips" id="f4"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="count">찾은 유산 <b id="cnt">0</b>건</p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ============ 어휘 탐험 ============ -->
+<section class="view" id="v-quest">
+  <h2 class="sec">어휘 탐험</h2>
+  <p class="lead">문제를 맞히면 <b>탐험 토큰</b>을 얻어요. 유산의 자세한 정보를 열려면 토큰 <b>3개</b>가 필요합니다.</p>
+  <div class="qwrap">
+    <div class="tokbar">
+      <div><div class="big" id="tokBig">0</div><div class="lab">가지고 있는 탐험 토큰 🪙</div></div>
+      <div class="stat" id="tokStat"></div>
+    </div>
+    <div class="qcard" id="qCard">
+      <div class="qno" id="qno"></div>
+      <p class="qtext" id="qtext"></p>
+      <div class="opts" id="qopts"></div>
+      <div class="qfb" id="qfb"></div>
+      <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" id="nextQ" style="display:none">다음 문제 →</button>
+        <button class="btn" id="toDict">📖 어휘 사전에서 공부하고 오기</button>
+      </div>
+    </div>
+
+    <div class="qlock" id="qLock" style="display:none">
+      <div class="ic">📕</div>
+      <h3>어휘 탐험이 잠겼어요</h3>
+      <p>문제를 <b>연속으로 3개</b> 틀렸어요. 아직 낱말이 익숙하지 않은 것 같아요.<br>
+         어휘 사전에서 <b>낱말 5개</b>를 눌러 뜻을 확인하고 오면 다시 열립니다.</p>
+      <div class="prog"><div class="bar"><span id="stBar"></span></div><div class="pt" id="stTxt"></div></div>
+      <button class="btn primary" id="goStudy">📖 어휘 사전에서 공부하기</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 미션 ============ -->
+<section class="view" id="v-mission">
+  <h2 class="sec">웹 탐정 미션 카드</h2>
+  <p class="lead">그냥 읽고 베끼면 조사가 아닙니다. 미션을 하나 골라 <b>스스로 답을 만들어</b> 보세요.</p>
+  <div class="mgrid" id="mgrid"></div>
+</section>
+
+<!-- ============ 보고서 ============ -->
+<section class="view" id="v-report">
+  <h2 class="sec">탐구 보고서 만들기</h2>
+  <p class="lead" id="reportLead"></p>
+  <div class="rlayout">
+    <div class="form">
+      <div class="whobox">
+        <span id="whoLine">—</span>
+        <button class="mini" id="editWho">✏️ 정보 고치기</button>
+      </div>
+      <div class="fld">
+        <label>조사한 국가유산</label>
+        <select id="r_pick"></select>
+        <div class="hint" id="pickHint"></div>
+      </div>
+      <div class="fld" style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn blue" id="fillBtn">👀 작성 예시 살펴보기</button>
+        <button class="btn" id="clearBtn">🧹 내용 비우기</button>
+      </div>
+      <p class="exhelp">예시는 <b class="exsample">파란 글씨</b>로 들어갑니다. 칸을 <b>누르면 예시가 사라지니</b> 그 자리에 내 말로 써 보세요.</p>
+      <div class="fld"><label id="L1"></label><textarea id="r_why"></textarea></div>
+      <div class="fld"><label id="L2"></label><textarea id="r_event"></textarea></div>
+      <div class="fld"><label id="L3"></label><textarea id="r_now"></textarea></div>
+      <div class="half">
+        <div class="fld"><label id="L4a"></label><textarea id="r_pro"></textarea></div>
+        <div class="fld"><label id="L4b"></label><textarea id="r_con"></textarea></div>
+      </div>
+      <div class="fld">
+        <label id="L5"></label><textarea id="r_unknown"></textarea>
+        <div class="hint" id="H5"></div>
+      </div>
+      <div class="fld"><label id="L6"></label><textarea id="r_think" placeholder="여기는 불러오기로 채워지지 않아요. 스스로 쓰세요."></textarea></div>
+      <div class="fld"><label>출처</label><input id="r_src"></div>
+      <div id="checklist"></div>
+      <div class="fld" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn primary" id="submitBtn" disabled>📤 선생님께 제출하기</button>
+        <button class="btn" id="printBtn" disabled>🖨 인쇄 / PDF</button>
+        <button class="btn" id="codeBtn" disabled>🔑 제출 코드 만들기</button>
+      </div>
+      <p class="saved" id="savedMsg"></p>
+      <p class="hint" style="margin:0;color:var(--ink2);font-size:12.5px">쓴 내용은 이 컴퓨터에 자동 저장돼요. 인쇄 창에서 프린터를 <b>“PDF로 저장”</b>으로 바꾸면 파일로 받을 수 있습니다.</p>
+    </div>
+
+    <div class="sticky">
+      <div id="overflowWarn" class="noprint">⚠️ 내용이 한 장을 넘쳐서 <b>아랫부분이 잘립니다.</b> 글을 조금 줄여 주세요.</div>
+      <div id="sheetWrap">
+        <div id="reportSheet">
+          <div class="rh">
+            <h1>국가유산 탐구 보고서</h1>
+            <div class="who"><span id="s_who"></span><span id="s_date"></span></div>
+          </div>
+          <div class="rt" id="s_title">조사한 국가유산</div>
+          <div class="rsec"><h3 id="s_l1"></h3><div class="txt" id="s_why"></div></div>
+          <div class="rsec"><h3 id="s_l2"></h3><div class="txt" id="s_event"></div></div>
+          <div class="rsec"><h3 id="s_l3"></h3><div class="txt" id="s_now"></div></div>
+          <div class="rsec">
+            <h3 id="s_l4"></h3>
+            <div class="rtwo">
+              <div class="box p"><b id="s_l4a"></b><span id="s_pro"></span></div>
+              <div class="box c"><b id="s_l4b"></b><span id="s_con"></span></div>
+            </div>
+          </div>
+          <div class="rsec"><h3 id="s_l5"></h3><div class="box u" id="s_unknown"></div></div>
+          <div class="rsec"><h3 id="s_l6"></h3><div class="txt" id="s_think" style="min-height:38px"></div></div>
+          <div class="rf"><span id="s_src"></span><span id="s_meta"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 사전 ============ -->
+<section class="view" id="v-dict">
+  <h2 class="sec">어휘 사전</h2>
+  <p class="lead">설명 안에서 <span class="term">이렇게 표시된 낱말</span>에 손을 올리거나 누르면 뜻이 바로 나옵니다. 여기 낱말들이 <b>어휘 탐험 문제로 나와요.</b></p>
+  <div id="studyBanner" style="display:none"></div>
+  <div class="searchbar"><input id="dq" type="search" placeholder="낱말 검색 (예: 사적, 중건, 의궤)"></div>
+  <p class="count">낱말 <b id="dcnt">0</b>개</p>
+  <div class="dgrid" id="dgrid"></div>
+</section>
+
+<!-- ============ 선생님 ============ -->
+<section class="view" id="v-teacher">
+  <div id="tLock">
+    <h2 class="sec">선생님 전용</h2>
+    <p class="lead">학생들이 제출한 보고서를 보려면 비밀번호가 필요합니다.</p>
+    <div class="lock">
+      <h3>🔒 비밀번호</h3>
+      <p>네 자리 숫자를 입력하세요.</p>
+      <input id="pw" type="password" inputmode="numeric" maxlength="4" autocomplete="off">
+      <p class="msg" id="pwMsg"></p>
+      <button class="btn primary" id="pwGo" style="width:100%;margin-top:8px">들어가기</button>
+    </div>
+  </div>
+
+  <div id="tPanel" style="display:none">
+    <h2 class="sec">제출된 보고서</h2>
+    <p class="lead">제목을 누르면 전체 내용을 볼 수 있습니다.</p>
+
+    <div class="tnote">
+      <b>⚠️ 꼭 알아 두세요.</b> 이 목록은 <b>이 컴퓨터의 브라우저에만</b> 저장됩니다. 학생이 각자 기기에서 제출한 것은 여기 자동으로 나타나지 않습니다.<br>
+      학생 기기가 따로라면 학생에게 <b>‘🔑 제출 코드 만들기’</b>를 눌러 코드를 복사해 패들렛·구글폼·학급 채팅에 올리게 하고, 아래 <b>‘코드로 불러오기’</b>에 붙여 넣으세요.
+    </div>
+
+    <div class="tnote" style="border-color:var(--accent2);background:#f2f7fb">
+      <b style="color:var(--accent2)">📷 유산 사진에 대하여</b> 각 유산의 그림은 저작권 문제 없이 인터넷 없어도 보이도록 <b>직접 그린 그림</b>입니다.
+      국가유산포털의 실제 사진은 저작권이 있어 파일에 넣을 수 없습니다.<br>
+      실제 사진을 쓰시려면 위 <b>‘🔓 토큰 제한 풀기’</b>를 누른 뒤 유산 상세 화면 오른쪽 위의
+      <b>‘📷 실제 사진으로 바꾸기’</b>로 넣으시면 됩니다. 사진은 이 컴퓨터에만 저장되고, 학생에게는 <b>📷 사진</b> 표시가 붙습니다.
+      (수업에 쓰실 사진은 국가유산포털에서 이용 조건을 확인하고 내려받아 주세요.)
+    </div>
+
+    <div class="tbar">
+      <button class="btn" id="tCodeOpen">📥 코드로 불러오기</button>
+      <button class="btn" id="tCsv">📊 CSV로 내려받기</button>
+      <button class="btn" id="tUnlockAll">🔓 토큰 제한 풀기</button>
+      <button class="btn" id="tWipe">🗑 전체 지우기</button>
+      <button class="btn" id="tOut">잠그기</button>
+    </div>
+
+    <div id="tCodeBox" style="display:none;margin-bottom:16px">
+      <textarea id="codeIn" placeholder="학생이 만든 제출 코드를 여기에 붙여 넣으세요. 여러 개를 줄바꿈으로 나누어 한꺼번에 넣어도 됩니다."></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" id="tCodeGo">불러오기</button>
+        <span class="saved" id="codeMsg"></span>
+      </div>
+    </div>
+
+    <p class="count">제출 <b id="tCnt">0</b>건</p>
+    <div class="tscroll"><table class="ttable" id="tTable"></table></div>
+  </div>
+</section>
+
+</main>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="sheet-hd">
+      <button class="closeX" id="closeX">✕</button>
+      <h2 id="m_name"></h2>
+      <div class="sub" id="m_sub"></div>
+    </div>
+    <div class="sheet-bd" id="m_body"></div>
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+/* =========================================================
+   어휘 사전  ( h = 5~6학년 / e = 3~4학년 / basic = 3~4학년에만 표시 )
+   ========================================================= */
+const DICT = {
+"국가유산":{h:"예전에 ‘문화재’라고 부르던 말. 2024년부터 나라에서 정한 공식 이름이 ‘국가유산’으로 바뀌었어요.",e:"옛날부터 전해 내려와 우리가 함께 지켜야 하는 소중한 것. 예전에는 ‘문화재’라고 불렀어요."},
+"국보":{h:"우리나라 유산 가운데 특히 귀하고 값진 것으로 나라가 정한 것. 예전에는 번호를 붙였지만 지금은 붙이지 않아요.",e:"나라가 ‘아주아주 귀하다’고 정한 보물이에요."},
+"보물":{h:"역사와 예술로 볼 때 값어치가 큰 유산으로 나라가 정한 것.",e:"나라가 ‘귀하다’고 정한 물건이에요."},
+"사적":{h:"옛사람들이 살거나 일했던 터, 성, 무덤처럼 ‘땅과 자리’에 남은 유산.",e:"옛날 사람들이 살거나 무언가를 했던 자리예요. 성, 궁궐, 무덤 같은 곳이지요."},
+"명승":{h:"경치가 특히 아름다워 나라가 보호하는 곳.",e:"경치가 아주 예뻐서 나라가 지키는 곳이에요."},
+"천연기념물":{h:"동물·식물·땅의 모습 가운데 아주 귀해서 나라가 보호하는 것.",e:"아주 귀한 동물, 식물, 땅을 나라가 지키는 것이에요."},
+"국가무형유산":{h:"물건이 아니라 노래·춤·솜씨·풍습처럼 사람에게서 사람으로 전해지는 유산.",e:"물건이 아니라 노래, 춤, 솜씨처럼 사람이 배워서 이어 가는 것이에요."},
+"무형유산":{h:"손에 잡히지 않는 유산. 노래, 춤, 기술, 풍습처럼 사람이 몸으로 이어 가는 것.",e:"손으로 만질 수 없는 유산. 노래나 춤, 솜씨 같은 것이에요."},
+"습지보호지역":{h:"물기가 많아 생물이 많이 사는 땅을 나라가 정해 보호하는 곳.",e:"물이 많고 생물이 많이 사는 땅을 나라가 지키는 곳이에요."},
+"세계유산":{h:"유네스코가 ‘온 인류가 함께 지켜야 한다’고 정한 유산.",e:"온 세계 사람들이 함께 지키기로 한 유산이에요."},
+"세계기록유산":{h:"유네스코가 정한, 인류에게 소중한 기록물(책과 문서).",e:"온 세계가 소중하다고 정한 책이나 기록이에요."},
+"인류무형문화유산":{h:"유네스코가 정한, 인류가 함께 지켜야 할 무형유산.",e:"온 세계가 함께 지키기로 한, 만질 수 없는 유산이에요."},
+"유네스코":{h:"교육·과학·문화를 위해 여러 나라가 함께 만든 국제 기구.",e:"여러 나라가 함께 만든 모임이에요. 세계의 소중한 것을 지키는 일을 해요."},
+"등재":{h:"목록에 정식으로 올리는 것.",e:"이름을 목록에 올리는 것이에요."},
+"지정":{h:"나라가 ‘이건 보호해야 할 유산이다’라고 정하는 것.",e:"나라가 ‘이건 꼭 지키자’고 정하는 것이에요."},
+"건조물":{h:"사람이 지은 건물이나 구조물을 함께 이르는 말.",e:"사람이 지은 건물이에요."},
+"창건":{h:"건물이나 절을 처음 세우는 것.",e:"처음으로 짓는 것이에요."},
+"중건":{h:"불타거나 무너진 건물을 다시 크게 세우는 것.",e:"무너진 건물을 다시 크게 짓는 것이에요."},
+"복원":{h:"부서지거나 사라진 것을 옛 모습대로 되살리는 것.",e:"망가진 것을 옛날 모습으로 되돌리는 것이에요."},
+"보수":{h:"낡거나 상한 곳을 고치는 것.",e:"낡은 곳을 고치는 것이에요."},
+"소실":{h:"불에 타서 없어지는 것.",e:"불에 타서 사라지는 것이에요."},
+"축성":{h:"성을 쌓는 것.",e:"성을 쌓는 것이에요."},
+"성곽":{h:"적을 막으려고 둘레에 쌓은 성벽.",e:"적을 막으려고 둘레에 쌓은 담이에요."},
+"발굴":{h:"땅속에 묻힌 유물이나 무덤을 파서 찾아내는 것.",e:"땅을 파서 옛날 물건을 찾아내는 것이에요."},
+"출토":{h:"땅속에서 유물이 나오는 것.",e:"땅속에서 옛날 물건이 나오는 것이에요."},
+"껴묻거리":{h:"죽은 사람과 함께 무덤에 넣어 준 물건. 어려운 말로 ‘부장품’이라고 해요.",e:"죽은 사람과 함께 무덤에 넣어 준 물건이에요."},
+"지석":{h:"무덤의 주인이 누구인지 적어 무덤에 넣은 돌판.",e:"무덤 주인의 이름을 적어 넣은 돌이에요."},
+"고분":{h:"아주 오래된 무덤.",e:"아주 오래된 무덤이에요."},
+"창제":{h:"글자나 제도를 처음으로 만드는 것.",e:"글자를 처음으로 만드는 것이에요."},
+"반포":{h:"새로 만든 것을 세상에 널리 알리는 것.",e:"새로 만든 것을 사람들에게 널리 알리는 것이에요."},
+"해례본":{h:"훈민정음을 왜, 어떻게 만들었는지 예를 들어 풀이한 책.",e:"한글을 왜, 어떻게 만들었는지 알려 주는 책이에요."},
+"상소":{h:"신하가 임금에게 글을 올려 자기 뜻을 말하는 것.",e:"신하가 임금에게 글을 써서 자기 생각을 말하는 것이에요."},
+"사관":{h:"임금 곁에서 일어난 일을 있는 그대로 적는 벼슬아치.",e:"임금 옆에서 있었던 일을 그대로 적는 사람이에요."},
+"사초":{h:"사관이 그때그때 적어 둔 기록. 나중에 실록의 재료가 돼요.",e:"사관이 그때그때 적어 둔 글이에요."},
+"실록":{h:"임금이 세상을 떠난 뒤, 그 임금 때 있었던 일을 모아 만든 역사책.",e:"임금 때 있었던 일을 모아 만든 역사책이에요."},
+"사고":{h:"실록 같은 귀한 책을 보관하던 나라의 창고.",e:"귀한 책을 넣어 두던 나라의 창고예요."},
+"의궤":{h:"나라의 큰 행사나 공사를 그림과 글로 아주 자세히 남긴 기록책.",e:"나라의 큰 공사를 그림과 글로 아주 자세히 적어 둔 책이에요."},
+"거중기":{h:"도르래를 이용해 무거운 돌을 적은 힘으로 들어 올리는 기계. 정약용이 만들었어요.",e:"무거운 돌을 쉽게 들어 올리는 기계예요. 정약용이 만들었어요."},
+"환수":{h:"다른 나라에 가 있던 우리 유산을 되찾아 오는 것.",e:"다른 나라에 있던 우리 것을 되찾아 오는 것이에요."},
+"주전파":{h:"싸워서 끝까지 버티자고 주장한 사람들.",e:"끝까지 싸우자고 한 사람들이에요."},
+"주화파":{h:"화해해서 백성을 살리자고 주장한 사람들.",e:"싸우지 말고 화해하자고 한 사람들이에요."},
+"항전":{h:"맞서 싸우며 버티는 것.",e:"맞서 싸우며 버티는 것이에요."},
+"피난":{h:"위험을 피해 다른 곳으로 옮겨 가는 것.",e:"위험을 피해 다른 곳으로 가는 것이에요."},
+"당백전":{h:"경복궁을 다시 지을 돈을 마련하려고 만든 돈. 값을 크게 매겨 물가가 올라 백성이 힘들어졌어요.",e:"경복궁을 짓는 돈을 마련하려고 만든 돈이에요. 이 돈 때문에 물건값이 올라 사람들이 힘들었어요."},
+"원납전":{h:"경복궁 공사에 ‘스스로 내는 돈’이라며 걷은 돈. 사실상 억지로 걷힌 경우가 많았어요.",e:"경복궁을 짓는다며 걷어 간 돈이에요. 안 내면 벌을 받아서 억지로 낸 사람이 많았어요."},
+"암각화":{h:"바위에 새긴 그림.",e:"바위에 새긴 그림이에요."},
+"제례":{h:"조상이나 신에게 정성껏 올리는 의식.",e:"조상님께 정성껏 올리는 제사예요."},
+"종묘제례악":{h:"종묘에서 제사를 지낼 때 연주하는 음악과 노래, 춤.",e:"종묘에서 제사를 지낼 때 하는 음악과 춤이에요."},
+"판소리":{h:"소리꾼 한 명이 북 장단에 맞춰 긴 이야기를 노래로 들려주는 우리 예술.",e:"한 사람이 북소리에 맞춰 긴 이야기를 노래로 들려주는 것이에요."},
+"마당":{h:"판소리에서 이야기 한 편을 세는 말. ‘춘향가 한 마당’처럼 써요.",e:"판소리 이야기 한 편을 세는 말이에요."},
+"의병":{h:"나라가 위험할 때 백성이 스스로 일어나 만든 군대.",e:"나라가 위험할 때 백성들이 스스로 만든 군대예요."},
+"습지":{h:"물기가 많은 땅. 갯벌이나 늪처럼 생명이 많이 사는 곳이에요.",e:"물기가 많은 땅이에요. 생물이 많이 살아요."},
+"갯벌":{h:"바닷물이 들어왔다 나가면서 드러나는 진흙 벌판.",e:"바닷물이 빠지면 나타나는 진흙 벌판이에요."},
+"화산섬":{h:"화산이 터져 나온 용암이 굳어 만들어진 섬.",e:"화산이 터져서 만들어진 섬이에요."},
+"용암동굴":{h:"흘러가던 용암 속이 비면서 만들어진 굴.",e:"용암이 흐르면서 만들어진 굴이에요."},
+"일제강점기":{h:"1910년부터 1945년까지 일본이 우리나라를 강제로 다스리던 때.",e:"옛날에 일본이 우리나라를 억지로 다스리던 때예요."},
+"임진왜란":{h:"1592년에 일본이 조선을 쳐들어와 7년간 이어진 전쟁.",e:"옛날에 일본이 우리나라에 쳐들어와서 오래 싸운 전쟁이에요."},
+"병자호란":{h:"1636년 겨울에 청나라가 조선을 쳐들어온 전쟁.",e:"옛날 겨울에 청나라가 우리나라에 쳐들어온 전쟁이에요."},
+/* --- 아래는 3~4학년 화면에서만 표시되는 기초 낱말 --- */
+"조정":{basic:1,h:"임금과 신하들이 모여 나랏일을 의논하던 곳, 또는 그 사람들.",e:"임금님과 신하들이 모여 나랏일을 정하던 곳이에요."},
+"신하":{basic:1,h:"임금을 도와 나랏일을 하던 사람.",e:"임금님을 도와 일하던 사람이에요."},
+"백성":{basic:1,h:"나라에 사는 보통 사람들.",e:"옛날에 나라에 살던 보통 사람들이에요."},
+"관리":{basic:1,h:"나라의 일을 맡아 하던 사람.",e:"나라의 일을 맡아 하던 사람이에요."},
+"위패":{basic:1,h:"돌아가신 분의 이름을 적어 모시는 나무패.",e:"돌아가신 분의 이름을 적어 모시는 나무 조각이에요."},
+"경전":{basic:1,h:"종교의 가르침을 적어 놓은 책.",e:"부처님이나 신의 가르침을 적어 놓은 책이에요."},
+"공덕":{basic:1,h:"남을 위해 한 착하고 훌륭한 일.",e:"남을 위해 한 착하고 훌륭한 일이에요."},
+"혈통":{basic:1,h:"부모에게서 자식으로 이어지는 핏줄.",e:"부모에게서 자식으로 이어지는 핏줄이에요."},
+"토종":{basic:1,h:"옛날부터 그 땅에서 살아온 동물이나 식물.",e:"옛날부터 우리 땅에서 살아온 동물이나 식물이에요."},
+"장인":{basic:1,h:"한 가지 솜씨를 오래 갈고닦은 사람.",e:"한 가지 일을 아주 잘하는 사람이에요."},
+"소리꾼":{basic:1,h:"판소리를 부르는 사람.",e:"판소리를 부르는 사람이에요."},
+"명절":{basic:1,h:"설날, 추석처럼 해마다 지키는 특별한 날.",e:"설날이나 추석처럼 해마다 지내는 특별한 날이에요."},
+"철새":{basic:1,h:"철에 따라 먼 곳으로 옮겨 다니며 사는 새.",e:"계절에 따라 먼 곳으로 날아가는 새예요."},
+"용암":{basic:1,h:"화산에서 뿜어져 나온 뜨겁게 녹은 돌.",e:"화산에서 나오는 아주 뜨겁게 녹은 돌이에요."},
+"선사 시대":{basic:1,h:"글로 된 기록이 남아 있지 않은 아주 오래된 옛날.",e:"글이 없어서 기록이 남지 않은 아주아주 옛날이에요."}
+};
+
+/* =========================================================
+   유산 데이터
+   ========================================================= */
+const SRC = "https://www.heritage.go.kr";
+const HERITAGE = [
+{
+  id:"gyeongbokgung", jong:["사적"], one34:"조선의 임금이 살던 가장 큰 궁궐이에요. 불에 탔다가 아주 오랜 뒤에 다시 지었어요.", purpose34:"조선을 세운 사람들이, 임금이 살면서 나랏일을 볼 집으로 지었어요. ‘경복’은 ‘큰 복을 받으라’는 뜻이에요.", hot:true, name:"서울 경복궁", easy:"경복궁",
+  era:"조선 시대", year:"1395년 창건", where:"서울특별시 종로구",
+  one:"조선을 세우고 가장 먼저 지은 으뜸 궁궐. 불탔다가 270여 년 만에 다시 지었어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["👑 왕과 궁궐 이야기"],
+  purpose:"조선을 세운 태조 이성계가 새 나라의 중심으로 삼으려고 지은 궁궐이에요. 임금이 살면서 신하들과 나랏일을 의논하고 큰 행사를 여는 곳이었습니다. ‘경복’은 ‘큰 복을 누리라’는 뜻이에요.",
+  events:[
+    {y:"1395년", t:"조선을 세운 뒤 한양에 처음 지음(창건)"},
+    {y:"1592년", t:"임진왜란 때 불에 타 없어짐(소실)"},
+    {y:"270여 년", t:"다시 짓지 못한 채 빈 터로 남아 있었음"},
+    {y:"1867년", t:"흥선대원군이 앞장서서 크게 다시 지음(중건)"},
+    {y:"1926년", t:"일제강점기에 근정전 앞을 가로막고 조선총독부 건물이 세워짐"},
+    {y:"1995년", t:"조선총독부 건물을 헐어 내고 궁궐 복원 공사를 시작함"}
+  ],
+  now:"근정전, 경회루, 향원정 등이 남아 있고 지금도 복원 공사가 이어지고 있어요. 일제강점기에 헐린 건물을 옛 그림과 기록을 보고 하나씩 되살리는 중이라, 갈 때마다 모습이 조금씩 달라집니다.",
+  desig:"사적", desigDate:"1963년", unesco:"",
+  pro:[
+    "흥선대원군: 270년 동안 비어 있던 궁궐을 되살려야 왕실의 위엄이 서고 나라가 다시 하나로 뭉칠 수 있다.",
+    "공사를 맡은 관리: 궁궐을 크게 지으면 조선이 아직 힘 있는 나라라는 것을 안팎에 보여 줄 수 있다."
+  ],
+  con:[
+    "돈을 낸 백성: 원납전이라며 걷어 가는데, 스스로 내는 돈이라면서 안 내면 벌을 준다.",
+    "시장 상인: 당백전이라는 새 돈이 나온 뒤 쌀값이 크게 올라 살기가 더 어려워졌다.",
+    "일부 신하: 나라 살림이 넉넉하지 않은데 이렇게 큰 공사를 벌이면 뒷감당을 못 한다."
+  ],
+  unknown:[
+    "공사에 불려 나와 돌과 나무를 나른 사람들의 이름은 거의 남아 있지 않아요.",
+    "원납전을 내느라 집집마다 살림이 얼마나 힘들어졌는지는 기록에 없습니다.",
+    "공사 중에 다치거나 목숨을 잃은 사람이 몇 명이었는지 알 수 없어요.",
+    "궁궐에서 일하던 궁녀와 하인들이 서로 무슨 이야기를 나눴는지는 남아 있지 않습니다."
+  ],
+  mission:"경복궁을 다시 짓는 일에 찬성한 사람과 힘들어한 사람의 말을 각각 하나씩 찾아 적어 보세요. 그리고 내가 그때 한양에 살던 백성이었다면 어느 쪽이었을지, 이유와 함께 쓰세요.",
+  srcUrl:SRC, srcKey:"경복궁"
+},
+{
+  id:"hwaseong", jong:["사적"], one34:"정조 임금이 새 도시를 만들면서 쌓은 성이에요. 공사 이야기를 책으로 남겼어요.", purpose34:"정조 임금이 아버지의 무덤을 수원으로 옮기고, 그 옆에 새 도시를 만들었어요. 그 도시를 지키려고 성을 쌓았어요.", name:"수원 화성", easy:"수원 화성",
+  era:"조선 시대", year:"1794~1796년", where:"경기도 수원시",
+  one:"정조가 새 도시를 만들며 2년 7개월 만에 쌓은 성. 공사 기록을 책으로 남긴 덕분에 되살릴 수 있었어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["⚔️ 나라를 지키는 곳","👑 왕과 궁궐 이야기"],
+  purpose:"정조 임금이 아버지 사도세자의 무덤을 수원으로 옮기면서, 그 곁에 새 도시를 만들고 그 도시를 지키려고 쌓은 성이에요. 적을 막는 군사 시설이면서 동시에 사람들이 사는 도시의 울타리였습니다.",
+  events:[
+    {y:"1789년", t:"사도세자의 무덤을 수원으로 옮김"},
+    {y:"1794년", t:"성을 쌓기 시작함. 정약용이 거중기를 만들어 무거운 돌을 옮김"},
+    {y:"1796년", t:"2년 7개월 만에 완성함"},
+    {y:"1801년", t:"공사 과정을 자세히 적은 『화성성역의궤』를 펴냄"},
+    {y:"1950년대", t:"6·25 전쟁으로 성벽 곳곳이 부서짐"},
+    {y:"1970년대~", t:"『화성성역의궤』를 보고 원래 모습대로 되살림(복원)"},
+    {y:"1997년", t:"유네스코 세계유산에 오름"}
+  ],
+  now:"성벽 약 5.7km와 팔달문, 화서문, 방화수류정 등이 남아 있어요. 도시 한가운데를 성벽이 지나가서, 사람들이 사는 동네와 성이 붙어 있는 보기 드문 모습입니다.",
+  desig:"사적", desigDate:"1963년", unesco:"1997년 세계유산 등재",
+  pro:[
+    "정조 임금: 새 도시를 세워 아버지를 기리고, 백성이 살기 좋고 지키기도 좋은 성을 만들겠다.",
+    "정약용: 거중기와 새 기계를 쓰면 사람의 힘을 덜고 공사도 훨씬 빨리 끝낼 수 있다.",
+    "공사에 온 일꾼: 이번 공사는 억지로 끌려온 것이 아니라 일한 만큼 품삯을 받는다."
+  ],
+  con:[
+    "원래 그 자리에 살던 사람들: 집과 땅을 내주고 옮겨 가야 하는데, 정든 곳을 떠나는 일은 쉽지 않다.",
+    "일부 신하: 성을 쌓는 데 드는 돈이 너무 많다. 나라 살림이 흔들릴까 걱정이다.",
+    "정조를 견제한 세력: 임금이 수원에 힘을 쏟는 것은 한양의 신하들을 멀리하려는 뜻이 아닌가."
+  ],
+  unknown:[
+    "품삯을 받고 일했다는 기록은 있지만, 일꾼들이 그 일을 어떻게 느꼈는지는 적혀 있지 않아요.",
+    "집을 옮겨야 했던 주민들이 어떤 말을 주고받았는지 알 수 없습니다.",
+    "거중기를 실제로 어디에 몇 번이나 썼는지 자세한 현장 기록은 남아 있지 않아요.",
+    "공사 중에 다친 사람이 있었는지, 있었다면 어떻게 되었는지 기록이 없습니다."
+  ],
+  mission:"수원 화성은 6·25 전쟁으로 부서졌는데도 원래 모습대로 되살릴 수 있었어요. 그 비결이 무엇인지 찾아 쓰고, 기록을 남기는 일이 왜 중요한지 두 문장으로 설명해 보세요.",
+  srcUrl:SRC, srcKey:"수원 화성"
+},
+{
+  id:"bulguksa", jong:["국보","사적"], one34:"신라 사람들이 부처님의 나라를 만들고 싶어서 지은 절이에요. 산 위에 돌로 굴도 만들었어요.", purpose34:"신라 사람들이 부처님이 사는 좋은 나라를 이 땅에 만들어 보려고 지은 절과 돌굴이에요.", name:"경주 불국사, 석굴암 석굴", easy:"불국사와 석굴암",
+  era:"통일 신라", year:"751년 시작 ~ 774년 완성", where:"경상북도 경주시 토함산",
+  one:"부처님의 나라를 땅 위에 만들려 한 절. 산 위에 돌을 하나하나 쌓아 굴을 만들었어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["🎨 예술과 신앙"],
+  purpose:"신라 사람들이 부처님이 사는 이상적인 나라를 이 땅에 그대로 만들어 보려고 지은 절과 돌굴이에요. 김대성이라는 사람이 앞장서서 만들기 시작했다고 『삼국유사』에 전합니다.",
+  events:[
+    {y:"751년", t:"김대성이 짓기 시작했다고 『삼국유사』에 전함"},
+    {y:"774년", t:"김대성이 세상을 떠난 뒤 나라가 이어받아 완성함"},
+    {y:"1592년", t:"임진왜란 때 불국사의 나무 건물이 대부분 불에 탐"},
+    {y:"1913~1915년", t:"일제강점기에 석굴암을 뜯어 고치며 시멘트를 사용함"},
+    {y:"1960~70년대", t:"석굴암을 다시 손보고 불국사의 나무 건물을 되살림"},
+    {y:"1995년", t:"유네스코 세계유산에 오름"}
+  ],
+  now:"불국사의 다보탑, 삼층석탑, 청운교·백운교처럼 돌로 만든 부분은 신라 때 그대로예요. 나무 건물은 나중에 다시 지은 것입니다. 석굴암은 습기 문제 때문에 지금은 유리벽 너머로만 볼 수 있어요.",
+  desig:"국보(석굴암 석굴, 불국사 다보탑·삼층석탑 등), 사적(불국사)", desigDate:"1962년",
+  unesco:"1995년 세계유산 등재",
+  pro:[
+    "김대성과 신라 왕실: 부처님의 나라를 이 땅에 세우면 나라가 평안해지고 백성의 마음도 하나가 된다.",
+    "절을 찾은 신라 사람들: 이렇게 아름다운 곳에서 빌면 소원이 이루어질 것 같다."
+  ],
+  con:[
+    "세금과 일손을 감당한 백성: 절을 짓는 데 드는 나무와 돌, 사람의 힘은 결국 우리에게서 나온다.",
+    "일부 관리: 나라의 힘을 절 짓는 일에만 쏟으면 다른 일이 밀린다."
+  ],
+  unknown:[
+    "무거운 돌을 어떻게 토함산 꼭대기까지 옮겼는지 기록이 남아 있지 않아요.",
+    "석굴암의 돌을 실제로 깎은 석공들의 이름은 한 명도 알 수 없습니다.",
+    "김대성 한 사람이 정말 다 이끌었는지, 그를 도운 사람들이 누구였는지 알 수 없어요.",
+    "일제강점기에 뜯어 고치기 이전의 석굴암 안이 정확히 어떤 모습이었는지 알기 어렵습니다."
+  ],
+  mission:"불국사에서 신라 때 그대로 남은 부분과 나중에 다시 지은 부분을 나누어 적어 보세요. 왜 어떤 것은 남고 어떤 것은 사라졌을까요?",
+  srcUrl:SRC, srcKey:"불국사"
+},
+{
+  id:"hunmin", jong:["국보"], one34:"한글을 왜, 어떻게 만들었는지 알려 주는 책이에요.", purpose34:"세종 임금이 새로 만든 글자를 사람들에게 알리려고 만든 책이에요. 글을 몰라 억울한 일을 당하는 백성이 없게 하려고 글자를 만들었어요.", hot:true, name:"훈민정음 해례본", easy:"훈민정음 해례본",
+  era:"조선 시대", year:"1446년", where:"서울 간송미술관 등 소장",
+  one:"한글을 왜, 어떻게 만들었는지 만든 사람들이 직접 설명해 둔 책이에요.",
+  t1:["🏛️ 문화유산"], t2:["📜 글·그림·책"], t3:["🌾 백성들의 생활"],
+  purpose:"세종 임금이 새로 만든 글자 훈민정음을 세상에 알리면서, 이 글자를 왜 만들었고 소리가 어떻게 나는지 예를 들어 풀이한 책이에요. 글을 몰라 억울한 일을 당하는 백성이 없게 하려는 것이 목적이었습니다.",
+  events:[
+    {y:"1443년", t:"세종이 훈민정음 스물여덟 글자를 만듦(창제)"},
+    {y:"1444년", t:"최만리 등 일부 학자가 반대하는 상소를 올림"},
+    {y:"1446년", t:"해례본을 펴내며 훈민정음을 세상에 알림(반포)"},
+    {y:"1940년", t:"경상북도 안동에서 해례본 한 권이 세상에 알려짐"},
+    {y:"1962년", t:"국보로 지정됨"},
+    {y:"1997년", t:"유네스코 세계기록유산에 오름"}
+  ],
+  now:"간송미술관에 있는 한 권이 가장 잘 알려져 있어요. 글자를 만든 원리를 만든 사람이 직접 적어 남긴 책은 세계에서도 아주 드물어서 더욱 값집니다.",
+  desig:"국보", desigDate:"1962년", unesco:"1997년 세계기록유산 등재",
+  pro:[
+    "세종 임금: 우리말이 중국말과 달라 백성이 하고 싶은 말이 있어도 적지 못한다. 이를 딱하게 여겨 새 글자를 만든다.",
+    "정인지 등 집현전 학자: 이 글자는 배우기 쉬워 며칠이면 익힐 수 있다. 억울한 사정을 스스로 적을 수 있게 된다."
+  ],
+  con:[
+    "최만리 등: 중국과 다른 글자를 쓰면 스스로 중국과 멀어지는 일이다.",
+    "반대한 신하들: 쉬운 글자만 쓰다 보면 학문에 힘쓰지 않게 될까 걱정된다.",
+    "이두를 쓰던 관리들: 지금까지 잘 써 오던 방식이 있는데 굳이 새로 만들 까닭이 있는가."
+  ],
+  unknown:[
+    "세종이 혼자 만들었는지, 집현전 학자들과 함께 만들었는지 정확한 과정은 기록이 없어요.",
+    "글자를 만드는 동안 실패하거나 버려진 글자가 있었는지 알 수 없습니다.",
+    "백성들이 새 글자를 처음 봤을 때 어떤 반응이었는지 남아 있지 않아요.",
+    "궁녀나 하급 관리처럼 가까이서 지켜본 사람들의 이야기는 기록되지 않았습니다."
+  ],
+  mission:"최만리는 왜 반대했을까요? 반대한 쪽의 말을 그 사람 입장에서 최대한 이해해 본 다음, 내가 세종이라면 뭐라고 답했을지 써 보세요.",
+  srcUrl:SRC, srcKey:"훈민정음"
+},
+{
+  id:"tripitaka", jong:["국보"], one34:"전쟁 중에 16년 동안 나무판 8만 장에 글자를 새긴 것이에요.", purpose34:"몽골이 쳐들어오자, 고려 사람들이 부처님의 힘을 빌려 나라를 지키고 싶어서 나무판에 불교 책을 새겼어요.", name:"합천 해인사 대장경판", easy:"팔만대장경판",
+  era:"고려 시대", year:"1236~1251년", where:"경상남도 합천군 해인사",
+  one:"몽골이 쳐들어온 전쟁 중에 16년 동안 8만여 장의 나무판에 글자를 새겼어요.",
+  t1:["🏛️ 문화유산"], t2:["📜 글·그림·책"], t3:["🎨 예술과 신앙"],
+  purpose:"몽골이 여러 차례 쳐들어오자, 고려 사람들이 부처님의 힘을 빌려 나라를 지키려는 마음으로 불교 경전을 나무판에 새긴 것이에요. 흩어진 마음을 하나로 모으는 일이기도 했습니다.",
+  events:[
+    {y:"1232년", t:"몽골의 침입으로 앞서 만들었던 대장경판이 불타 없어짐"},
+    {y:"1236년", t:"강화도로 피난한 상태에서 다시 새기기 시작함"},
+    {y:"1251년", t:"16년 만에 8만여 장을 모두 새겨 마침"},
+    {y:"1398년", t:"조선 초에 해인사로 옮겨 보관함"},
+    {y:"1995년", t:"보관 창고인 장경판전이 유네스코 세계유산에 오름"},
+    {y:"2007년", t:"대장경판이 유네스코 세계기록유산에 오름"}
+  ],
+  now:"81,000장이 넘는 나무판이 해인사 장경판전에 그대로 보관되어 있어요. 700년이 넘도록 썩거나 뒤틀리지 않았는데, 바람이 잘 통하도록 지은 창고 덕분이라고 봅니다.",
+  desig:"국보", desigDate:"1962년", unesco:"2007년 세계기록유산 등재 (장경판전은 1995년 세계유산)",
+  pro:[
+    "고려 왕실과 무신 정권: 부처님의 힘으로 몽골을 물리치고, 흩어진 백성의 마음을 하나로 모으자.",
+    "글자를 새긴 사람들: 한 글자를 새길 때마다 절을 하는 마음으로 새긴다."
+  ],
+  con:[
+    "뭍에 남은 백성: 강화도로 피난한 조정은 경전을 새기는데, 우리는 몽골군을 그대로 맞고 있다.",
+    "살림을 걱정한 관리: 전쟁 중에 이렇게 큰 일을 벌이면 나무와 사람과 돈이 모두 모자라게 된다."
+  ],
+  unknown:[
+    "8만 장을 새긴 사람들 대부분의 이름과 사연은 남아 있지 않아요.",
+    "글자를 잘못 새겨 다시 만든 판이 몇 장이었는지 알 수 없습니다.",
+    "나무를 어디서 얼마나 베어 왔고, 그 지역 사람들이 어떤 영향을 받았는지 기록이 없어요.",
+    "이 일을 한 사람들이 정말 부처의 힘을 믿었는지, 시켜서 한 것인지는 알 수 없습니다."
+  ],
+  mission:"전쟁 중에 무기 대신 나무판에 글자를 새긴 이유는 무엇일까요? 내가 그 시대 백성이었다면 이 일을 어떻게 생각했을지 써 보세요.",
+  srcUrl:SRC, srcKey:"대장경판"
+},
+{
+  id:"cheomseongdae", jong:["국보"], one34:"1,300년이 넘게 서 있는 돌탑이에요. 무엇에 썼는지는 아직도 잘 몰라요.", purpose34:"선덕여왕 때 만들었다고 해요. 하늘의 별을 보고 농사지을 때를 알려고 만든 것이라는 이야기가 가장 널리 알려져 있어요.", name:"경주 첨성대", easy:"첨성대",
+  era:"신라", year:"632~647년 무렵", where:"경상북도 경주시",
+  one:"1,300년 넘게 그 자리에 서 있는 돌탑. 그런데 무엇에 썼는지는 아직도 논쟁 중이에요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["🌾 백성들의 생활"],
+  purpose:"선덕여왕 때 세워진 것으로 전해집니다. 하늘의 별과 해, 달을 살펴 농사지을 때를 알아내려고 만든 관측대라는 설명이 가장 널리 알려져 있어요. 하지만 학자들 사이에는 다른 의견도 있습니다.",
+  events:[
+    {y:"632~647년", t:"선덕여왕 때 세워진 것으로 전해짐"},
+    {y:"1962년", t:"국보로 지정됨"},
+    {y:"1980년대~", t:"무엇에 쓰였는지를 두고 학자들의 논쟁이 이어짐"},
+    {y:"2016년", t:"경주 지진 뒤 기울기와 안전 상태를 정밀하게 조사함"}
+  ],
+  now:"높이 약 9m, 돌 360여 개를 쌓아 만든 모습 그대로 서 있어요. 지진 때문에 아주 조금 기울어 있어서 상태를 계속 지켜보고 있습니다.",
+  desig:"국보", desigDate:"1962년", unesco:"",
+  pro:[], con:[],
+  unknown:[
+    "정확히 몇 년에 세웠는지 기록이 분명하지 않아요.",
+    "별을 보던 곳인지, 제사를 지내던 곳인지, 신라의 상징물이었는지 아직도 학자들의 의견이 갈립니다.",
+    "꼭대기에 올라가 별을 봤다면 어떻게 올라갔는지, 사다리가 있었는지 알 수 없어요.",
+    "이 돌을 쌓은 사람들이 누구였는지 이름이 남아 있지 않습니다."
+  ],
+  mission:"첨성대의 쓰임에 대해서는 학자들의 의견이 갈립니다. ‘별을 보던 곳’이라고 사실처럼 적어 놓은 자료를 찾아보고, 그 자료가 무엇을 근거로 그렇게 썼는지 확인해 보세요.",
+  srcUrl:SRC, srcKey:"첨성대"
+},
+{
+  id:"jongmyo", jong:["사적"], one34:"조선 임금들을 기리는 곳이에요. 600년이 넘도록 같은 제사를 지내요.", purpose34:"조선의 임금과 왕비가 돌아가신 뒤에, 그분들을 기리며 제사를 지내려고 지은 곳이에요.", name:"서울 종묘", easy:"종묘",
+  era:"조선 시대", year:"1395년 창건", where:"서울특별시 종로구",
+  one:"조선 임금들의 위패를 모신 곳. 600년 넘게 같은 제사를 지금도 지내고 있어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["👑 왕과 궁궐 이야기","🎨 예술과 신앙"],
+  purpose:"조선의 임금과 왕비가 세상을 떠난 뒤 그 위패를 모시고 제사를 지내려고 지은 곳이에요. 조상을 잘 모시는 것이 나라를 잘 다스리는 바탕이라고 여겼습니다.",
+  events:[
+    {y:"1395년", t:"경복궁과 같은 해에 지음"},
+    {y:"1592년", t:"임진왜란 때 불에 탐"},
+    {y:"1608년", t:"다시 지음(중건)"},
+    {y:"1963년", t:"사적으로 지정됨"},
+    {y:"1995년", t:"유네스코 세계유산에 오름"},
+    {y:"2001년", t:"종묘제례와 종묘제례악이 유네스코 인류무형문화유산에 오름"}
+  ],
+  now:"정전과 영녕전이 남아 있고, 정전은 길이가 100m가 넘어 우리나라에서 가장 긴 나무 건물이에요. 해마다 5월에 종묘제례가 열려서 600년 전 방식 그대로의 제사와 음악, 춤을 볼 수 있습니다.",
+  desig:"사적", desigDate:"1963년",
+  unesco:"1995년 세계유산 등재 / 종묘제례·종묘제례악 2001년 인류무형문화유산 등재",
+  pro:[
+    "조선을 세운 사람들: 조상을 모시는 곳을 먼저 지어야 나라의 뿌리가 바로 선다.",
+    "유학자들: 제사를 정성껏 지내는 모습을 보고 백성도 부모를 공경하게 된다."
+  ],
+  con:[
+    "살림을 맡은 관리: 제사 때마다 드는 곡식과 비단, 사람의 손이 적지 않다.",
+    "제사를 준비한 사람들: 행사가 한 번 열릴 때마다 며칠씩 밤을 새워 준비해야 한다."
+  ],
+  unknown:[
+    "제사에 쓸 음식을 만들고 마당을 쓸던 사람들의 이름은 남아 있지 않아요.",
+    "임금이 제사를 지내며 속으로 무슨 생각을 했는지는 알 수 없습니다.",
+    "임진왜란 때 위패를 어떻게 옮겨 지켰는지 자세한 과정이 기록되지 않았어요."
+  ],
+  mission:"종묘와 경복궁은 같은 해에 지어졌습니다. 두 곳의 ‘쓰임’이 어떻게 다른지 비교해서 표로 정리해 보세요.",
+  srcUrl:SRC, srcKey:"종묘"
+},
+{
+  id:"sillok", jong:["국보"], one34:"조선에서 있었던 일을 472년 동안 적어 놓은 역사책이에요.", purpose34:"임금이 돌아가신 뒤에, 그 임금 때 있었던 일을 모아서 만든 역사책이에요. 뒷날 사람들이 보고 배우게 하려고 만들었어요.", name:"조선왕조실록", easy:"조선왕조실록",
+  era:"조선 시대", year:"1413~1865년", where:"서울대 규장각, 국가기록원 등 소장",
+  one:"임금도 마음대로 볼 수 없었던 역사책. 472년 동안 있었던 일이 그대로 적혀 있어요.",
+  t1:["🏛️ 문화유산"], t2:["📜 글·그림·책"], t3:["👑 왕과 궁궐 이야기"],
+  purpose:"임금이 세상을 떠난 뒤, 사관이 적어 둔 사초를 모아 만든 역사책이에요. 뒷날 사람들이 정치를 바르게 하도록 거울로 삼게 하려는 것이 목적이었습니다.",
+  events:[
+    {y:"1413년", t:"첫 실록인 『태조실록』을 완성함"},
+    {y:"1498년", t:"연산군이 사초를 문제 삼아 무오사화가 일어남"},
+    {y:"1592년", t:"임진왜란으로 여러 사고가 불타고 전주 사고본만 살아남음"},
+    {y:"1606년", t:"살아남은 실록을 다시 베껴 여러 사고에 나누어 보관함"},
+    {y:"1913년 무렵", t:"오대산 사고본이 일본으로 옮겨짐"},
+    {y:"1997년", t:"유네스코 세계기록유산에 오름"},
+    {y:"2006년", t:"오대산 사고본 일부를 되찾아 옴(환수)"}
+  ],
+  now:"1,893권에 이르는 방대한 기록이 남아 있고, 지금은 인터넷으로 누구나 우리말 번역을 읽을 수 있어요. 한 나라의 역사를 이렇게 오래, 이렇게 자세히 남긴 기록은 세계적으로도 드뭅니다.",
+  desig:"국보", desigDate:"1973년", unesco:"1997년 세계기록유산 등재",
+  pro:[
+    "사관들: 임금이 무섭다고 사실을 숨기면 그것은 역사가 아니다. 본 대로 적는다.",
+    "신하들: 임금이 실록을 못 보게 해야 뒷날의 임금도 함부로 행동하지 못한다."
+  ],
+  con:[
+    "연산군: 나에 대해 무엇을 적었는지 임금인 내가 왜 볼 수 없는가.",
+    "기록에 오른 신하들: 사관이 잘못 알고 적으면 우리 집안이 대대로 욕을 먹는다."
+  ],
+  unknown:[
+    "사관이 보지 못한 곳에서 일어난 일은 아예 적히지 않았어요.",
+    "궁궐 밖 보통 백성의 하루하루는 거의 기록되지 않았습니다.",
+    "무오사화 때 없어진 사초에 무엇이 적혀 있었는지 알 수 없어요.",
+    "사관이 무엇을 적고 무엇을 뺄지 어떻게 판단했는지는 남아 있지 않습니다."
+  ],
+  mission:"실록은 임금도 볼 수 없었어요. 그 규칙이 왜 필요했을까요? 그리고 실록에 ‘적히지 않은 사람들’은 누구였을지 세 부류를 찾아 써 보세요.",
+  srcUrl:SRC, srcKey:"조선왕조실록"
+},
+{
+  id:"namhansanseong", jong:["사적"], one34:"임금이 47일 동안 갇혀서 버틴 산 위의 성이에요.", purpose34:"한양이 위험할 때 임금과 신하들이 피해 들어가 버틸 수 있게 산에 쌓은 성이에요.", hot:true, name:"남한산성", easy:"남한산성",
+  era:"조선 시대", year:"1624~1626년 크게 쌓음", where:"경기도 광주시·성남시·하남시",
+  one:"임금이 47일간 갇혀 버틴 산성. 싸우자는 쪽과 화해하자는 쪽이 성 안에서 부딪쳤어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["⚔️ 나라를 지키는 곳"],
+  purpose:"한양이 위험할 때 임금과 조정이 피해 들어가 버틸 수 있도록 만든 산성이에요. 신라 때 쌓은 성터 위에 인조 때 크게 다시 쌓았습니다.",
+  events:[
+    {y:"672년", t:"신라가 이 자리에 주장성을 쌓았다고 전해짐"},
+    {y:"1624~1626년", t:"인조 때 큰 산성으로 다시 쌓음(축성)"},
+    {y:"1636년 12월", t:"병자호란이 일어나 인조가 남한산성으로 들어감"},
+    {y:"1637년 1월", t:"47일간 버틴 끝에 성을 나와 삼전도에서 항복함"},
+    {y:"1963년", t:"사적으로 지정됨"},
+    {y:"2014년", t:"유네스코 세계유산에 오름"}
+  ],
+  now:"성벽 약 12km와 수어장대, 남한산성 행궁 등이 남아 있어요. 지금은 서울에서 가까워 많은 사람이 찾는 산책·등산 장소가 되었습니다.",
+  desig:"사적", desigDate:"1963년", unesco:"2014년 세계유산 등재",
+  pro:[
+    "김상헌 등 주전파: 청나라에 무릎을 꿇는 것은 나라의 뿌리를 꺾는 일이다. 끝까지 싸워야 한다.",
+    "성을 지킨 군사들: 성문을 열면 지금까지 버틴 것이 모두 헛일이 된다."
+  ],
+  con:[
+    "최명길 등 주화파: 성 안에 식량이 떨어졌다. 화해해서 백성이라도 살려야 한다.",
+    "성 안의 백성과 병사: 추위에 손발이 얼고 먹을 것이 없다. 더는 버티기 어렵다."
+  ],
+  unknown:[
+    "47일 동안 성 안에서 굶주리고 얼어붙은 병사와 백성 개개인의 이름은 남아 있지 않아요.",
+    "성 안에서 몇 명이 추위와 굶주림으로 목숨을 잃었는지 정확한 수를 알 수 없습니다.",
+    "성 밖에 남겨진 사람들이 어떤 일을 겪었는지는 기록이 거의 없어요.",
+    "주전파와 주화파 말고, 아무 말도 하지 못하고 지켜본 사람들의 생각은 알 수 없습니다."
+  ],
+  mission:"김상헌과 최명길 중 누가 옳았을까요? 정답은 없습니다. 두 사람의 주장을 각각 세 줄로 정리한 뒤, 내가 성 안에 있었다면 어느 쪽에 섰을지 이유와 함께 쓰세요.",
+  srcUrl:SRC, srcKey:"남한산성"
+},
+{
+  id:"muryeong", jong:["사적","국보"], one34:"누구의 무덤인지 확실히 밝혀진 하나뿐인 백제 왕의 무덤이에요.", purpose34:"백제의 무령왕과 왕비를 모신 무덤이에요. 무덤 안에서 이름이 적힌 돌이 나와서 주인이 누구인지 알 수 있었어요.", hot:true, name:"공주 무령왕릉과 왕릉원", easy:"무령왕릉",
+  era:"백제", year:"525년 무령왕 안장, 529년 왕비 합장", where:"충청남도 공주시",
+  one:"무덤 주인의 이름이 확실하게 밝혀진 유일한 백제 왕릉. 1971년에 우연히 발견됐어요.",
+  t1:["🏛️ 문화유산"], t2:["🏰 큰 건물·터"], t3:["👑 왕과 궁궐 이야기"],
+  purpose:"백제 무령왕과 왕비를 모신 무덤이에요. 벽돌을 쌓아 만든 방식은 당시 백제가 중국 남조와 활발히 교류했다는 것을 보여 줍니다. 무덤 안에서 지석이 나와 주인이 누구인지 확인되었어요.",
+  events:[
+    {y:"523년", t:"무령왕이 세상을 떠남"},
+    {y:"525년", t:"무령왕을 무덤에 모심"},
+    {y:"529년", t:"왕비를 함께 모심(합장)"},
+    {y:"1971년 7월", t:"다른 무덤의 물길 공사를 하다가 우연히 발견됨"},
+    {y:"1971년", t:"하룻밤 만에 서둘러 발굴해 큰 아쉬움을 남김"},
+    {y:"2015년", t:"‘백제역사유적지구’의 하나로 유네스코 세계유산에 오름"}
+  ],
+  now:"무덤 안은 보존을 위해 닫혀 있고, 옆에 똑같이 만든 모형관에서 볼 수 있어요. 나온 유물 4,600여 점은 국립공주박물관에 있고, 그중 여러 점이 국보로 지정되었습니다.",
+  desig:"사적(공주 무령왕릉과 왕릉원), 출토 유물 다수 국보", desigDate:"1963년",
+  unesco:"2015년 세계유산 등재(백제역사유적지구)",
+  pro:[
+    "발굴을 서두른 쪽: 사람들이 몰려들어 유물이 사라질까 봐 빨리 마쳐야 했다.",
+    "소식을 들은 사람들: 백제 왕의 무덤이 도굴되지 않고 온전히 남아 있다니 놀라운 일이다."
+  ],
+  con:[
+    "학자들: 하룻밤 만에 끝낸 발굴이라 유물이 어디에 어떻게 놓여 있었는지 제대로 기록하지 못했다.",
+    "뒷날의 연구자들: 그때 서두르지 않았다면 훨씬 더 많은 것을 알 수 있었을 것이다."
+  ],
+  unknown:[
+    "유물이 원래 어디에 어떤 순서로 놓여 있었는지 정확히 알 수 없어요. 발굴을 서둘렀기 때문입니다.",
+    "무덤을 만든 사람들이 누구였고 몇 명이었는지 기록이 없습니다.",
+    "껴묻거리를 놓은 순서와 그 의미가 무엇이었는지 알 수 없어요.",
+    "무령왕과 왕비가 어떤 성격이었고 어떤 하루를 보냈는지는 남아 있지 않습니다."
+  ],
+  mission:"무령왕릉 발굴은 지금도 ‘아쉬운 발굴’로 불립니다. 무엇이 아쉬웠는지 찾아 쓰고, 오늘 새 무덤이 발견된다면 어떻게 해야 할지 제안해 보세요.",
+  srcUrl:SRC, srcKey:"무령왕릉"
+},
+{
+  id:"bangudae", jong:["국보"], one34:"바위에 새긴 고래 그림이에요. 한 해에 여러 달은 물에 잠겨요.", purpose34:"아주 오래전 사람들이 바위에 고래와 사슴, 호랑이를 새긴 그림이에요. 사냥이 잘되기를 빌면서 새긴 것으로 봐요.", hot:true, name:"울주 대곡리 반구대 암각화", easy:"반구천의 암각화",
+  era:"신석기~청동기 시대", year:"약 6,000~3,500년 전으로 봄", where:"울산광역시 울주군",
+  one:"바위에 새긴 고래 사냥 그림. 1년 중 여러 달은 댐 물에 잠겨 볼 수 없어요.",
+  t1:["🏛️ 문화유산"], t2:["🗿 돌·금속 물건","📜 글·그림·책"], t3:["🎨 예술과 신앙"],
+  purpose:"선사 시대 사람들이 바위에 고래, 사슴, 호랑이, 사냥하는 사람의 모습을 새긴 그림이에요. 사냥이 잘되기를 빌었거나, 무엇을 어떻게 잡는지 알려 주려 한 것으로 봅니다.",
+  events:[
+    {y:"약 6,000년 전~", t:"바위에 그림을 새기기 시작함"},
+    {y:"1965년", t:"근처에 사연댐이 만들어짐"},
+    {y:"1971년", t:"학자들이 암각화를 찾아냄. 이미 댐 물에 잠기는 상태였음"},
+    {y:"1995년", t:"국보로 지정됨"},
+    {y:"2000년대~", t:"물에 잠기는 문제를 두고 오랜 논쟁이 이어짐"},
+    {y:"2025년", t:"‘반구천의 암각화’로 유네스코 세계유산에 오름"}
+  ],
+  now:"300점이 넘는 그림이 새겨져 있지만, 댐 물이 차오르면 1년 중 여러 달 동안 물에 잠깁니다. 잠겼다 드러나기를 반복하면서 그림이 조금씩 닳고 있어요.",
+  desig:"국보", desigDate:"1995년", unesco:"2025년 세계유산 등재",
+  pro:[
+    "유산을 지키려는 쪽: 세계에서 가장 오래된 고래 사냥 그림이다. 물에 잠기게 두면 결국 사라진다.",
+    "학자들: 그림이 한번 닳으면 다시는 되돌릴 수 없다. 댐 물 높이를 낮춰야 한다."
+  ],
+  con:[
+    "울산 시민: 사연댐은 우리가 마시는 물을 담아 두는 곳이다. 물을 줄이면 우리는 어떻게 하나.",
+    "물 관리를 맡은 쪽: 가뭄이 오면 댐 물이 꼭 필요하다. 유산도 중요하지만 사람이 먼저다."
+  ],
+  unknown:[
+    "이 그림을 새긴 사람들이 누구였는지, 어떤 말을 썼는지 알 수 없어요.",
+    "왜 하필 고래를 그렇게 많이 그렸는지 정확한 이유를 알 수 없습니다.",
+    "그림을 새기는 데 얼마나 걸렸는지, 한 사람이 했는지 여럿이 했는지 알 수 없어요.",
+    "발견되기 전 오랜 세월 동안 이미 얼마나 많은 그림이 지워졌는지 알 수 없습니다."
+  ],
+  mission:"여기서는 ‘유산을 지키는 일’과 ‘사람들이 마실 물’이 부딪칩니다. 양쪽 주장을 각각 정리하고, 둘 다 만족시킬 방법이 있을지 내 생각을 써 보세요.",
+  srcUrl:SRC, srcKey:"반구대 암각화"
+},
+{
+  id:"divinebell", jong:["국보"], one34:"만드는 데 34년이 걸린 아주 큰 종이에요.", purpose34:"임금이 돌아가신 아버지를 기리려고 만들기 시작한 종이에요. 절에서 때를 알릴 때 쳤어요.", name:"성덕대왕신종", easy:"성덕대왕신종 (에밀레종)",
+  era:"통일 신라", year:"771년 완성", where:"국립경주박물관",
+  one:"만드는 데 34년이 걸린 종. 아이를 넣었다는 이야기는 과학으로 확인되지 않았어요.",
+  t1:["🏛️ 문화유산"], t2:["🗿 돌·금속 물건"], t3:["🎨 예술과 신앙"],
+  purpose:"경덕왕이 아버지 성덕왕의 공덕을 기리려고 만들기 시작한 종이에요. 절에서 때를 알리고 사람들의 마음을 가라앉히는 데 쓰였습니다.",
+  events:[
+    {y:"8세기 중반", t:"경덕왕이 아버지를 기리려고 만들기 시작함"},
+    {y:"771년", t:"아들 혜공왕 때 34년 만에 완성함"},
+    {y:"1962년", t:"국보로 지정됨"},
+    {y:"1990년대~", t:"성분을 분석한 결과 사람 뼈에 들어 있는 성분이 나오지 않음"},
+    {y:"2000년대", t:"종을 보호하려고 더 이상 정기적으로 치지 않기로 함"}
+  ],
+  now:"국립경주박물관에 걸려 있어요. 높이 약 3.7m, 무게 약 19톤으로 우리나라에 남은 종 가운데 가장 큽니다. 지금은 보존을 위해 거의 치지 않고, 녹음된 소리로 들을 수 있어요.",
+  desig:"국보", desigDate:"1962년", unesco:"",
+  pro:[
+    "경덕왕과 왕실: 아버지의 공덕을 기리는 큰 종을 만들어 온 나라에 그 소리가 울리게 하겠다.",
+    "종을 만든 장인들: 이만한 크기의 종을 소리까지 살려 만드는 것은 우리 솜씨를 다 쏟는 일이다."
+  ],
+  con:[
+    "구리를 모아야 했던 백성: 이렇게 큰 종을 만들려면 구리가 엄청나게 든다. 그것은 어디서 나오는가.",
+    "오래 기다린 사람들: 34년 동안 몇 번이나 실패했는데 언제까지 이 일을 계속하는가."
+  ],
+  unknown:[
+    "왜 34년이나 걸렸는지, 몇 번 실패했는지 자세한 기록이 없어요.",
+    "종을 만든 장인들의 이름과 사연은 거의 남아 있지 않습니다.",
+    "‘에밀레종’ 이야기가 언제부터 전해졌는지 알 수 없어요. 성분을 분석했을 때 사람 뼈의 흔적은 나오지 않았습니다.",
+    "구리를 어디에서 얼마나 모았고 그 부담을 누가 졌는지 알 수 없어요."
+  ],
+  mission:"‘에밀레종’ 이야기는 널리 알려져 있지만 사실로 확인되지 않았습니다. 이 이야기를 사실처럼 적어 놓은 자료를 찾아보고, 이야기와 사실을 어떻게 구분해서 써야 할지 정리해 보세요.",
+  srcUrl:SRC, srcKey:"성덕대왕신종"
+},
+{
+  id:"pansori", jong:["국가무형유산"], one34:"한 사람이 북소리에 맞춰 긴 이야기를 노래로 들려주는 것이에요.", purpose34:"장터나 마을에서 사람들에게 긴 이야기를 노래로 들려주던 것이에요. 웃기기도 하고 울리기도 했어요.", name:"판소리", easy:"판소리",
+  era:"조선 후기~현재", year:"17세기 무렵부터", where:"전국 (전라도를 중심으로 발달)",
+  one:"소리꾼 한 명과 북 치는 사람 한 명이 몇 시간짜리 이야기를 들려주는 예술.",
+  t1:["🎭 무형유산"], t2:["🎶 노래·춤·기술"], t3:["🎨 예술과 신앙"],
+  purpose:"장터나 마을에서 사람들에게 긴 이야기를 노래로 들려주던 예술이에요. 웃기고 울리면서 세상 이야기를 하고, 때로는 양반을 슬쩍 놀리기도 했습니다.",
+  events:[
+    {y:"17~18세기", t:"장터와 마을을 돌며 소리꾼들이 부르기 시작함"},
+    {y:"19세기", t:"신재효가 판소리 사설을 정리함. 원래 열두 마당이 전해짐"},
+    {y:"20세기", t:"다섯 마당만 남고 일곱 마당은 온전히 전해지지 않게 됨"},
+    {y:"1964년", t:"국가무형유산으로 지정됨"},
+    {y:"2003년", t:"유네스코 인류무형문화유산에 오름"}
+  ],
+  now:"춘향가, 심청가, 흥보가, 수궁가, 적벽가 다섯 마당이 전해집니다. 국악 공연장에서 들을 수 있고, 요즘은 젊은 소리꾼들이 새로운 방식으로 부르기도 해요.",
+  desig:"국가무형유산", desigDate:"1964년", unesco:"2003년 인류무형문화유산 등재",
+  pro:[
+    "판소리를 즐긴 사람들: 몇 시간을 앉아 들어도 지루하지 않고 울다가 웃다가 한다.",
+    "소리꾼: 목이 상하도록 연습해야 겨우 한 마당을 제대로 부를 수 있다."
+  ],
+  con:[
+    "일부 양반: 장터에서 부르는 소리를 어찌 점잖은 음악이라 하겠는가.",
+    "소리꾼의 가족: 소리꾼은 제대로 대접받지 못하는 일이라 살림이 늘 어려웠다."
+  ],
+  unknown:[
+    "판소리를 처음 부른 사람이 누구인지 알 수 없어요.",
+    "사라진 일곱 마당의 내용이 어떤 것이었는지 온전히 알 수 없습니다.",
+    "초기 소리꾼들 대부분의 이름과 삶이 기록되지 않았어요.",
+    "옛날 소리가 실제로 어떤 소리였는지는 녹음이 없어 알 수 없습니다."
+  ],
+  mission:"원래 열두 마당이던 판소리가 지금은 다섯 마당만 남았습니다. 사라진 것들은 왜 사라졌을까요? 무형유산이 건물이나 책보다 사라지기 쉬운 이유를 설명해 보세요.",
+  srcUrl:SRC, srcKey:"판소리"
+},
+{
+  id:"ganggang", jong:["국가무형유산"], one34:"보름달이 뜬 밤에 손을 잡고 둥글게 돌면서 부르는 노래이자 놀이예요.", purpose34:"추석 같은 명절 밤에 여자들이 손을 잡고 둥글게 돌면서 노래하고 놀던 놀이예요. 농사가 잘되기를 빌었어요.", name:"강강술래", easy:"강강술래",
+  era:"조선 시대~현재", year:"오래전부터 전해짐", where:"전라남도 해안 지역",
+  one:"보름달 아래 손을 잡고 둥글게 돌며 부르는 노래이자 춤.",
+  t1:["🎭 무형유산"], t2:["🎶 노래·춤·기술"], t3:["🌾 백성들의 생활"],
+  purpose:"주로 추석 같은 명절 밤에 여자들이 손을 잡고 둥글게 돌며 노래하고 놀던 놀이예요. 한 해 농사가 잘되기를 빌고, 평소 밖에 나가기 어려웠던 여자들이 함께 어울리는 자리이기도 했습니다.",
+  events:[
+    {y:"오래전부터", t:"전라남도 해안 마을에서 명절 밤에 전해 내려옴"},
+    {y:"1966년", t:"국가무형유산으로 지정됨"},
+    {y:"2009년", t:"유네스코 인류무형문화유산에 오름"}
+  ],
+  now:"해남, 진도 등에서 이어지고 있고 학교에서도 배웁니다. 사람이 많이 모여야 제맛인데 마을에 사는 사람이 줄어서 이어 가기가 쉽지 않아요.",
+  desig:"국가무형유산", desigDate:"1966년", unesco:"2009년 인류무형문화유산 등재",
+  pro:[
+    "놀이에 참여한 여자들: 일 년에 몇 번 안 되는, 마음껏 소리 내고 뛰어놀 수 있는 밤이다.",
+    "마을 어른들: 함께 돌고 노래하면 마을 사람들의 마음이 하나로 모인다."
+  ],
+  con:[
+    "엄격한 집안: 여자가 밤늦게 밖에서 소리를 내며 노는 것을 곱게 보지 않는다.",
+    "일이 많은 사람: 명절이라 해도 해야 할 집안일이 산더미다."
+  ],
+  unknown:[
+    "언제부터 시작되었는지 정확한 기록이 없어요.",
+    "임진왜란 때 적을 속이는 방법으로 썼다는 이야기가 널리 알려져 있지만, 학자들은 확실하지 않다고 봅니다.",
+    "옛날에 부르던 노랫말이 지금과 얼마나 달랐는지 알 수 없어요.",
+    "놀이에 참여한 여자들이 그 밤을 어떻게 느꼈는지는 거의 기록되지 않았습니다."
+  ],
+  mission:"강강술래가 임진왜란과 관련 있다는 이야기는 널리 알려져 있지만 확실하지 않습니다. 왜 이런 이야기가 붙게 되었을지 생각해 보고, ‘전해 오는 이야기’와 ‘확인된 사실’을 나누어 정리해 보세요.",
+  srcUrl:SRC, srcKey:"강강술래"
+},
+{
+  id:"kimjang", jong:["국가무형유산"], one34:"겨울에 먹을 김치를 이웃과 함께 담그고 나누는 것이에요.", purpose34:"겨울에는 채소를 기를 수 없어서, 가을에 김치를 많이 담가 두고 겨우내 먹었어요. 양이 많아서 이웃과 함께 담갔어요.", name:"김치 담그기와 나누기(김장 문화)", easy:"김장 문화",
+  era:"오래전부터~현재", year:"오래전부터 이어져 옴", where:"전국",
+  one:"겨울 채소가 없던 시절, 온 마을이 함께 김치를 담가 나누던 풍습.",
+  t1:["🎭 무형유산"], t2:["🎶 노래·춤·기술"], t3:["🌾 백성들의 생활"],
+  purpose:"겨울에는 채소를 기를 수 없으니, 늦가을에 배추와 무를 한꺼번에 절여 담가 두고 겨우내 먹으려던 것이에요. 혼자 하기에는 양이 많아서 이웃과 친척이 모여 함께 담그고 나누었습니다.",
+  events:[
+    {y:"오래전부터", t:"겨울을 나기 위한 살림 방법으로 이어져 옴"},
+    {y:"18~19세기", t:"고추가 널리 쓰이며 지금과 비슷한 빨간 김치가 자리 잡음"},
+    {y:"2013년", t:"유네스코 인류무형문화유산에 오름"},
+    {y:"2017년", t:"국가무형유산으로 지정됨"}
+  ],
+  now:"아파트에 살고 김치냉장고를 쓰면서 예전만큼 큰 김장은 줄었어요. 하지만 김장을 담가 이웃이나 어려운 사람들과 나누는 문화는 지금도 이어지고 있습니다.",
+  desig:"국가무형유산", desigDate:"2017년", unesco:"2013년 인류무형문화유산 등재",
+  pro:[
+    "마을 사람들: 혼자면 며칠 걸릴 일도 여럿이 모이면 하루면 끝난다. 그러면서 정도 나눈다.",
+    "살림을 맡은 어른: 김장만 해 두면 겨울 반찬 걱정은 끝난다."
+  ],
+  con:[
+    "준비를 도맡은 사람들: 며칠 전부터 배추를 절이고 양념을 만드느라 허리가 휜다.",
+    "형편이 어려운 집: 배추와 고춧가루 값이 오르면 김장 담그기가 큰 부담이다."
+  ],
+  unknown:[
+    "김장을 언제부터 지금과 같은 방식으로 했는지 정확히 알 수 없어요.",
+    "김장을 도맡아 한 사람들 대부분이 여자였지만, 그들이 이 일을 어떻게 느꼈는지는 기록이 거의 없습니다.",
+    "지역마다 김치 맛이 왜 그렇게 달라졌는지 그 시작을 알 수 없어요."
+  ],
+  mission:"김장 문화는 ‘물건’이 아니라 ‘함께 하는 방식’이 유산이 된 경우입니다. 우리 집이나 우리 반에도 이런 ‘함께 하는 방식’이 있는지 찾아보고, 그것이 유산이 될 수 있을지 써 보세요.",
+  srcUrl:SRC, srcKey:"김장"
+},
+{
+  id:"jeju", jong:["천연기념물"], one34:"화산이 만든 섬이에요. 용암이 흐르면서 뚫어 놓은 굴도 있어요.", purpose34:"사람이 만든 것이 아니라 화산이 아주 오랫동안 만들어 낸 자연이에요. 제주 사람들은 이 돌밭을 일구며 살아왔어요.", hot:true, name:"제주 화산섬과 용암동굴", easy:"제주 화산섬과 용암동굴",
+  era:"약 180만 년 전~1만 년 전", year:"화산 활동으로 만들어짐", where:"제주특별자치도",
+  one:"화산이 만든 섬. 한라산, 성산일출봉, 용암이 흐르며 뚫어 놓은 굴이 함께 묶여 있어요.",
+  t1:["🌿 자연유산"], t2:["🌳 나무·동물·지형"], t3:["🌾 백성들의 생활"],
+  purpose:"사람이 만든 것이 아니라 화산 활동이 아주 오랜 시간에 걸쳐 만들어 낸 자연이에요. 제주 사람들은 물이 잘 빠지는 이 돌밭을 일구며 살아왔습니다.",
+  events:[
+    {y:"약 180만 년 전~", t:"바닷속 화산이 터지며 섬이 만들어지기 시작함"},
+    {y:"약 5,000년 전", t:"성산일출봉이 만들어진 것으로 봄"},
+    {y:"1966년", t:"한라산 천연보호구역이 천연기념물로 지정됨"},
+    {y:"2000년", t:"성산일출봉이 천연기념물로 지정됨"},
+    {y:"2007년", t:"우리나라 최초로 유네스코 세계자연유산에 오름"}
+  ],
+  now:"한라산 천연보호구역, 성산일출봉, 거문오름 용암동굴계 세 곳이 함께 묶여 있어요. 만장굴 일부는 걸어 들어가 볼 수 있지만, 대부분의 동굴은 보호를 위해 닫혀 있습니다.",
+  desig:"천연기념물", desigDate:"1966년(한라산 천연보호구역)", unesco:"2007년 세계자연유산 등재",
+  pro:[
+    "보호하려는 쪽: 한번 부서진 자연은 사람이 다시 만들 수 없다. 사람이 들어가는 곳을 줄여야 한다.",
+    "연구자: 동굴 안의 온도와 습도가 조금만 달라져도 안의 모습이 바뀐다."
+  ],
+  con:[
+    "관광으로 사는 사람들: 찾아오는 사람이 있어야 마을이 산다. 다 막으면 어떻게 살라는 말인가.",
+    "여행하는 사람: 귀한 곳일수록 직접 보고 싶은 마음이 드는 것은 당연하다."
+  ],
+  unknown:[
+    "아직 발견되지 않은 용암동굴이 얼마나 더 있는지 알 수 없어요.",
+    "동굴 안에 어떤 생물이 살고 있는지 아직 다 밝혀지지 않았습니다.",
+    "옛날 제주 사람들이 이 동굴을 알고 있었는지, 알았다면 어떻게 여겼는지 기록이 거의 없어요."
+  ],
+  mission:"자연유산은 사람이 만든 것이 아닌데 왜 ‘유산’이라고 부를까요? 문화유산과 자연유산을 지키는 방법이 어떻게 달라야 할지 비교해 보세요.",
+  srcUrl:SRC, srcKey:"제주 화산섬과 용암동굴"
+},
+{
+  id:"getbol", jong:["습지보호지역"], one34:"바닷물이 빠지면 드러나는 진흙 벌판이에요. 생물이 아주 많이 살아요.", purpose34:"강물이 실어 온 흙이 바닷가에 오래 쌓여서 만들어진 땅이에요. 조개와 게가 살고 철새들이 쉬어 가요.", hot:true, name:"한국의 갯벌", easy:"한국의 갯벌",
+  era:"오랜 세월에 걸쳐 만들어짐", year:"", where:"충남 서천, 전북 고창, 전남 신안, 전남 보성·순천",
+  one:"바닷물이 빠지면 드러나는 진흙 벌판. 수많은 생물이 사는 자연의 보물창고예요.",
+  t1:["🌿 자연유산"], t2:["🌳 나무·동물·지형"], t3:["🌾 백성들의 생활"],
+  purpose:"강물이 실어 온 흙이 바닷가에 오래 쌓여 만들어진 땅이에요. 조개와 게, 물고기가 살고 먼 길을 나는 철새들이 쉬어 가는 곳이라 사람에게도 자연에게도 중요합니다.",
+  events:[
+    {y:"오랜 세월", t:"강물이 실어 온 흙이 쌓여 만들어짐"},
+    {y:"1980~90년대", t:"갯벌을 메워 땅으로 바꾸는 공사가 여러 곳에서 이뤄짐"},
+    {y:"2000년대", t:"갯벌의 가치가 알려지며 습지보호지역으로 지정되기 시작함"},
+    {y:"2021년", t:"서천·고창·신안·보성순천 갯벌이 유네스코 세계자연유산에 오름"}
+  ],
+  now:"네 곳의 갯벌이 세계자연유산으로 함께 묶여 있어요. 갯벌에 기대어 조개를 캐며 사는 사람들이 지금도 있고, 봄가을에는 철새들이 잔뜩 모여듭니다.",
+  desig:"습지보호지역 지정, 일부 지역은 천연기념물·명승으로 지정", desigDate:"",
+  unesco:"2021년 세계자연유산 등재",
+  pro:[
+    "갯벌을 지키려는 쪽: 갯벌은 바다를 깨끗하게 하고 철새를 먹여 살린다. 한번 메우면 되돌릴 수 없다.",
+    "어민: 갯벌에서 조개를 캐며 살아온 사람이 많다. 갯벌이 사라지면 일자리도 사라진다."
+  ],
+  con:[
+    "개발을 바란 쪽: 갯벌을 메우면 공장과 논밭을 만들 넓은 땅이 생긴다.",
+    "지역 주민 일부: 땅이 늘어나면 마을에 일자리와 돈이 들어온다."
+  ],
+  unknown:[
+    "갯벌에 사는 아주 작은 생물이 모두 몇 종류인지 아직 다 밝혀지지 않았어요.",
+    "예전에 메워 없어진 갯벌에 어떤 생물이 살았는지 알 수 없습니다.",
+    "갯벌에서 일하며 살아온 사람들의 이야기는 기록으로 남은 것이 많지 않아요."
+  ],
+  mission:"갯벌을 메워 땅을 만들자는 주장과 지키자는 주장을 각각 정리해 보세요. 그리고 ‘한번 사라지면 되돌릴 수 없는 것’의 예를 세 가지 더 찾아 써 보세요.",
+  srcUrl:SRC, srcKey:"한국의 갯벌"
+},
+{
+  id:"jindodog", jong:["천연기념물"], one34:"주인을 알아보고 끝까지 따르는 우리나라 토종개예요.", purpose34:"진도에서 오래전부터 사람과 함께 살아온 토종개예요. 사냥을 돕고 집을 지켰어요.", name:"진도의 진도개", easy:"진도개",
+  era:"오래전부터", year:"", where:"전라남도 진도군",
+  one:"주인을 알아보고 끝까지 따르는 우리 토종개. 살아 있는 천연기념물이에요.",
+  t1:["🌿 자연유산"], t2:["🌳 나무·동물·지형"], t3:["🌾 백성들의 생활"],
+  purpose:"진도에서 오래전부터 사람과 함께 살아온 토종개예요. 사냥을 돕고 집을 지키며 사람 곁에서 살았습니다. 섬이라 다른 개와 잘 섞이지 않아 고유한 모습이 남았습니다.",
+  events:[
+    {y:"오래전부터", t:"진도에서 사람들과 함께 살아옴"},
+    {y:"1962년", t:"천연기념물로 지정됨"},
+    {y:"1967년", t:"진도개를 보호하기 위한 법이 만들어짐"},
+    {y:"지금", t:"진도개의 혈통을 확인하고 관리하는 기관이 운영되고 있음"}
+  ],
+  now:"진도에서 혈통을 확인받은 개들이 보호받고 있어요. 살아 있는 동물이 천연기념물인 흔치 않은 경우라, 지키는 방법도 건물이나 물건과는 아주 다릅니다.",
+  desig:"천연기념물", desigDate:"1962년", unesco:"",
+  pro:[
+    "진도 사람들: 다른 곳 개와 섞이지 않게 지켜야 진도개다운 모습이 남는다.",
+    "보호를 맡은 기관: 혈통을 확인하고 관리해야 토종개가 사라지지 않는다."
+  ],
+  con:[
+    "동물을 걱정하는 쪽: 혈통만 따지다 보면 기준에 맞지 않는 개들이 어떻게 되는지도 살펴야 한다.",
+    "진도 밖 사람들: 진도개를 키우고 싶어도 섬 밖으로 데리고 나가는 규칙이 까다롭다."
+  ],
+  unknown:[
+    "진도개가 언제부터 진도에 살았는지 정확히 알 수 없어요.",
+    "어디에서 온 개들이 진도개가 되었는지 여러 이야기가 있지만 확실하지 않습니다.",
+    "옛날 진도 사람들이 진도개를 어떻게 길렀는지 자세한 기록이 거의 없어요."
+  ],
+  mission:"진도개는 살아 있는 생명인데 천연기념물입니다. 건물이나 그림을 지키는 것과 살아 있는 동물을 지키는 것은 어떻게 달라야 할까요? 세 가지 차이를 써 보세요.",
+  srcUrl:SRC, srcKey:"진도개"
+}
+];
+
+/* =========================================================
+   유산 그림 (직접 그린 SVG — 저작권 걱정 없이 인터넷 없어도 보입니다)
+   선생님이 실제 사진으로 바꿔 넣을 수 있습니다.
+   ========================================================= */
+const SKY='<rect width="200" height="130" fill="#dfeaf2"/>';
+const GND='<rect y="102" width="200" height="28" fill="#ded0b0"/>';
+const ART = {
+gyeongbokgung: SKY+GND+
+ '<rect x="26" y="92" width="148" height="11" fill="#c3bcae"/><rect x="34" y="83" width="132" height="10" fill="#d8d2c6"/>'+
+ '<rect x="46" y="60" width="8" height="24" fill="#8b4a2f"/><rect x="70" y="60" width="8" height="24" fill="#8b4a2f"/>'+
+ '<rect x="94" y="60" width="8" height="24" fill="#8b4a2f"/><rect x="118" y="60" width="8" height="24" fill="#8b4a2f"/>'+
+ '<rect x="142" y="60" width="8" height="24" fill="#8b4a2f"/><rect x="42" y="55" width="116" height="6" fill="#2f6b8f"/>'+
+ '<path d="M18 56 L54 38 L146 38 L182 56 Z" fill="#8f3a34"/><path d="M18 56 Q100 47 182 56" fill="none" stroke="#68231f" stroke-width="2.5"/>'+
+ '<rect x="78" y="26" width="44" height="13" fill="#a8543a"/><rect x="76" y="22" width="48" height="5" fill="#2f6b8f"/>'+
+ '<path d="M58 23 L80 10 L120 10 L142 23 Z" fill="#a8443b"/><path d="M58 23 Q100 16 142 23" fill="none" stroke="#68231f" stroke-width="2"/>'+
+ '<rect x="92" y="66" width="16" height="18" fill="#5d3320"/>',
+
+hwaseong: SKY+GND+
+ '<rect x="0" y="70" width="200" height="34" fill="#cfc6b6"/>'+
+ '<path d="M0 70 h200 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 h-14 v-6 h-8 v6 H0 Z" fill="#b9b0a0"/>'+
+ '<path d="M78 104 v-20 a22 22 0 0 1 44 0 v20 Z" fill="#4a3524"/>'+
+ '<rect x="72" y="46" width="56" height="18" fill="#c9885a"/><rect x="70" y="42" width="60" height="5" fill="#2f6b8f"/>'+
+ '<path d="M52 43 L74 28 L126 28 L148 43 Z" fill="#8f3a34"/><path d="M52 43 Q100 35 148 43" fill="none" stroke="#68231f" stroke-width="2.5"/>'+
+ '<rect x="84" y="50" width="10" height="12" fill="#5d3320"/><rect x="106" y="50" width="10" height="12" fill="#5d3320"/>'+
+ '<circle cx="30" cy="86" r="3" fill="#9a9082"/><circle cx="170" cy="86" r="3" fill="#9a9082"/>',
+
+bulguksa: SKY+GND+
+ '<rect x="16" y="96" width="168" height="8" fill="#c3bcae"/>'+
+ '<rect x="84" y="84" width="32" height="12" fill="#cfc7bb"/><rect x="88" y="76" width="24" height="9" fill="#ded7cb"/>'+
+ '<rect x="76" y="68" width="48" height="8" fill="#c3bcae"/><rect x="92" y="56" width="16" height="13" fill="#ded7cb"/>'+
+ '<rect x="72" y="48" width="56" height="8" fill="#c3bcae"/><rect x="94" y="36" width="12" height="13" fill="#ded7cb"/>'+
+ '<rect x="80" y="28" width="40" height="8" fill="#c3bcae"/><circle cx="100" cy="22" r="6" fill="#cfc7bb"/>'+
+ '<rect x="98" y="12" width="4" height="10" fill="#b0a795"/>'+
+ '<path d="M8 96 L24 84 L52 84 L68 96 Z" fill="#8f3a34"/><rect x="22" y="96" width="32" height="8" fill="#a8642f"/>'+
+ '<path d="M132 96 L148 84 L176 84 L192 96 Z" fill="#8f3a34"/><rect x="146" y="96" width="32" height="8" fill="#a8642f"/>',
+
+hunmin:
+ '<rect width="200" height="130" fill="#efe6d4"/>'+
+ '<path d="M100 34 C118 26 142 26 160 30 v62 c-18-4-42-4-60 4 Z" fill="#fffaf0" stroke="#d8cbb0" stroke-width="1"/>'+
+ '<path d="M100 34 C82 26 58 26 40 30 v62 c18-4 42-4 60 4 Z" fill="#fffdf6" stroke="#d8cbb0" stroke-width="1"/>'+
+ '<rect x="97" y="32" width="6" height="70" rx="2" fill="#8a6a44"/>'+
+ '<g stroke="#c9b58f" stroke-width="1"><path d="M52 38 v58"/><path d="M66 36 v58"/><path d="M80 35 v58"/><path d="M120 35 v58"/><path d="M134 36 v58"/><path d="M148 38 v58"/></g>'+
+ '<g fill="#2b2118" font-family="serif" font-size="15" font-weight="700">'+
+ '<text x="52" y="58">ㄱ</text><text x="66" y="72">ㅁ</text><text x="120" y="58">ㅅ</text><text x="134" y="76">ㅇ</text></g>'+
+ '<g fill="#b4342c" font-size="13" font-weight="800"><text x="76" y="92">훈</text><text x="112" y="92">민</text></g>',
+
+tripitaka:
+ '<rect width="200" height="130" fill="#e6dcc6"/>'+
+ '<rect x="14" y="18" width="172" height="96" rx="4" fill="#8a5a32"/>'+
+ '<rect x="20" y="24" width="160" height="84" fill="#c49a63"/>'+
+ '<g fill="#7a4f2a"><rect x="26" y="30" width="148" height="7"/><rect x="26" y="42" width="148" height="7"/>'+
+ '<rect x="26" y="54" width="148" height="7"/><rect x="26" y="66" width="148" height="7"/>'+
+ '<rect x="26" y="78" width="148" height="7"/><rect x="26" y="90" width="148" height="7"/></g>'+
+ '<g fill="#4a3018" font-size="6" font-family="serif">'+
+ '<text x="30" y="36">大 藏 經 板 高 麗 八 萬</text><text x="30" y="48">佛 心 一 字 一 拜 誠 心</text>'+
+ '<text x="30" y="60">大 藏 經 板 高 麗 八 萬</text><text x="30" y="72">佛 心 一 字 一 拜 誠 心</text>'+
+ '<text x="30" y="84">大 藏 經 板 高 麗 八 萬</text><text x="30" y="96">佛 心 一 字 一 拜 誠 心</text></g>'+
+ '<rect x="14" y="18" width="172" height="96" rx="4" fill="none" stroke="#6d431f" stroke-width="4"/>',
+
+cheomseongdae: SKY+GND+
+ '<ellipse cx="100" cy="103" rx="34" ry="6" fill="#c3bcae"/>'+
+ '<path d="M74 102 C74 60 80 34 100 20 C120 34 126 60 126 102 Z" fill="#cfc7bb"/>'+
+ '<path d="M74 102 C74 60 80 34 100 20 C110 34 113 60 113 102 Z" fill="#dcd5c9"/>'+
+ '<g stroke="#b3aa9a" stroke-width="1"><path d="M76 92 h48"/><path d="M77 82 h46"/><path d="M79 72 h42"/><path d="M82 62 h36"/><path d="M85 52 h30"/><path d="M89 42 h22"/><path d="M93 32 h14"/></g>'+
+ '<rect x="90" y="56" width="20" height="18" fill="#6b6055"/>'+
+ '<rect x="82" y="16" width="36" height="5" fill="#b3aa9a"/><rect x="86" y="11" width="28" height="5" fill="#c3bcae"/>'+
+ '<circle cx="164" cy="26" r="9" fill="#f0e2a8"/><circle cx="176" cy="18" r="2" fill="#fff"/><circle cx="150" cy="16" r="2" fill="#fff"/>',
+
+jongmyo: SKY+GND+
+ '<rect x="8" y="94" width="184" height="10" fill="#c3bcae"/><rect x="14" y="86" width="172" height="9" fill="#d8d2c6"/>'+
+ '<g fill="#8b4a2f"><rect x="22" y="62" width="7" height="25"/><rect x="42" y="62" width="7" height="25"/>'+
+ '<rect x="62" y="62" width="7" height="25"/><rect x="82" y="62" width="7" height="25"/><rect x="102" y="62" width="7" height="25"/>'+
+ '<rect x="122" y="62" width="7" height="25"/><rect x="142" y="62" width="7" height="25"/><rect x="162" y="62" width="7" height="25"/></g>'+
+ '<rect x="16" y="57" width="168" height="6" fill="#2f6b8f"/>'+
+ '<path d="M4 58 L28 40 L172 40 L196 58 Z" fill="#6f2f2b"/><path d="M4 58 Q100 50 196 58" fill="none" stroke="#4d1d1a" stroke-width="2.5"/>'+
+ '<rect x="28" y="40" width="144" height="4" fill="#54211e"/>',
+
+sillok:
+ '<rect width="200" height="130" fill="#e9e0cd"/>'+
+ '<rect x="18" y="70" width="164" height="42" rx="4" fill="#8a5a32"/>'+
+ '<rect x="24" y="76" width="152" height="30" fill="#a9743f"/>'+
+ '<rect x="86" y="76" width="28" height="30" fill="#d5a63a"/><circle cx="100" cy="91" r="5" fill="#8a5a32"/>'+
+ '<g><rect x="34" y="34" width="44" height="34" rx="2" fill="#f3ecdd" stroke="#c2b699" stroke-width="1.5"/>'+
+ '<rect x="34" y="34" width="9" height="34" fill="#3d5d7a"/><text x="50" y="56" font-size="11" font-family="serif" fill="#3b2d1c">實錄</text></g>'+
+ '<g><rect x="84" y="26" width="44" height="42" rx="2" fill="#f7f1e4" stroke="#c2b699" stroke-width="1.5"/>'+
+ '<rect x="84" y="26" width="9" height="42" fill="#7a3b35"/><text x="100" y="50" font-size="11" font-family="serif" fill="#3b2d1c">朝鮮</text></g>'+
+ '<g><rect x="132" y="40" width="40" height="28" rx="2" fill="#f3ecdd" stroke="#c2b699" stroke-width="1.5"/>'+
+ '<rect x="132" y="40" width="8" height="28" fill="#4a6b4a"/></g>',
+
+namhansanseong:
+ SKY+'<path d="M0 104 L40 60 L78 88 L120 44 L164 82 L200 58 v46 Z" fill="#6f8f5e"/>'+
+ '<path d="M0 104 L40 60 L78 88 L120 44 L164 82 L200 58" fill="none" stroke="#55764a" stroke-width="2"/>'+
+ '<path d="M0 96 L40 52 L78 80 L120 36 L164 74 L200 50" fill="none" stroke="#cfc7bb" stroke-width="7" stroke-linejoin="round"/>'+
+ '<path d="M0 96 L40 52 L78 80 L120 36 L164 74 L200 50" fill="none" stroke="#b0a795" stroke-width="2" stroke-linejoin="round"/>'+
+ '<rect y="104" width="200" height="26" fill="#5c7a4e"/>'+
+ '<path d="M62 104 v-16 a14 14 0 0 1 28 0 v16 Z" fill="#3d2c1d"/>'+
+ '<rect x="56" y="64" width="40" height="12" fill="#c9885a"/><path d="M44 64 L62 52 L90 52 L108 64 Z" fill="#8f3a34"/>'+
+ '<g fill="#fff" opacity=".85"><circle cx="150" cy="24" r="4"/><circle cx="160" cy="20" r="6"/><circle cx="170" cy="25" r="5"/></g>',
+
+muryeong: SKY+
+ '<rect y="96" width="200" height="34" fill="#7f9a63"/>'+
+ '<path d="M32 98 a68 44 0 0 1 136 0 Z" fill="#6f8f5e"/>'+
+ '<path d="M32 98 a68 44 0 0 1 136 0 Z" fill="none" stroke="#587a48" stroke-width="2"/>'+
+ '<path d="M78 98 v-24 a22 22 0 0 1 44 0 v24 Z" fill="#7a5636"/>'+
+ '<path d="M84 98 v-22 a16 16 0 0 1 32 0 v22 Z" fill="#2f2318"/>'+
+ '<g fill="#95704a"><rect x="78" y="72" width="10" height="5"/><rect x="90" y="66" width="10" height="5"/>'+
+ '<rect x="102" y="66" width="10" height="5"/><rect x="112" y="72" width="10" height="5"/></g>'+
+ '<rect x="92" y="86" width="16" height="12" rx="2" fill="#d5a63a"/><text x="96" y="96" font-size="9" font-family="serif" fill="#5a4113">誌</text>',
+
+bangudae:
+ '<rect width="200" height="130" fill="#b9ae9c"/>'+
+ '<path d="M0 0 h200 v92 H0 Z" fill="#a89c88"/>'+
+ '<g fill="#6b5f4d"><path d="M0 6 q40 8 80 2 t120 4 v6 q-60 6-120 0 T0 14 Z" opacity=".4"/></g>'+
+ '<path d="M30 40 q22-14 44 0 q10 6 0 12 q-22 14-44 0 q-10-6 0-12 Z" fill="#4a4034"/>'+
+ '<path d="M30 46 l-12-8 v18 Z" fill="#4a4034"/><circle cx="64" cy="43" r="2" fill="#a89c88"/>'+
+ '<path d="M110 34 q18-12 36 0 q8 5 0 10 q-18 12-36 0 q-8-5 0-10 Z" fill="#4a4034"/>'+
+ '<path d="M110 39 l-10-7 v15 Z" fill="#4a4034"/>'+
+ '<g fill="#4a4034"><path d="M44 74 h4 v10 h-4 Z"/><path d="M56 74 h4 v10 h-4 Z"/><path d="M42 66 q10-8 20 0 v9 H42 Z"/>'+
+ '<path d="M62 68 l8-4 v4 Z"/><path d="M44 62 l-4-8 M50 61 l0-9 M56 62 l5-8" stroke="#4a4034" stroke-width="2" fill="none"/></g>'+
+ '<g fill="#4a4034"><circle cx="140" cy="70" r="5"/><rect x="136" y="74" width="8" height="12"/>'+
+ '<path d="M136 86 h3 v6 h-3 Z M141 86 h3 v6 h-3 Z"/><path d="M145 76 l12-6" stroke="#4a4034" stroke-width="2"/></g>'+
+ '<rect y="92" width="200" height="38" fill="#6f9fb8"/>'+
+ '<path d="M0 96 q25 6 50 0 t50 0 t50 0 t50 0" fill="none" stroke="#8fb8cc" stroke-width="3"/>'+
+ '<path d="M0 106 q25 6 50 0 t50 0 t50 0 t50 0" fill="none" stroke="#8fb8cc" stroke-width="3"/>',
+
+divinebell:
+ '<rect width="200" height="130" fill="#e7e2d6"/>'+
+ '<rect x="30" y="16" width="140" height="7" rx="3" fill="#7a5636"/>'+
+ '<rect x="34" y="10" width="10" height="14" fill="#5d4026"/><rect x="156" y="10" width="10" height="14" fill="#5d4026"/>'+
+ '<path d="M96 23 q4-8 8 0 q6 2 4 8 h-16 q-2-6 4-8 Z" fill="#7d7a5e"/>'+
+ '<path d="M74 40 q26-12 52 0 c10 26 12 46 10 62 H64 c-2-16 0-36 10-62 Z" fill="#8e8a6a"/>'+
+ '<path d="M74 40 q26-12 52 0 c6 16 9 30 9 42 H65 c0-12 3-26 9-42 Z" fill="#9d9877"/>'+
+ '<rect x="60" y="100" width="80" height="8" rx="3" fill="#7c785c"/>'+
+ '<g stroke="#6e6a50" stroke-width="1.5" fill="none"><path d="M68 62 h64"/><path d="M65 78 h70"/></g>'+
+ '<circle cx="100" cy="88" r="7" fill="none" stroke="#6e6a50" stroke-width="2"/><circle cx="100" cy="88" r="2.5" fill="#6e6a50"/>'+
+ '<path d="M78 50 q6-6 12 0 q-4 6-6 12 q-4-6-6-12 Z" fill="#cfc9a6" opacity=".8"/>'+
+ '<path d="M110 50 q6-6 12 0 q-4 6-6 12 q-4-6-6-12 Z" fill="#cfc9a6" opacity=".8"/>'+
+ '<g stroke="#b7b195" stroke-width="2" fill="none" opacity=".9"><path d="M150 60 q10 8 0 16"/><path d="M158 54 q16 14 0 28"/><path d="M50 60 q-10 8 0 16"/><path d="M42 54 q-16 14 0 28"/></g>',
+
+pansori:
+ '<rect width="200" height="130" fill="#f0e3cd"/><rect y="100" width="200" height="30" fill="#c9a46f"/>'+
+ '<g><ellipse cx="72" cy="100" rx="22" ry="5" fill="#a9803f" opacity=".4"/>'+
+ '<path d="M60 100 v-32 q12-8 24 0 v32 Z" fill="#3d5d7a"/>'+
+ '<circle cx="72" cy="58" r="11" fill="#f2d3ab"/><path d="M61 56 q11-14 22 0 q-4-10-11-10 t-11 10 Z" fill="#2b2118"/>'+
+ '<path d="M84 74 l22-16 q4 10-2 16 Z" fill="#e8e0cf" stroke="#b0a48c" stroke-width="1"/>'+
+ '<path d="M60 76 l-10 12" stroke="#f2d3ab" stroke-width="6" stroke-linecap="round"/></g>'+
+ '<g><ellipse cx="140" cy="100" rx="20" ry="5" fill="#a9803f" opacity=".4"/>'+
+ '<path d="M128 100 v-24 q12-7 24 0 v24 Z" fill="#7a3b35"/>'+
+ '<circle cx="140" cy="66" r="10" fill="#f2d3ab"/><path d="M130 64 q10-13 20 0 q-3-9-10-9 t-10 9 Z" fill="#2b2118"/>'+
+ '<ellipse cx="122" cy="88" rx="14" ry="16" fill="#c96a3a"/><ellipse cx="122" cy="88" rx="9" ry="12" fill="#f0e0c8"/>'+
+ '<path d="M150 82 l12-10" stroke="#f2d3ab" stroke-width="5" stroke-linecap="round"/>'+
+ '<rect x="158" y="66" width="4" height="14" rx="2" fill="#8a5a32"/></g>'+
+ '<g fill="none" stroke="#b4342c" stroke-width="2" opacity=".55"><path d="M92 40 q8-8 16 0"/><path d="M86 32 q14-14 28 0"/></g>',
+
+ganggang:
+ '<rect width="200" height="130" fill="#2f3f66"/><rect y="100" width="200" height="30" fill="#263454"/>'+
+ '<circle cx="100" cy="36" r="22" fill="#f4ecc0"/><circle cx="93" cy="30" r="4" fill="#e6dcaa"/><circle cx="106" cy="42" r="3" fill="#e6dcaa"/>'+
+ '<ellipse cx="100" cy="98" rx="76" ry="20" fill="none" stroke="#4a5c85" stroke-width="2"/>'+
+ '<g fill="#f0e2c8"><g><circle cx="34" cy="88" r="6"/><path d="M28 95 h12 v16 h-12 Z" fill="#d97b6c"/></g>'+
+ '<g><circle cx="72" cy="82" r="6"/><path d="M66 89 h12 v16 h-12 Z" fill="#e8c46a"/></g>'+
+ '<g><circle cx="128" cy="82" r="6"/><path d="M122 89 h12 v16 h-12 Z" fill="#7fb08a"/></g>'+
+ '<g><circle cx="166" cy="88" r="6"/><path d="M160 95 h12 v16 h-12 Z" fill="#8fa6d4"/></g>'+
+ '<g><circle cx="100" cy="76" r="6"/><path d="M94 83 h12 v16 h-12 Z" fill="#d99ec0"/></g></g>'+
+ '<g stroke="#f0e2c8" stroke-width="2.5" stroke-linecap="round">'+
+ '<path d="M40 96 L66 90"/><path d="M78 86 L94 82"/><path d="M106 82 L122 86"/><path d="M134 90 L160 96"/></g>',
+
+kimjang:
+ '<rect width="200" height="130" fill="#f2e8d5"/><rect y="98" width="200" height="32" fill="#d8c7a4"/>'+
+ '<ellipse cx="58" cy="92" rx="42" ry="12" fill="#9aa6b0"/><path d="M16 90 a42 12 0 0 0 84 0 v-12 a42 12 0 0 1-84 0 Z" fill="#b6c0c8"/>'+
+ '<g fill="#c9452f"><ellipse cx="44" cy="82" rx="14" ry="9"/><ellipse cx="70" cy="84" rx="13" ry="8"/><ellipse cx="57" cy="76" rx="12" ry="7"/></g>'+
+ '<g fill="#e06a4a" opacity=".8"><circle cx="40" cy="79" r="2"/><circle cx="62" cy="80" r="2"/><circle cx="74" cy="86" r="2"/></g>'+
+ '<g><path d="M120 96 q-4-30 8-42 q10 10 8 42 Z" fill="#8fbf6a"/>'+
+ '<path d="M128 96 q-3-30 6-42 q8 12 6 42 Z" fill="#c8dd9e"/>'+
+ '<path d="M132 96 q0-30 10-40 q6 14 2 40 Z" fill="#eef2d8"/></g>'+
+ '<g><path d="M158 96 q-3-24 7-34 q8 10 6 34 Z" fill="#8fbf6a"/><path d="M164 96 q-1-24 6-34 q6 12 3 34 Z" fill="#eef2d8"/></g>'+
+ '<path d="M150 98 a34 8 0 0 0 44 0 v-2 H150 Z" fill="#a08a63"/>'+
+ '<g stroke="#8a7550" stroke-width="2" fill="none"><path d="M104 100 h92"/></g>',
+
+jeju:
+ '<rect width="200" height="130" fill="#cfe4ef"/>'+
+ '<path d="M0 78 L46 34 L92 78 Z" fill="#6f8f5e"/><path d="M30 52 L46 34 L62 52 Z" fill="#8faa79"/>'+
+ '<ellipse cx="46" cy="36" rx="9" ry="4" fill="#4f7fa0"/>'+
+ '<path d="M120 78 q6-30 24-32 q20 2 24 32 Z" fill="#7d9a68"/>'+
+ '<path d="M124 50 q8-6 16 0 q8-6 16 0 q8-6 12 4 q-30 6-58 0 q4-10 14-4 Z" fill="#9ab785"/>'+
+ '<rect y="78" width="200" height="52" fill="#4f7fa0"/>'+
+ '<path d="M0 84 q25 6 50 0 t50 0 t50 0 t50 0" fill="none" stroke="#7fb0c9" stroke-width="3"/>'+
+ '<path d="M0 96 q25 6 50 0 t50 0 t50 0 t50 0" fill="none" stroke="#7fb0c9" stroke-width="3"/>'+
+ '<path d="M28 130 v-24 a22 14 0 0 1 44 0 v24 Z" fill="#3b3229"/>'+
+ '<path d="M36 130 v-18 a14 10 0 0 1 28 0 v18 Z" fill="#241d17"/>'+
+ '<g fill="#5a4f42"><path d="M44 112 l4 8 h-8 Z"/><path d="M56 114 l3 6 h-6 Z"/></g>'+
+ '<circle cx="176" cy="22" r="11" fill="#f7dd8a"/>',
+
+getbol:
+ '<rect width="200" height="130" fill="#cfe0ea"/><rect y="46" width="200" height="84" fill="#a89376"/>'+
+ '<path d="M0 46 h200 v10 H0 Z" fill="#7fa8c0"/>'+
+ '<g fill="none" stroke="#8d7a5f" stroke-width="3"><path d="M100 130 q-6-30 -34-44"/><path d="M100 130 q6-30 34-44"/>'+
+ '<path d="M100 130 v-46"/><path d="M78 100 q-16-6 -26-16"/><path d="M122 100 q16-6 26-16"/></g>'+
+ '<g fill="#9c8768"><ellipse cx="60" cy="112" rx="11" ry="8"/>'+
+ '<path d="M50 108 l-8-5 M70 108 l8-5 M52 118 l-8 5 M68 118 l8 5" stroke="#9c8768" stroke-width="2.5"/>'+
+ '<path d="M52 104 l-4-6 M68 104 l4-6" stroke="#9c8768" stroke-width="2.5"/>'+
+ '<circle cx="56" cy="109" r="1.6" fill="#4a3f2f"/><circle cx="64" cy="109" r="1.6" fill="#4a3f2f"/></g>'+
+ '<g fill="#f4f1ea"><ellipse cx="146" cy="98" rx="13" ry="6"/><circle cx="158" cy="93" r="4.5"/>'+
+ '<path d="M162 92 l9-2 -8 4 Z" fill="#e0a23c"/><path d="M140 104 v8 M148 104 v8" stroke="#e0a23c" stroke-width="1.6"/>'+
+ '<path d="M136 96 q10-8 20-2" fill="none" stroke="#cfcabf" stroke-width="1.5"/></g>'+
+ '<g fill="#6b6255" opacity=".7"><circle cx="96" cy="86" r="2"/><circle cx="112" cy="94" r="2"/><circle cx="86" cy="104" r="2"/></g>'+
+ '<g fill="#f4f1ea" opacity=".9"><path d="M28 22 l6-4 -2 5 8-1 -9 4 Z"/><path d="M52 14 l6-4 -2 5 8-1 -9 4 Z"/></g>',
+
+jindodog:
+ '<rect width="200" height="130" fill="#e6efdc"/><rect y="102" width="200" height="28" fill="#a8bd8e"/>'+
+ '<path d="M56 100 q-4-34 22-40 q28-6 44 10 q10 10 8 30 Z" fill="#d9a45c"/>'+
+ '<path d="M56 100 q-2-24 16-32 q10 24 6 32 Z" fill="#e8bd7e"/>'+
+ '<path d="M122 70 q22-2 30-18 q6 20-8 30 q-12 8-22 2 Z" fill="#d9a45c"/>'+
+ '<circle cx="140" cy="52" r="18" fill="#e0ac66"/>'+
+ '<path d="M126 42 l-4-16 14 8 Z" fill="#c98f45"/><path d="M154 42 l6-16 -14 8 Z" fill="#c98f45"/>'+
+ '<path d="M128 44 l-2-11 9 6 Z" fill="#f0cfa0"/><path d="M152 44 l4-11 -9 6 Z" fill="#f0cfa0"/>'+
+ '<path d="M140 46 q14 2 18 10 q-8 8-18 6 Z" fill="#f0d3a8"/>'+
+ '<ellipse cx="158" cy="55" rx="4" ry="3.4" fill="#3b2f22"/>'+
+ '<circle cx="146" cy="48" r="2.4" fill="#3b2f22"/><circle cx="133" cy="48" r="2.4" fill="#3b2f22"/>'+
+ '<path d="M150 60 q6 3 10 0" fill="none" stroke="#8a6335" stroke-width="1.6"/>'+
+ '<g fill="#d9a45c"><rect x="62" y="94" width="9" height="16" rx="4"/><rect x="78" y="96" width="9" height="14" rx="4"/>'+
+ '<rect x="104" y="94" width="9" height="16" rx="4"/><rect x="118" y="96" width="9" height="14" rx="4"/></g>'+
+ '<path d="M58 66 q-16-10 -10-24 q10 4 12 16 q2 10-2 8 Z" fill="#e8bd7e"/>'+
+ '<ellipse cx="100" cy="112" rx="52" ry="6" fill="#8fa87a" opacity=".5"/>',
+_default:'<rect width="200" height="130" fill="#e2dccf"/><text x="100" y="72" text-anchor="middle" font-size="42">🏯</text>'
+};
+
+/* 선생님이 넣은 실제 사진 (있으면 그림 대신 씁니다) — 실제 값은 아래 저장소 구역에서 채웁니다 */
+let PHOTOS = {};
+function artOf(h){
+  return PHOTOS[h.id]
+    ? `<img src="${PHOTOS[h.id]}" alt="${esc(h.easy)} 사진">`
+    : (ART[h.id] ? `<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">${ART[h.id]}</svg>` : ART._default);
+}
+const kindOf = h => PHOTOS[h.id] ? "📷 사진" : "🎨 그림";
+
+/* =========================================================
+   태그 정의
+   ========================================================= */
+const T1 = ["🏛️ 문화유산","🌿 자연유산","🎭 무형유산"];
+const T2 = ["🏰 큰 건물·터","📜 글·그림·책","🗿 돌·금속 물건","🌳 나무·동물·지형","🎶 노래·춤·기술"];
+const T3 = ["⚔️ 나라를 지키는 곳","👑 왕과 궁궐 이야기","🌾 백성들의 생활","🎨 예술과 신앙"];
+const T0 = ["국보","보물","사적","국가무형유산","천연기념물","습지보호지역"];
+
+/* =========================================================
+   미션
+   ========================================================= */
+const MISSIONS = [
+  {t:"이름 없는 사람들을 찾아라",e:"🔍",lv:"필수",
+   d:"유산 하나를 골라 ‘기록에 없어 알 수 없는 것’ 칸을 읽어 보세요. 그 일을 실제로 한 사람은 누구였을까요? 그 사람의 하루를 세 문장으로 상상해 써 보세요.",
+   h:"돌을 나르고 밥을 짓고 나무를 벤 사람들의 이름은 대부분 남아 있지 않아요. ‘없다’가 아니라 ‘적히지 않았다’입니다. 상상해서 쓴 것과 기록에 있는 것을 꼭 구분해 표시하세요."},
+  {t:"두 사람의 말이 달라요",e:"⚖️",lv:"필수",
+   d:"찬반이 갈린 유산을 골라, 찬성한 사람의 말과 걱정한 사람의 말을 각각 한 줄씩 옮겨 적으세요. 그리고 나는 누구 편인지, 왜 그런지 쓰세요.",
+   h:"남한산성, 경복궁, 반구천의 암각화를 먼저 보세요. 한쪽이 무조건 나쁜 경우는 거의 없습니다.",
+   go:{k:"persp"}},
+  {t:"가장 오래된 것과 가장 최근 것",e:"⏳",lv:"쉬움",
+   d:"만들어진 연도를 비교해서 가장 오래된 유산과 가장 최근에 만들어진 유산을 찾고, 몇 년 차이인지 계산해 보세요.",
+   h:"카드에 적힌 시대를 보세요. ‘신석기’처럼 연도가 정확하지 않은 것도 있는데, 왜 정확하지 않은지도 생각해 보세요."},
+  {t:"세계가 함께 지키는 우리 유산",e:"🌍",lv:"쉬움",
+   d:"유네스코에 오른 유산만 골라 개수를 세어 보세요. 그리고 이 유산들의 공통점을 한 가지 찾아 쓰세요.",
+   h:"‘더 자세히 나누어 보기’를 열면 유네스코 조건을 켤 수 있어요.",
+   go:{k:"unesco"}},
+  {t:"나라를 지킨 곳들",e:"🛡️",lv:"보통",
+   d:"‘나라를 지키는 곳’ 세부 분류가 붙은 유산을 모두 찾아, 각각 어떤 적을 막으려 했는지 표로 정리해 보세요.",
+   h:"막으려던 상대가 서로 다릅니다. 같은 ‘성’이라도 왜 다른 곳에 지었는지 지도를 함께 보면 좋아요.",
+   go:{k:"use",v:"⚔️ 나라를 지키는 곳"}},
+  {t:"전쟁을 겪은 유산",e:"💥",lv:"보통",
+   d:"‘겪은 사건’에 전쟁이 나오는 유산을 모두 찾아 보세요. 전쟁 뒤에 그 유산은 어떻게 되었나요? (그대로 / 불탐 / 다시 지음 / 사라짐)",
+   h:"검색창에 낱말을 띄어쓰기로 여러 개 넣으면 그중 하나만 있어도 찾아 줍니다. 다시 지은 것과 못 지은 것의 차이도 생각해 보세요.",
+   go:{k:"q",v:"전쟁 왜란 호란 몽골"}},
+  {t:"어려운 말 사냥꾼",e:"📖",lv:"쉬움",
+   d:"어휘 사전에서 처음 보는 낱말 세 개를 고르고, 사전 뜻을 보지 않고 내 말로 다시 설명해 보세요.",
+   h:"설명이 막히면 아직 이해한 게 아니에요. 친구에게 말로 설명해 보면 금방 알 수 있습니다."},
+  {t:"같은 형태, 다른 쓰임",e:"🔀",lv:"보통",
+   d:"형태가 같은 유산 두 개를 골라(예: 큰 건물·터) 쓰임이 어떻게 다른지 비교해 보세요. 왜 다르게 쓰였을까요?",
+   h:"수원 화성과 종묘는 둘 다 큰 건물이지만 만든 목적이 완전히 다릅니다."},
+  {t:"내가 만든 질문",e:"❓",lv:"어려움",hard:1,
+   d:"아무 유산이나 하나 골라, <b>이 사이트에 답이 없는 질문</b> 세 개를 만들어 보세요. 그리고 어디서 답을 찾을 수 있을지 적으세요.",
+   h:"좋은 질문은 ‘몇 년에 지었나요?’가 아니라 ‘왜 하필 그때 지었을까?’입니다. 답을 찾을 곳도 함께 적어야 미션 완료예요."},
+  {t:"출처까지 따라가기",e:"🔗",lv:"어려움",hard:1,
+   d:"유산 하나를 골라 맨 아래 국가유산포털 링크를 열고, 이 사이트의 설명과 원래 설명을 비교해 보세요. 빠진 내용이 있나요?",
+   h:"쉽게 옮기면서 사라진 정보가 반드시 있습니다. 무엇이 사라졌는지 찾아내는 것이 이 미션의 목표예요."}
+];
+
+/* =========================================================
+   보고서 문구 (학년별)
+   ========================================================= */
+const LABELS = {
+  high:{
+    lead:"칸을 채우면 오른쪽에 보고서 한 장이 완성됩니다. <b>자료 불러오기</b>를 누르면 초안이 채워지는데, 그대로 두지 말고 꼭 <b>내 말로 고쳐 쓰세요.</b>",
+    l1:"1. 언제, 왜 만들었나요?", l2:"2. 어떤 일을 겪었나요?", l3:"3. 지금은 어떤 모습인가요?",
+    l4:"4. 그때 사람들의 생각은 서로 달랐어요",
+    l4a:"4-1. 찬성·추진한 사람의 말", l4b:"4-2. 부담·걱정한 사람의 말",
+    s4a:"👍 찬성·추진", s4b:"😟 부담·걱정",
+    l5:"5. 기록에 없어 알 수 없는 것 ★",
+    h5:"이 칸이 이 보고서에서 가장 중요합니다. 모르는 것을 아는 척하지 않는 것도 조사 능력이에요.",
+    l6:"6. 새로 알게 된 점과 내 생각 (직접 쓰기)"
+  },
+  low:{
+    lead:"칸을 채우면 오른쪽에 보고서 한 장이 만들어져요. <b>자료 불러오기</b>를 누르면 글이 채워지는데, 그대로 두지 말고 <b>내 말로 바꿔 써 보세요.</b>",
+    l1:"1. 언제, 왜 만들었나요?", l2:"2. 어떤 일이 있었나요?", l3:"3. 지금은 어떤 모습인가요?",
+    l4:"4. 그때 사람들의 생각은 서로 달랐어요",
+    l4a:"4-1. 좋아한 사람은 뭐라고 했나요?", l4b:"4-2. 힘들어한 사람은 뭐라고 했나요?",
+    s4a:"👍 좋아한 사람", s4b:"😟 힘들어한 사람",
+    l5:"5. 기록이 없어서 모르는 것 ★",
+    h5:"이 칸이 가장 중요해요. 모르는 것을 아는 척하지 않는 것도 아주 훌륭한 공부예요.",
+    l6:"6. 새로 알게 된 것과 내 생각 (내가 직접 쓰기)"
+  }
+};
+
+/* =========================================================
+   상태 / 저장소
+   ========================================================= */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const bare = t => String(t).replace(/^\S+\s+/,"");        // 이모지 떼기
+const K = {user:"he-user", tok:"he-token", unl:"he-unlocked", rep:"he-report", sub:"he-submits", quiz:"he-quiz", std:"he-studied", pho:"he-photos"};
+const ls = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+const FRESH_QUIZ = ()=>({asked:0,right:0,streak:0,best:0,wrong:0,locked:false});
+let USER   = ls.get(K.user,null);            // {level, grade, cls, no, name}
+let TOKENS = ls.get(K.tok,0);
+let UNLOCK = new Set(ls.get(K.unl,[]));
+let QUIZ   = Object.assign(FRESH_QUIZ(), ls.get(K.quiz,{}));
+let STUDIED= new Set(ls.get(K.std,[]));
+PHOTOS = ls.get(K.pho,{});
+let teacherMode = false;
+const START_TOKENS = 0, COST = 3, REWARD = 2;
+const MISS_LIMIT = 3, NEED_STUDY = 5;        // 연속 3오답 -> 사전에서 낱말 5개 공부
+
+const lvl = () => (USER && USER.level==="low") ? "low" : "high";
+const L   = () => LABELS[lvl()];
+
+const state = {q:"", f0:new Set(), f1:new Set(), f2:new Set(), f3:new Set(), extra:new Set()};
+
+/* =========================================================
+   시작 창
+   ========================================================= */
+let gateLevel = null;
+$$(".lvpick button").forEach(b=>b.onclick=()=>{
+  gateLevel=b.dataset.lv;
+  $$(".lvpick button").forEach(x=>x.classList.toggle("on",x===b));
+  const g=$("#g_grade"), opts = gateLevel==="low"?[3,4]:[5,6];
+  g.innerHTML = opts.map(n=>`<option value="${n}">${n}학년</option>`).join("");
+  $("#gateMsg").textContent="";
+});
+$("#gateGo").onclick = ()=>{
+  const msg=$("#gateMsg");
+  if(!gateLevel){ msg.textContent="먼저 몇 학년인지 골라 주세요."; return; }
+  const name=$("#g_name").value.trim();
+  if(!name){ msg.textContent="이름을 써 주세요."; $("#g_name").focus(); return; }
+  const cls=parseInt($("#g_class").value,10), no=parseInt($("#g_no").value,10);
+  if(!cls){ msg.textContent="반을 숫자로 써 주세요."; $("#g_class").focus(); return; }
+  if(!no){ msg.textContent="번호를 숫자로 써 주세요."; $("#g_no").focus(); return; }
+  const fresh = !USER || USER.level!==gateLevel;
+  USER = {level:gateLevel, grade:parseInt($("#g_grade").value,10), cls, no, name};
+  ls.set(K.user,USER);
+  if(fresh){ QUIZ=FRESH_QUIZ(); ls.set(K.quiz,QUIZ); STUDIED=new Set(); ls.set(K.std,[]); }
+  $("#gate").classList.remove("on");
+  document.body.style.overflow="";
+  applyLevel();
+};
+function openGate(){
+  if(USER){
+    gateLevel=USER.level;
+    $$(".lvpick button").forEach(x=>x.classList.toggle("on",x.dataset.lv===gateLevel));
+    const g=$("#g_grade"), opts = gateLevel==="low"?[3,4]:[5,6];
+    g.innerHTML = opts.map(n=>`<option value="${n}">${n}학년</option>`).join("");
+    g.value=USER.grade; $("#g_class").value=USER.cls; $("#g_no").value=USER.no; $("#g_name").value=USER.name;
+  }
+  $("#gateMsg").textContent="";
+  $("#gate").classList.add("on");
+  document.body.style.overflow="hidden";
+}
+
+/* =========================================================
+   학년 반영
+   ========================================================= */
+function applyLevel(){
+  const low = lvl()==="low";
+  document.body.classList.toggle("low",low);
+  $("#hsub").textContent = low
+    ? "3~4학년 탐험대 — 어려운 말은 손을 올리면 쉬운 뜻이 나와요"
+    : "5~6학년 탐험대 — 어려운 말은 손을 올리면 뜻이 바로 나옵니다";
+  $("#browseLead").innerHTML = low
+    ? "먼저 <b>교과서에서 배우는 세 가지 분류</b>에서 골라 보세요. 자세한 정보를 열려면 탐험 토큰 3개가 필요해요. 토큰은 <b>어휘 탐험</b>에서 모을 수 있어요."
+    : "먼저 <b>교과서에서 배우는 세 가지 분류</b>로 좁혀 보세요. 더 잘게 나눈 세부 분류는 아래에서 펼칠 수 있습니다. 자세한 정보를 열려면 탐험 토큰 3개가 필요하고, 토큰은 <b>어휘 탐험</b>에서 문제를 맞혀 모읍니다.";
+  $("#reportLead").innerHTML = L().lead;
+  ["l1","l2","l3","l5","l6"].forEach(k=>{ $("#L"+k[1].toUpperCase()) });
+  $("#L1").textContent=L().l1; $("#L2").textContent=L().l2; $("#L3").textContent=L().l3;
+  $("#L4a").textContent=L().l4a; $("#L4b").textContent=L().l4b;
+  $("#L5").textContent=L().l5;  $("#H5").textContent=L().h5; $("#L6").textContent=L().l6;
+  $("#s_l1").textContent=L().l1; $("#s_l2").textContent=L().l2; $("#s_l3").textContent=L().l3;
+  $("#s_l4").textContent=L().l4; $("#s_l4a").textContent=L().s4a; $("#s_l4b").textContent=L().s4b;
+  $("#s_l5").textContent=L().l5; $("#s_l6").textContent=L().l6;
+  rebuildTerms(); renderWho(); renderMissions(); renderDict($("#dq").value.trim());
+  render(); refreshPicker(); newQuestion(); syncReport(); updateChecklist();
+}
+function renderWho(){
+  const w=$("#whoami");
+  if(!USER){ w.innerHTML=""; return; }
+  w.innerHTML = `<span>${esc(USER.grade)}학년 ${esc(USER.cls)}반 ${esc(USER.no)}번 ${esc(USER.name)}</span>
+    <span class="tok">🪙 ${teacherMode?"∞":TOKENS}</span>
+    <button id="reWho">정보 바꾸기</button>`;
+  $("#reWho").onclick = openGate;
+  $("#whoLine").textContent = `${USER.grade}학년 ${USER.cls}반 ${USER.no}번 ${USER.name}`;
+  $("#tokBig").textContent = teacherMode ? "∞" : TOKENS;
+  const rate = QUIZ.asked ? Math.round(QUIZ.right/QUIZ.asked*100) : 0;
+  $("#tokStat").innerHTML = `푼 문제 ${QUIZ.asked}개 · 맞힌 문제 ${QUIZ.right}개 (${rate}%)<br>
+    연속 정답 ${QUIZ.streak} (최고 ${QUIZ.best}) · 연 유산 ${UNLOCK.size}/${HERITAGE.length}<br>
+    ${QUIZ.locked&&!teacherMode ? "📕 잠김 — 어휘 사전에서 공부하고 오세요"
+      : `연속 오답 ${QUIZ.wrong||0} / ${MISS_LIMIT} (${MISS_LIMIT}개면 잠겨요)`}`;
+}
+function setTokens(n){ TOKENS=Math.max(0,n); ls.set(K.tok,TOKENS); renderWho(); }
+
+/* =========================================================
+   화면 전환
+   ========================================================= */
+function show(v){
+  $$("nav button").forEach(b=>b.classList.toggle("on", b.dataset.v===v));
+  $$(".view").forEach(s=>s.classList.toggle("on", s.id==="v-"+v));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$$("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+$("#toDict").onclick = ()=>show("dict");
+
+/* =========================================================
+   필터
+   ========================================================= */
+function buildChips(el,list,key,cls){
+  el.innerHTML="";
+  list.forEach(t=>{
+    const b=document.createElement("button");
+    b.className="chip "+(cls||""); b.textContent=t; b.dataset.v=t;
+    b.onclick=()=>{
+      state[key].has(t) ? state[key].delete(t) : state[key].add(t);
+      b.classList.toggle("on"); render();
+    };
+    el.appendChild(b);
+  });
+}
+buildChips($("#f1"),T1,"f1","c1");
+buildChips($("#f0"),T0,"f0");
+buildChips($("#f2"),T2,"f2");
+buildChips($("#f3"),T3,"f3");
+buildChips($("#f4"),["🌍 유네스코에 오른 유산","⚖️ 생각이 크게 갈렸던 유산"],"extra");
+$("#subToggle").onclick = ()=>{
+  const b=$("#subBody"); b.classList.toggle("on");
+  $("#subToggle").textContent = (b.classList.contains("on")?"▾":"▸")+" 더 자세히 나누어 보기 (세부 분류)";
+};
+$("#q").oninput = e => { state.q = e.target.value.trim(); render(); };
+$("#resetBtn").onclick = () => {
+  state.q=""; $("#q").value="";
+  ["f0","f1","f2","f3","extra"].forEach(k=>state[k].clear());
+  $$(".chip").forEach(c=>c.classList.remove("on"));
+  render();
+};
+
+const one = h => lvl()==="low" ? (h.one34||h.one) : h.one;
+const purposeOf = h => lvl()==="low" ? (h.purpose34||h.purpose) : h.purpose;
+function haystack(h){
+  return [h.name,h.easy,h.era,h.one,h.one34,purposeOf(h),h.now,h.desig,h.unesco,
+          ...h.t1,...h.t2,...h.t3,...(h.jong||[]),
+          ...h.events.map(e=>e.y+" "+e.t),...h.pro,...h.con,...h.unknown].join(" ");
+}
+function match(h){
+  if(state.q){
+    const hay=haystack(h);
+    if(!state.q.split(/\s+/).filter(Boolean).some(w=>hay.includes(w))) return false;
+  }
+  for(const t of state.f1) if(!h.t1.includes(t)) return false;
+  for(const t of state.f2) if(!h.t2.includes(t)) return false;
+  for(const t of state.f3) if(!h.t3.includes(t)) return false;
+  for(const t of state.f0) if(!(h.jong||[]).includes(t)) return false;
+  if(state.extra.has("🌍 유네스코에 오른 유산") && !h.unesco) return false;
+  if(state.extra.has("⚖️ 생각이 크게 갈렸던 유산") && !h.hot) return false;
+  return true;
+}
+const isOpen = id => teacherMode || UNLOCK.has(id);
+
+function render(){
+  const list = HERITAGE.filter(match);
+  $("#cnt").textContent = list.length;
+  const g=$("#grid");
+  if(!list.length){
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1">조건에 맞는 유산이 없어요.<br>조건을 하나씩 꺼 보세요.</div>';
+    return;
+  }
+  g.innerHTML = list.map(h=>{
+    const top = bare(h.t1[0]);
+    const subs = [...(h.jong||[]),...h.t2.map(bare),...h.t3.map(bare)];
+    const open = isOpen(h.id);
+    return `<button class="card${open?"":" locked"}" data-id="${h.id}">
+      <span class="thumb">${artOf(h)}<i class="kind">${kindOf(h)}</i></span>
+      <span class="bigtag">${esc(h.t1[0])}</span>
+      <span class="era">${esc(h.era)}</span>
+      <h3>${esc(h.easy)}</h3>
+      <p class="oneline">${esc(one(h))}</p>
+      <span class="subtags">세부 분류 — <b>${esc(top)}</b> 중 ${subs.map(s=>`‘${esc(s)}’`).join(" · ")}</span>
+      <span class="lockrow ${open?"op":"lk"}">${open?"🔓 정보를 열어 두었어요":"🔒 열려면 탐험 토큰 "+COST+"개"}</span>
+    </button>`;
+  }).join("");
+  g.querySelectorAll(".card").forEach(c=>c.onclick=()=>tryOpen(c.dataset.id));
+}
+
+/* =========================================================
+   토큰으로 정보 열기
+   ========================================================= */
+function tryOpen(id){
+  const h=HERITAGE.find(x=>x.id===id); if(!h) return;
+  if(isOpen(id)){ openDetail(id); return; }
+  if(TOKENS < COST){
+    if(confirm(`탐험 토큰이 ${COST}개 필요한데 지금 ${TOKENS}개예요.\n어휘 탐험에서 문제를 풀면 토큰을 모을 수 있어요.\n\n어휘 탐험으로 갈까요?`)) show("quest");
+    return;
+  }
+  if(!confirm(`‘${h.easy}’의 자세한 정보를 열까요?\n\n탐험 토큰 ${COST}개를 씁니다. (지금 ${TOKENS}개 → ${TOKENS-COST}개)\n한 번 열면 계속 볼 수 있어요.`)) return;
+  setTokens(TOKENS-COST);
+  UNLOCK.add(id); ls.set(K.unl,[...UNLOCK]);
+  render(); refreshPicker(); openDetail(id);
+}
+
+/* =========================================================
+   상세
+   ========================================================= */
+function openDetail(id){
+  const h=HERITAGE.find(x=>x.id===id); if(!h) return;
+  $("#m_name").textContent = h.easy;
+  $("#m_sub").textContent  = h.name + " · " + h.era;
+  const top = bare(h.t1[0]);
+  const line = (label,val) => `<li><b>${esc(top)}</b> 중 ‘${esc(val)}’ <span style="color:var(--ink2)">— ${esc(label)}</span></li>`;
+
+  $("#m_body").innerHTML = `
+    <div class="bigart">${artOf(h)}<i class="kind">${kindOf(h)}</i>
+      <span class="cap">${esc(h.easy)}</span>
+      ${teacherMode?`<button class="phbtn" id="phSet">📷 실제 사진으로 바꾸기</button>`:""}
+      ${(teacherMode&&PHOTOS[h.id])?`<button class="phbtn del" id="phDel">↺ 그림으로 되돌리기</button>`:""}
+    </div>
+    ${PHOTOS[h.id]?"":`<p class="artnote">위 그림은 유산의 생김새를 알아보기 쉽게 <b>직접 그린 그림</b>이에요. 실제 사진은 아래 <b>국가유산포털</b> 링크에서 볼 수 있어요.</p>`}
+
+    <div class="missionbox"><h4>🕵️ 이 유산의 탐정 미션</h4><p>${esc(h.mission)}</p></div>
+
+    <div class="blk">
+      <h4>🏷️ 어떤 분류에 들어가나요?</h4>
+      <div class="classbox">
+        <div class="main">📚 교과서에서 배우는 분류 — ${esc(h.t1[0])}</div>
+        <ul>
+          ${(h.jong||[]).map(j=>line("나라가 정한 종목",j)).join("")}
+          ${h.t2.map(t=>line("유산의 형태",bare(t))).join("")}
+          ${h.t3.map(t=>line("유산의 쓰임",bare(t))).join("")}
+        </ul>
+        <p class="cnote">위 목록은 모두 <b>‘${esc(top)}’ 안에서 더 잘게 나눈 세부 분류</b>예요. 큰 분류 세 가지(문화유산·자연유산·무형유산)만 먼저 알아도 괜찮아요.</p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h4>📌 기본 정보</h4>
+      <dl class="kv">
+        <dt>정식 이름</dt><dd>${esc(h.name)}</dd>
+        <dt>만든 시기</dt><dd>${esc(h.era)}${h.year?` (${esc(h.year)})`:""}</dd>
+        <dt>있는 곳</dt><dd>${esc(h.where)}</dd>
+      </dl>
+    </div>
+
+    <div class="blk"><h4>🎯 왜 만들었나요? 무엇에 썼나요?</h4><p>${esc(purposeOf(h))}</p></div>
+
+    <div class="blk">
+      <h4>📅 겪은 사건</h4>
+      <ul class="tl">${h.events.map(e=>`<li><span class="yr">${esc(e.y)}</span><span>${esc(e.t)}</span></li>`).join("")}</ul>
+    </div>
+
+    <div class="blk">
+      <h4>🔎 지금은 어떤 모습인가요?</h4>
+      <p>${esc(h.now)}</p>
+      <dl class="kv" style="margin-top:10px">
+        <dt>지정 현황</dt><dd>${esc(h.desig)}${h.desigDate?` (지정 ${esc(h.desigDate)})`:""}</dd>
+        ${h.unesco?`<dt>유네스코</dt><dd>${esc(h.unesco)}</dd>`:""}
+      </dl>
+    </div>
+
+    ${(h.pro.length||h.con.length)?`
+    <div class="blk">
+      <h4>⚖️ 그때 사람들의 생각</h4>
+      <p style="font-size:13.5px;color:var(--ink2);margin-bottom:10px">아래 말은 실제 발언을 그대로 옮긴 것이 아니라, 기록에 남은 <b>입장을 쉽게 풀어 쓴 것</b>이에요.</p>
+      <div class="two">
+        <div class="side pro"><h5>${esc(L().s4a)}한 쪽</h5><ul>${h.pro.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div class="side con"><h5>${esc(L().s4b)}한 쪽</h5><ul>${h.con.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      </div>
+    </div>`:""}
+
+    <div class="blk unknown">
+      <h4>❓ ${esc(lvl()==="low"?"기록이 없어서 모르는 것":"기록에 없어 알 수 없는 것")}</h4>
+      <p style="font-size:13.5px;margin-bottom:9px">아래 내용은 <b>실제로 없었던 일이 아니라, 기록에 적히지 않아 알 수 없는 일</b>이에요.</p>
+      <ul>${h.unknown.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    </div>
+
+    <div class="blk">
+      <h4>📎 출처</h4>
+      <p class="src"><a href="${esc(h.srcUrl)}" target="_blank" rel="noopener">국가유산포털 (heritage.go.kr)</a>에서 <b>‘${esc(h.srcKey)}’</b>로 검색<br>확인한 날짜: 2026년 7월 28일</p>
+    </div>
+
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn primary" id="toRep">📝 이 유산으로 보고서 쓰기</button>
+    </div>`;
+
+  $("#toRep").onclick = ()=>{ closeModal(); show("report"); $("#r_pick").value=h.id; refreshPicker(); fillExample(); };
+  if($("#phSet")) $("#phSet").onclick = ()=>pickPhoto(h.id);
+  if($("#phDel")) $("#phDel").onclick = ()=>{
+    if(!confirm("이 유산의 사진을 지우고 원래 그림으로 되돌릴까요?")) return;
+    delete PHOTOS[h.id]; ls.set(K.pho,PHOTOS); render(); openDetail(h.id);
+  };
+  markTerms($("#m_body"));
+  $("#modal").classList.add("on");
+  document.body.style.overflow="hidden";
+}
+/* 선생님용: 실제 사진 넣기 (용량을 줄여 저장합니다) */
+function pickPhoto(id){
+  const inp=document.createElement("input");
+  inp.type="file"; inp.accept="image/*";
+  inp.onchange=()=>{
+    const f=inp.files&&inp.files[0]; if(!f) return;
+    const rd=new FileReader();
+    rd.onload=()=>{
+      const im=new Image();
+      im.onload=()=>{
+        const W=640, sc=Math.min(1,W/im.width);
+        const cv=document.createElement("canvas");
+        cv.width=Math.round(im.width*sc); cv.height=Math.round(im.height*sc);
+        cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+        try{
+          PHOTOS[id]=cv.toDataURL("image/jpeg",0.72);
+          ls.set(K.pho,PHOTOS);
+          if(JSON.stringify(ls.get(K.pho,{}))!==JSON.stringify(PHOTOS)) throw new Error("quota");
+          render(); openDetail(id);
+        }catch(e){
+          delete PHOTOS[id];
+          alert("사진을 저장하지 못했습니다. 브라우저 저장 공간이 가득 찼을 수 있어요.\n사진 몇 장을 지운 뒤 다시 시도해 주세요.");
+        }
+      };
+      im.onerror=()=>alert("이미지를 읽지 못했습니다. 다른 파일로 시도해 주세요.");
+      im.src=rd.result;
+    };
+    rd.readAsDataURL(f);
+  };
+  inp.click();
+}
+function closeModal(){ $("#modal").classList.remove("on"); document.body.style.overflow=""; }
+$("#closeX").onclick = closeModal;
+$("#modal").onclick = e => { if(e.target.id==="modal") closeModal(); };
+document.addEventListener("keydown", e => { if(e.key==="Escape" && !$("#gate").classList.contains("on")) closeModal(); });
+
+/* =========================================================
+   어휘 표시 + 팝업
+   ========================================================= */
+let TERM_RE=null, TERM_TEST=null, ACTIVE=[];
+function activeTerms(){
+  const low = lvl()==="low";
+  return Object.keys(DICT).filter(k=>low || !DICT[k].basic);
+}
+function defOf(t){ const d=DICT[t]; if(!d) return ""; return lvl()==="low" ? (d.e||d.h) : (d.h||d.e); }
+function rebuildTerms(){
+  ACTIVE = activeTerms().sort((a,b)=>b.length-a.length);
+  const src = "(" + ACTIVE.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|") + ")";
+  TERM_RE = new RegExp(src,"g"); TERM_TEST = new RegExp(src);
+}
+function markTerms(root){
+  if(!TERM_RE) rebuildTerms();
+  const skip = new Set(["SCRIPT","STYLE","A","BUTTON","INPUT","TEXTAREA","SELECT","H2","H4","H5"]);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){
+      if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      let p=n.parentElement;
+      while(p && p!==root){
+        if(skip.has(p.tagName) || p.classList.contains("term")) return NodeFilter.FILTER_REJECT;
+        p=p.parentElement;
+      }
+      return TERM_TEST.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const targets=[]; let n;
+  while(n=walker.nextNode()) targets.push(n);
+  targets.forEach(node=>{
+    const frag=document.createDocumentFragment();
+    let last=0; TERM_RE.lastIndex=0; let m;
+    while(m=TERM_RE.exec(node.nodeValue)){
+      if(m.index>last) frag.appendChild(document.createTextNode(node.nodeValue.slice(last,m.index)));
+      const sp=document.createElement("span");
+      sp.className="term"; sp.dataset.t=m[1]; sp.textContent=m[1];
+      frag.appendChild(sp); last=m.index+m[1].length;
+    }
+    frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+const tip=$("#tip");
+function showTip(el){
+  const t=el.dataset.t;
+  tip.innerHTML = "<b>"+esc(t)+"</b>"+esc(defOf(t));
+  tip.style.display="block";
+  const r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
+  let left=r.left, top=r.bottom+8;
+  if(left+tr.width>innerWidth-12) left=innerWidth-tr.width-12;
+  if(top+tr.height>innerHeight-12) top=r.top-tr.height-8;
+  tip.style.left=Math.max(12,left)+"px"; tip.style.top=Math.max(12,top)+"px";
+}
+document.addEventListener("mouseover",e=>{ if(e.target.classList?.contains("term")) showTip(e.target); });
+document.addEventListener("mouseout", e=>{ if(e.target.classList?.contains("term")) tip.style.display="none"; });
+document.addEventListener("click",e=>{
+  if(e.target.classList?.contains("term")){ e.stopPropagation(); showTip(e.target); }
+  else tip.style.display="none";
+});
+
+/* =========================================================
+   어휘 탐험 (문제 자동 생성)
+   ========================================================= */
+let curQ=null, answered=false;
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);
+
+/* 잠금 화면 / 문제 화면 전환 */
+function renderQuest(){
+  const locked = QUIZ.locked && !teacherMode;
+  $("#qCard").style.display = locked ? "none" : "";
+  $("#qLock").style.display = locked ? "" : "none";
+  if(locked){
+    const n=Math.min(STUDIED.size,NEED_STUDY), done=n>=NEED_STUDY;
+    $("#stBar").style.width = (n/NEED_STUDY*100)+"%";
+    $("#stTxt").textContent = done ? "다 공부했어요! 이제 다시 도전할 수 있어요." : `공부한 낱말 ${n} / ${NEED_STUDY}개`;
+    $("#qLock").classList.toggle("done",done);
+    $("#goStudy").textContent = done ? "🎯 어휘 탐험 다시 시작하기" : "📖 어휘 사전에서 공부하기";
+  }
+  renderStudyBanner();
+}
+function studyTerm(t){
+  if(!QUIZ.locked || STUDIED.has(t)) return;
+  STUDIED.add(t); ls.set(K.std,[...STUDIED]);
+  renderQuest(); renderDict($("#dq").value.trim());
+}
+function unlockQuiz(){
+  QUIZ.locked=false; QUIZ.wrong=0; ls.set(K.quiz,QUIZ);
+  STUDIED=new Set(); ls.set(K.std,[]);
+  renderDict($("#dq").value.trim());
+}
+function renderStudyBanner(){
+  const b=$("#studyBanner");
+  if(!QUIZ.locked || teacherMode){ b.style.display="none"; return; }
+  const n=Math.min(STUDIED.size,NEED_STUDY);
+  b.style.display="";
+  if(n>=NEED_STUDY){
+    b.className="done";
+    b.innerHTML = `✅ <b>낱말 ${NEED_STUDY}개를 다 공부했어요!</b> 이제 어휘 탐험을 다시 할 수 있어요.
+      <br><button class="btn primary" id="backToQuest">🎯 어휘 탐험 다시 시작하기</button>`;
+    $("#backToQuest").onclick = ()=>{ unlockQuiz(); renderQuest(); newQuestion(); renderWho(); show("quest"); };
+  }else{
+    b.className="need";
+    b.innerHTML = `📕 <b>어휘 탐험이 잠겼어요.</b> 아래 낱말 카드를 눌러 뜻을 확인해 보세요.
+      <b>${NEED_STUDY}개</b>를 공부하면 다시 열립니다. — 지금까지 <b>${n} / ${NEED_STUDY}개</b>`;
+  }
+}
+$("#goStudy").onclick = ()=>{
+  if(STUDIED.size>=NEED_STUDY){ unlockQuiz(); renderQuest(); newQuestion(); renderWho(); }
+  else show("dict");
+};
+
+function newQuestion(){
+  if(QUIZ.locked && !teacherMode){ renderQuest(); return; }
+  renderQuest();
+  const pool=activeTerms();
+  if(pool.length<4){ return; }
+  const pick=shuffle(pool);
+  const ans=pick[0], wrong=pick.slice(1,4);
+  const type = Math.random()<0.5 ? "d2w" : "w2d";
+  curQ={ans,type,opts:shuffle([ans,...wrong])};
+  answered=false;
+  $("#qno").textContent = `문제 ${QUIZ.asked+1}`;
+  $("#qtext").innerHTML = type==="d2w"
+    ? `다음 뜻에 알맞은 낱말은 무엇일까요?<br><em>${esc(defOf(ans))}</em>`
+    : `<em>${esc(ans)}</em> 은(는) 무슨 뜻일까요?`;
+  $("#qopts").innerHTML = curQ.opts.map((o,i)=>
+    `<button class="opt" data-i="${i}">${esc(type==="d2w" ? o : defOf(o))}</button>`).join("");
+  $$("#qopts .opt").forEach(b=>b.onclick=()=>answer(curQ.opts[+b.dataset.i], b));
+  $("#qfb").className="qfb"; $("#qfb").innerHTML="";
+  $("#nextQ").style.display="none";
+}
+function answer(chosen, btn){
+  if(answered) return; answered=true;
+  const ok = chosen===curQ.ans;
+  QUIZ.asked++;
+  if(ok){ QUIZ.right++; QUIZ.streak++; QUIZ.best=Math.max(QUIZ.best,QUIZ.streak); QUIZ.wrong=0; }
+  else  { QUIZ.streak=0; QUIZ.wrong=(QUIZ.wrong||0)+1; }
+  const justLocked = !ok && QUIZ.wrong>=MISS_LIMIT && !teacherMode;
+  if(justLocked){ QUIZ.locked=true; STUDIED=new Set(); ls.set(K.std,[]); }
+  ls.set(K.quiz,QUIZ);
+  $$("#qopts .opt").forEach((b,i)=>{
+    b.disabled=true;
+    if(curQ.opts[i]===curQ.ans) b.classList.add("right");
+    else if(b===btn) b.classList.add("wrong");
+  });
+  const fb=$("#qfb");
+  if(ok){
+    if(!teacherMode) setTokens(TOKENS+REWARD); else renderWho();
+    fb.className="qfb on ok";
+    fb.innerHTML = `<b>✅ 정답이에요!</b>탐험 토큰 <b style="display:inline">${REWARD}개</b>를 얻었어요. 지금 ${teacherMode?"∞":TOKENS}개예요.`;
+  }else{
+    fb.className="qfb on no";
+    fb.innerHTML = `<b>❌ 아쉬워요.</b>정답은 <b style="display:inline">${esc(curQ.ans)}</b> — ${esc(defOf(curQ.ans))}`
+      + (justLocked ? `<br><br><b style="display:inline;color:var(--accent)">연속으로 ${MISS_LIMIT}개를 틀렸어요.</b>
+           어휘 사전에서 낱말 ${NEED_STUDY}개를 공부하고 오면 다시 열려요. 잠시 뒤 사전으로 이동합니다.` : "");
+  }
+  renderWho();
+  if(justLocked){
+    $("#nextQ").style.display="none";
+    setTimeout(()=>{ renderQuest(); renderDict($("#dq").value.trim()); show("dict"); }, 2600);
+  }else{
+    $("#nextQ").style.display="";
+  }
+}
+$("#nextQ").onclick = newQuestion;
+
+/* =========================================================
+   미션
+   ========================================================= */
+function renderMissions(){
+  const list = MISSIONS.filter(m=>!(lvl()==="low" && m.hard));
+  $("#mgrid").innerHTML = list.map((m,i)=>`
+    <div class="mcard">
+      <span class="lvl">${esc(m.lv)}</span>
+      <h3>${m.e} ${esc(m.t)}</h3>
+      <p>${m.d}</p>
+      <div class="hintbox" id="hint${i}">💡 <b>힌트</b> — ${esc(m.h)}</div>
+      <div class="row">
+        <button class="mini" data-h="${i}">💡 힌트 보기</button>
+        ${m.go?`<button class="mini" data-g="${i}">🔎 해당 유산 보러 가기</button>`:""}
+      </div>
+    </div>`).join("");
+  $$("#mgrid [data-h]").forEach(b=>b.onclick=()=>{
+    const box=$("#hint"+b.dataset.h); box.classList.toggle("on");
+    b.textContent = box.classList.contains("on")?"💡 힌트 숨기기":"💡 힌트 보기";
+  });
+  $$("#mgrid [data-g]").forEach(b=>b.onclick=()=>{
+    const go=list[b.dataset.g].go;
+    $("#resetBtn").click();
+    if(go.k==="unesco") state.extra.add("🌍 유네스코에 오른 유산");
+    else if(go.k==="persp") state.extra.add("⚖️ 생각이 크게 갈렸던 유산");
+    else if(go.k==="use") state.f3.add(go.v);
+    else if(go.k==="q"){ state.q=go.v; $("#q").value=go.v; }
+    if(go.k!=="q"){ $("#subBody").classList.add("on"); $("#subToggle").textContent="▾ 더 자세히 나누어 보기 (세부 분류)"; }
+    $$(".chip").forEach(c=>{ if(state.f3.has(c.dataset.v)||state.extra.has(c.dataset.v)) c.classList.add("on"); });
+    render(); show("browse");
+  });
+}
+
+/* =========================================================
+   사전 화면
+   ========================================================= */
+function renderDict(f=""){
+  const rows = activeTerms().filter(k=>!f || k.includes(f) || defOf(k).includes(f));
+  const pick = QUIZ.locked && !teacherMode;      // 잠겼을 때만 카드를 눌러 공부 표시
+  $("#dcnt").textContent = rows.length;
+  $("#dgrid").innerHTML = rows.length
+    ? rows.map(k=>{
+        const cls = "dcard" + (pick?" pick":"") + (STUDIED.has(k)?" studied":"");
+        return pick
+          ? `<button class="${cls}" data-t="${esc(k)}"><b>${esc(k)}</b><span>${esc(defOf(k))}</span></button>`
+          : `<div class="${cls}"><b>${esc(k)}</b><span>${esc(defOf(k))}</span></div>`;
+      }).join("")
+    : '<div class="empty" style="grid-column:1/-1">그런 낱말은 아직 사전에 없어요.</div>';
+  if(pick) $$("#dgrid .dcard[data-t]").forEach(b=>b.onclick=()=>studyTerm(b.dataset.t));
+  renderStudyBanner();
+}
+$("#dq").oninput = e => renderDict(e.target.value.trim());
+
+/* =========================================================
+   보고서
+   ========================================================= */
+const RF=["r_why","r_event","r_now","r_pro","r_con","r_unknown","r_think","r_src"];
+function refreshPicker(){
+  const open = HERITAGE.filter(h=>isOpen(h.id));
+  const cur = $("#r_pick").value;
+  $("#r_pick").innerHTML = open.length
+    ? '<option value="">— 유산을 고르세요 —</option>' + open.map(h=>`<option value="${h.id}">${esc(h.easy)}</option>`).join("")
+    : '<option value="">— 아직 연 유산이 없어요 —</option>';
+  if(open.some(h=>h.id===cur)) $("#r_pick").value=cur;
+  $("#pickHint").innerHTML = open.length
+    ? `탐험 토큰으로 연 유산 ${open.length}건 중에서 고를 수 있어요.`
+    : `먼저 <b>유산 찾아보기</b>에서 탐험 토큰 ${COST}개로 유산 정보를 열어야 보고서를 쓸 수 있어요.`;
+}
+/* ---- 작성 예시: 파란 글씨로 넣었다가, 칸을 누르면 사라집니다 ---- */
+const EXF = ["r_why","r_event","r_now","r_pro","r_con","r_unknown","r_think"];
+let EX = new Set();
+function putExample(id,text){
+  const el=$("#"+id);
+  el.value=text; el.dataset.ex=text; el.classList.add("example"); EX.add(id);
+}
+function dropExample(id){
+  if(!EX.has(id)) return;
+  const el=$("#"+id);
+  const t=el.dataset.ex||"";
+  el.placeholder = "예시: " + (t.length>70 ? t.slice(0,70)+"…" : t);
+  el.value=""; el.classList.remove("example"); EX.delete(id);
+  syncReport(); save(); updateChecklist();
+}
+EXF.forEach(id=>{
+  const el=$("#"+id);
+  // 누르거나, 옮겨 오거나, 글자를 넣으려 하면 예시를 지웁니다
+  ["pointerdown","touchstart","mousedown","focus","keydown","beforeinput","paste"]
+    .forEach(ev=>el.addEventListener(ev,()=>dropExample(id)));
+});
+
+function fillExample(){
+  const h=HERITAGE.find(x=>x.id===$("#r_pick").value);
+  if(!h){ alert("먼저 조사한 국가유산을 골라 주세요."); return; }
+  const low = lvl()==="low";
+  const ev = low ? h.events.slice(0,4) : h.events;
+  putExample("r_why",   `${h.era}에 만들어졌습니다. ${purposeOf(h)}`);
+  putExample("r_event", ev.map(e=>`${e.y} — ${e.t}`).join("\n"));
+  putExample("r_now",   `${h.now}\n지정 현황: ${h.desig}${h.unesco?" / "+h.unesco:""}`);
+  putExample("r_pro",   (low?h.pro.slice(0,1):h.pro).join(" / ") || "생각이 크게 갈리지 않은 유산이에요.");
+  putExample("r_con",   (low?h.con.slice(0,1):h.con).join(" / ") || "생각이 크게 갈리지 않은 유산이에요.");
+  putExample("r_unknown",(low?h.unknown.slice(0,3):h.unknown).join("\n"));
+  putExample("r_think", low
+    ? `처음에는 ${h.easy}이(가) 멋지다고만 생각했는데, 만들 때 힘들었던 사람도 있다는 것을 알고 생각이 달라졌어요. 이름이 남지 않은 사람들이 궁금해졌어요.`
+    : `처음에는 ${h.easy}을(를) 대단한 유산으로만 보았는데, 만드는 과정에서 부담을 진 사람들이 있었다는 것을 알고 생각이 달라졌다. 기록에 남지 않은 사람들의 이야기가 가장 궁금해졌다.`);
+  $("#r_src").value = `국가유산포털(heritage.go.kr)에서 ‘${h.srcKey}’ 검색 · 확인 2026. 7. 28.`;
+  syncReport(); save(); updateChecklist();
+}
+
+/* ---- 제출 조건 확인 ---- */
+function checkState(){
+  const body=["r_why","r_event","r_now","r_pro","r_con","r_unknown"];
+  const written = body.filter(id=>!EX.has(id) && $("#"+id).value.trim()).length;
+  const think   = !EX.has("r_think") && $("#r_think").value.trim().length>0;
+  const picked  = !!$("#r_pick").value;
+  return {picked, noEx:EX.size===0, written, think,
+          ok: picked && EX.size===0 && written>=3 && think};
+}
+function updateChecklist(){
+  const s=checkState();
+  const row=(done,txt)=>`<li class="${done?"y":"n"}">${done?"✅":"⬜"} ${txt}</li>`;
+  $("#checklist").innerHTML = s.ok
+    ? `<div class="clist done">🎉 <b>다 썼어요!</b> 이제 제출하거나 인쇄할 수 있어요.</div>`
+    : `<div class="clist"><b>제출하려면 이렇게 해 주세요</b><ul>
+        ${row(s.picked,"조사한 국가유산 고르기")}
+        ${row(s.noEx,`파란 예시 글씨 지우고 내 말로 바꿔 쓰기 ${EX.size?`(${EX.size}칸 남음)`:""}`)}
+        ${row(s.written>=3,`1~5번 칸 가운데 3칸 이상 쓰기 (${s.written}칸 씀)`)}
+        ${row(s.think,"6번 ‘내 생각’ 칸 쓰기")}
+       </ul></div>`;
+  ["submitBtn","printBtn","codeBtn"].forEach(id=>$("#"+id).disabled=!s.ok);
+}
+function formData(){
+  const h=HERITAGE.find(x=>x.id===$("#r_pick").value);
+  const g=id=>$("#"+id).value.trim();
+  return {
+    v:1, lv:lvl(),
+    grade:USER?USER.grade:"", cls:USER?USER.cls:"", no:USER?USER.no:"", name:USER?USER.name:"",
+    pick:$("#r_pick").value, title:h?(h.easy===h.name?h.easy:`${h.easy} (${h.name})`):"",
+    why:g("r_why"), event:g("r_event"), now:g("r_now"), pro:g("r_pro"), con:g("r_con"),
+    unknown:g("r_unknown"), think:g("r_think"), src:g("r_src"),
+    tok:TOKENS, asked:QUIZ.asked, right:QUIZ.right, at:new Date().toISOString()
+  };
+}
+function renderSheet(d){
+  const lb = LABELS[d.lv||lvl()];
+  $("#s_l1").textContent=lb.l1; $("#s_l2").textContent=lb.l2; $("#s_l3").textContent=lb.l3;
+  $("#s_l4").textContent=lb.l4; $("#s_l4a").textContent=lb.s4a; $("#s_l4b").textContent=lb.s4b;
+  $("#s_l5").textContent=lb.l5; $("#s_l6").textContent=lb.l6;
+  $("#s_who").textContent = d.name ? `${d.grade}학년 ${d.cls}반 ${d.no}번 ${d.name}` : "이름: ____________";
+  $("#s_date").textContent = new Date(d.at||Date.now()).toLocaleDateString("ko-KR");
+  $("#s_title").textContent = d.title || "조사한 국가유산";
+  $("#s_why").textContent=d.why; $("#s_event").textContent=d.event; $("#s_now").textContent=d.now;
+  $("#s_pro").textContent=d.pro; $("#s_con").textContent=d.con;
+  $("#s_unknown").textContent=d.unknown; $("#s_think").textContent=d.think;
+  $("#s_src").textContent=d.src;
+  $("#s_meta").textContent = `어휘 탐험 ${d.right||0}/${d.asked||0} 정답 · 국가유산 탐험대`;
+  checkOverflow();
+}
+function syncReport(){ renderSheet(formData()); }
+function checkOverflow(){
+  const sheet=$("#reportSheet"), foot=sheet.querySelector(".rf");
+  const over = foot.getBoundingClientRect().bottom > sheet.getBoundingClientRect().bottom+2;
+  $("#overflowWarn").classList.toggle("on",over);
+}
+addEventListener("resize",checkOverflow);
+function save(){
+  const d={pick:$("#r_pick").value, ex:{}};
+  RF.forEach(k=>d[k]=$("#"+k).value);
+  EX.forEach(id=>d.ex[id]=$("#"+id).dataset.ex||"");
+  ls.set(K.rep,d);
+  const m=$("#savedMsg"); m.textContent="✓ 자동 저장됨";
+  clearTimeout(save._t); save._t=setTimeout(()=>m.textContent="",1800);
+}
+function loadReport(){
+  const d=ls.get(K.rep,null); if(!d) return;
+  if(d.pick) $("#r_pick").value=d.pick;
+  RF.forEach(k=>{ if(d[k]!=null) $("#"+k).value=d[k]; });
+  EX=new Set();
+  Object.entries(d.ex||{}).forEach(([id,txt])=>{
+    const el=$("#"+id); if(!el) return;
+    el.dataset.ex=txt; el.classList.add("example"); EX.add(id);
+  });
+}
+RF.forEach(k=>$("#"+k).addEventListener("input",()=>{ syncReport(); save(); updateChecklist(); }));
+$("#r_pick").onchange=()=>{ syncReport(); save(); updateChecklist(); };
+$("#fillBtn").onclick=fillExample;
+$("#editWho").onclick=openGate;
+$("#clearBtn").onclick=()=>{
+  if(!confirm("보고서에 쓴 내용을 모두 지울까요?")) return;
+  RF.forEach(k=>{ const el=$("#"+k); el.value=""; el.classList.remove("example"); el.placeholder=""; delete el.dataset.ex; });
+  EX=new Set(); $("#r_pick").value="";
+  syncReport(); save(); updateChecklist();
+};
+function reportReady(){
+  const s=checkState();
+  if(!s.ok){ alert("아직 제출할 수 없어요.\n버튼 위의 안내를 확인해 주세요."); updateChecklist(); return false; }
+  return true;
+}
+$("#printBtn").onclick=()=>{
+  if(!reportReady()) return;
+  syncReport(); checkOverflow();
+  if($("#overflowWarn").classList.contains("on") &&
+     !confirm("내용이 한 장을 넘쳐서 아랫부분이 잘립니다.\n그래도 인쇄할까요?")) return;
+  window.print();
+};
+
+/* --- 제출 --- */
+function addSubmission(d){
+  const list=ls.get(K.sub,[]);
+  const i=list.findIndex(x=>x.name===d.name && x.cls===d.cls && x.no===d.no && x.pick===d.pick);
+  if(i>=0) list[i]=d; else list.push(d);
+  ls.set(K.sub,list);
+  return i>=0;
+}
+$("#submitBtn").onclick=()=>{
+  if(!reportReady()) return;
+  const d=formData();
+  const replaced=addSubmission(d);
+  alert(replaced ? "같은 유산으로 낸 보고서를 새 내용으로 바꿔 제출했어요. ✅"
+                 : "보고서를 제출했어요. ✅\n선생님 탭에서 확인할 수 있어요.");
+  renderTeacher();
+};
+function enc(o){
+  const b=new TextEncoder().encode(JSON.stringify(o));
+  let s=""; b.forEach(x=>s+=String.fromCharCode(x));
+  return "HE1:"+btoa(s);
+}
+function dec(str){
+  const t=String(str).trim().replace(/^HE1:/,"");
+  const bin=atob(t);
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0))));
+}
+$("#codeBtn").onclick=async()=>{
+  if(!reportReady()) return;
+  const code=enc(formData());
+  try{ await navigator.clipboard.writeText(code); alert("제출 코드를 복사했어요. ✅\n선생님이 알려 준 곳(패들렛·구글폼·채팅)에 붙여 넣으세요."); }
+  catch(e){ prompt("아래 코드를 모두 복사해서 선생님께 내세요.", code); }
+};
+
+/* =========================================================
+   선생님
+   ========================================================= */
+$("#pwGo").onclick=checkPw;
+$("#pw").addEventListener("keydown",e=>{ if(e.key==="Enter") checkPw(); });
+function checkPw(){
+  if($("#pw").value==="1155"){
+    $("#tLock").style.display="none"; $("#tPanel").style.display="";
+    $("#pw").value=""; $("#pwMsg").textContent=""; renderTeacher();
+  }else{
+    $("#pwMsg").textContent="비밀번호가 맞지 않습니다."; $("#pw").value=""; $("#pw").focus();
+  }
+}
+$("#tOut").onclick=()=>{
+  teacherMode=false; $("#tPanel").style.display="none"; $("#tLock").style.display="";
+  renderWho(); render(); refreshPicker();
+};
+$("#tUnlockAll").onclick=()=>{
+  teacherMode=!teacherMode;
+  $("#tUnlockAll").textContent = teacherMode?"🔒 토큰 제한 다시 걸기":"🔓 토큰 제한 풀기";
+  renderWho(); render(); refreshPicker();
+  alert(teacherMode ? "토큰 제한을 풀었습니다. 모든 유산 정보를 열 수 있습니다.\n(이 창을 닫으면 다시 원래대로 돌아갑니다.)"
+                    : "토큰 제한을 다시 걸었습니다.");
+};
+$("#tCodeOpen").onclick=()=>{
+  const b=$("#tCodeBox"); b.style.display = b.style.display==="none"?"":"none";
+};
+$("#tCodeGo").onclick=()=>{
+  const lines=$("#codeIn").value.split(/[\r\n]+/).map(s=>s.trim()).filter(Boolean);
+  let ok=0,bad=0;
+  lines.forEach(l=>{ try{ const d=dec(l); if(d&&d.name){ addSubmission(d); ok++; } else bad++; }catch(e){ bad++; } });
+  $("#codeMsg").textContent = `${ok}건 불러왔습니다.` + (bad?` (${bad}건은 코드가 올바르지 않아 건너뛰었습니다.)`:"");
+  if(ok) $("#codeIn").value="";
+  renderTeacher();
+};
+$("#tWipe").onclick=()=>{
+  if(!confirm("제출된 보고서를 모두 지웁니다.\n되돌릴 수 없습니다. 계속할까요?")) return;
+  if(!confirm("정말 모두 지울까요?")) return;
+  ls.set(K.sub,[]); renderTeacher();
+};
+function renderTeacher(){
+  const list=ls.get(K.sub,[]).slice().sort((a,b)=>
+    (a.cls-b.cls)||(a.no-b.no)||String(a.at).localeCompare(String(b.at)));
+  $("#tCnt").textContent=list.length;
+  const t=$("#tTable");
+  if(!list.length){ t.innerHTML='<tr><td style="padding:26px;text-align:center;color:var(--ink2)">아직 제출된 보고서가 없습니다.</td></tr>'; return; }
+  t.innerHTML = `<thead><tr>
+      <th>반</th><th>번호</th><th>이름</th><th>조사한 유산</th><th>학년대</th>
+      <th>어휘 탐험</th><th>제출 시각</th><th></th></tr></thead><tbody>` +
+    list.map((d,i)=>`<tr>
+      <td>${esc(d.cls)}</td><td>${esc(d.no)}</td><td class="nm">${esc(d.name)}</td>
+      <td>${esc(d.title||"—")}</td><td>${d.lv==="low"?"3~4학년":"5~6학년"}</td>
+      <td>${esc(d.right||0)}/${esc(d.asked||0)}</td>
+      <td>${new Date(d.at).toLocaleString("ko-KR")}</td>
+      <td style="white-space:nowrap">
+        <button data-view="${i}">보기</button>
+        <button data-print="${i}">인쇄</button>
+        <button data-del="${i}">삭제</button>
+      </td></tr>`).join("") + `</tbody>`;
+  t.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>viewSub(list[+b.dataset.view]));
+  t.querySelectorAll("[data-print]").forEach(b=>b.onclick=()=>{
+    renderSheet(list[+b.dataset.print]);
+    window.print();
+    setTimeout(syncReport,300);
+  });
+  t.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+    const d=list[+b.dataset.del];
+    if(!confirm(`${d.cls}반 ${d.no}번 ${d.name}의 보고서를 지울까요?`)) return;
+    const all=ls.get(K.sub,[]).filter(x=>!(x.name===d.name&&x.cls===d.cls&&x.no===d.no&&x.pick===d.pick&&x.at===d.at));
+    ls.set(K.sub,all); renderTeacher();
+  });
+}
+function viewSub(d){
+  const lb=LABELS[d.lv||"high"];
+  $("#m_name").textContent = `${d.cls}반 ${d.no}번 ${d.name}`;
+  $("#m_sub").textContent  = `${d.title} · ${new Date(d.at).toLocaleString("ko-KR")} 제출`;
+  const sec=(t,v)=>`<div class="blk"><h4>${esc(t)}</h4><p style="white-space:pre-wrap">${esc(v||"(비어 있음)")}</p></div>`;
+  $("#m_body").innerHTML =
+    sec(lb.l1,d.why)+sec(lb.l2,d.event)+sec(lb.l3,d.now)+
+    `<div class="blk"><h4>${esc(lb.l4)}</h4><div class="two">
+       <div class="side pro"><h5>${esc(lb.s4a)}</h5><p style="white-space:pre-wrap;margin:0">${esc(d.pro||"(비어 있음)")}</p></div>
+       <div class="side con"><h5>${esc(lb.s4b)}</h5><p style="white-space:pre-wrap;margin:0">${esc(d.con||"(비어 있음)")}</p></div>
+     </div></div>`+
+    `<div class="blk unknown"><h4>${esc(lb.l5)}</h4><p style="white-space:pre-wrap">${esc(d.unknown||"(비어 있음)")}</p></div>`+
+    sec(lb.l6,d.think)+
+    `<div class="blk"><h4>📎 출처</h4><p class="src">${esc(d.src||"(비어 있음)")}</p>
+      <p class="src">어휘 탐험 ${esc(d.right||0)}/${esc(d.asked||0)} 정답 · 남은 토큰 ${esc(d.tok??"-")}개</p></div>`;
+  $("#modal").classList.add("on"); document.body.style.overflow="hidden";
+}
+$("#tCsv").onclick=()=>{
+  const list=ls.get(K.sub,[]);
+  if(!list.length){ alert("내려받을 보고서가 없습니다."); return; }
+  const cols=[["학년","grade"],["반","cls"],["번호","no"],["이름","name"],["조사한 유산","title"],
+    ["학년대","lv"],["푼 문제","asked"],["맞힌 문제","right"],["제출시각","at"],
+    ["1 언제왜","why"],["2 겪은 일","event"],["3 지금 모습","now"],
+    ["4a 찬성","pro"],["4b 걱정","con"],["5 알 수 없는 것","unknown"],["6 내 생각","think"],["출처","src"]];
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const rows=[cols.map(c=>q(c[0])).join(",")].concat(
+    list.map(d=>cols.map(c=>q(c[1]==="lv"?(d.lv==="low"?"3~4학년":"5~6학년"):d[c[1]])).join(",")));
+  const blob=new Blob(["﻿"+rows.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`국가유산_보고서_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+
+/* =========================================================
+   시작
+   ========================================================= */
+rebuildTerms();
+loadReport();
+if(!USER){ TOKENS=START_TOKENS; ls.set(K.tok,TOKENS); openGate(); }
+applyLevel();
+renderTeacher();
+</script>
+</body>
+</html>
