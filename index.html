@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>국가유산 탐험대 — 초등학생을 위한 쉬운 국가유산 탐구 데이터베이스</title>
 <!--
-  국가유산 탐험대  v1.1  (2026-08-09)
-  - 서버 없이 index.html 한 장으로 도는 앱. 모든 자료는 브라우저 localStorage에 저장됩니다.
+  국가유산 탐험대  v1.2  (2026-08-09)
+  - index.html 한 장으로 도는 앱. 자료는 브라우저 localStorage에 저장됩니다.
   - v1.1 수정: 보고서 유산 선택 복원, 교사 잠그기 버튼 상태, 지역명 검색,
               빈 낱말 풍선, '보물' 빈 필터, 안내문 문구 모순, 카드 마크업 등
+  - v1.2 추가: 앱스스크립트 웹앱으로 배포하면 제출물이 구글 시트에 자동으로 모입니다.
+              서버가 없으면(깃허브 페이지스 등) v1.1과 똑같이 동작합니다.
   - 자세한 내용은 함께 배포한 개발자노트.md 참고
 -->
 <meta name="description" content="초등학생이 국가유산을 스스로 조사하고 탐구 보고서를 쓰는 학습용 웹앱">
@@ -556,7 +558,7 @@ p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
     <h2 class="sec">제출된 보고서</h2>
     <p class="lead">제목을 누르면 전체 내용을 볼 수 있습니다.</p>
 
-    <div class="tnote">
+    <div class="tnote" id="tNoteStore">
       <b>⚠️ 꼭 알아 두세요.</b> 이 목록은 <b>이 컴퓨터의 브라우저에만</b> 저장됩니다. 학생이 각자 기기에서 제출한 것은 여기 자동으로 나타나지 않습니다.<br>
       학생 기기가 따로라면 학생에게 <b>‘🔑 제출 코드 만들기’</b>를 눌러 코드를 복사해 패들렛·구글폼·학급 채팅에 올리게 하고, 아래 <b>‘코드로 불러오기’</b>에 붙여 넣으세요.
     </div>
@@ -1613,6 +1615,24 @@ if(!STORAGE_OK){
     "보고서는 <b>🖨 인쇄 / PDF</b>로 바로 받아 두시면 안전합니다.";
 }
 
+/* =========================================================
+   제출물 저장소 어댑터
+   ---------------------------------------------------------
+   같은 파일이 두 곳에서 돕니다.
+     · 깃허브 페이지스처럼 서버가 없는 곳 → 예전처럼 이 브라우저에만 모읍니다.
+       (학생 기기가 각자 다르면 '제출 코드'로 옮겨야 합니다)
+     · 구글 앱스스크립트 웹앱으로 배포한 곳 → google.script.run 이 생기므로
+       제출물이 선생님 구글 시트 한 장에 자동으로 모입니다.
+   아래 SERVER 가 null 이면 예전 동작 그대로입니다.
+   ========================================================= */
+const SERVER = (typeof google!=="undefined" && google.script && google.script.run) ? google.script.run : null;
+const callServer = (fn,...args)=> new Promise((ok,fail)=>{
+  SERVER.withSuccessHandler(ok).withFailureHandler(fail)[fn](...args);
+});
+const subKey = d => [d.cls,d.no,d.name,d.pick].join("|");   // 시트의 '키' 열과 같은 규칙
+let TSUBS = [];    // 선생님 화면에 보여 줄 제출 목록
+let TPASS = "";    // 서버에 다시 물어볼 때 쓸 비밀번호 (로그인 성공 후에만 채워짐)
+
 const FRESH_QUIZ = ()=>({asked:0,right:0,streak:0,best:0,wrong:0,locked:false});
 let USER   = ls.get(K.user,null);            // {level, grade, cls, no, name}
 let TOKENS = ls.get(K.tok,0);
@@ -2331,13 +2351,29 @@ function addSubmission(d){
   ls.set(K.sub,list);
   return i>=0;
 }
-$("#submitBtn").onclick=()=>{
+$("#submitBtn").onclick=async()=>{
   if(!reportReady()) return;
   const d=formData();
-  const replaced=addSubmission(d);
-  alert(replaced ? "같은 유산으로 낸 보고서를 새 내용으로 바꿔 제출했어요. ✅"
-                 : "보고서를 제출했어요. ✅\n선생님 탭에서 확인할 수 있어요.");
-  renderTeacher();
+  const replaced=addSubmission(d);          // 서버가 있든 없든 이 컴퓨터에도 남깁니다(안전망)
+  if(!SERVER){
+    alert(replaced ? "같은 유산으로 낸 보고서를 새 내용으로 바꿔 제출했어요. ✅"
+                   : "보고서를 제출했어요. ✅\n선생님 탭에서 확인할 수 있어요.");
+    TSUBS = ls.get(K.sub,[]); renderTeacher();
+    return;
+  }
+  const btn=$("#submitBtn"), was=btn.textContent;
+  btn.disabled=true; btn.textContent="📤 보내는 중…";
+  try{
+    const res = await callServer("submitReport", d);
+    alert(res && res.replaced
+      ? "같은 유산으로 낸 보고서를 새 내용으로 바꿔 냈어요. ✅"
+      : "선생님께 보고서를 냈어요. ✅");
+  }catch(e){
+    alert("선생님께 보내지 못했어요. 😥\n인터넷 연결을 확인하고 다시 눌러 주세요.\n"
+        + "계속 안 되면 ‘🔑 제출 코드 만들기’로 코드를 내면 됩니다.\n\n(" + (e && e.message ? e.message : e) + ")");
+  }finally{
+    btn.textContent=was; updateChecklist();
+  }
 };
 function enc(o){
   const b=new TextEncoder().encode(JSON.stringify(o));
@@ -2361,18 +2397,40 @@ $("#codeBtn").onclick=async()=>{
    ========================================================= */
 $("#pwGo").onclick=checkPw;
 $("#pw").addEventListener("keydown",e=>{ if(e.key==="Enter") checkPw(); });
-function checkPw(){
-  if($("#pw").value===TEACHER_PW){
-    $("#tLock").style.display="none"; $("#tPanel").style.display="";
-    $("#pw").value=""; $("#pwMsg").textContent=""; renderTeacher();
-  }else{
-    $("#pwMsg").textContent="비밀번호가 맞지 않습니다."; $("#pw").value=""; $("#pw").focus();
+async function checkPw(){
+  const pw=$("#pw").value;
+  const fail=()=>{ $("#pwMsg").textContent="비밀번호가 맞지 않습니다."; $("#pw").value=""; $("#pw").focus(); };
+  if(SERVER){
+    /* 서버가 있으면 비밀번호를 서버에서 확인합니다.
+       덕분에 앱스스크립트 배포판에서는 비밀번호가 학생 브라우저로 내려가지 않습니다. */
+    $("#pwMsg").textContent="확인하는 중…";
+    let ok=false;
+    try{ ok = await callServer("teacherLogin", pw); }
+    catch(e){ $("#pwMsg").textContent="확인하지 못했습니다. 인터넷 연결을 확인해 주세요."; return; }
+    if(!ok){ fail(); return; }
+    TPASS = pw;
+  }else if(pw!==TEACHER_PW){ fail(); return; }
+  $("#tLock").style.display="none"; $("#tPanel").style.display="";
+  $("#pw").value=""; $("#pwMsg").textContent="";
+  loadSubs();
+}
+/* 목록 가져오기 — 서버가 있으면 시트에서, 없으면 이 브라우저에서 */
+async function loadSubs(){
+  if(!SERVER || !TPASS){ TSUBS = ls.get(K.sub,[]); renderTeacher(); return; }
+  $("#tCnt").textContent="…";
+  try{
+    TSUBS = await callServer("listReports", TPASS);
+    $("#codeMsg").textContent="";
+  }catch(e){
+    TSUBS = ls.get(K.sub,[]);
+    $("#codeMsg").textContent="⚠️ 시트에서 목록을 불러오지 못해 이 컴퓨터에 저장된 것만 보여 줍니다.";
   }
+  renderTeacher();
 }
 $("#tOut").onclick=()=>{
   /* 잠글 때 토큰 제한도 원래대로 돌려놓고 버튼 글자도 맞춰 줍니다.
      예전에는 teacherMode만 꺼지고 버튼은 '다시 걸기'로 남아 다음에 반대로 동작했습니다. */
-  teacherMode=false;
+  teacherMode=false; TPASS="";
   $("#tUnlockAll").textContent="🔓 토큰 제한 풀기";
   $("#tPanel").style.display="none"; $("#tLock").style.display="";
   renderWho(); render(); refreshPicker(); renderQuest(); renderDict($("#dq").value.trim());
@@ -2403,15 +2461,43 @@ $("#tCodeGo").onclick=()=>{
   });
   $("#codeMsg").textContent = `${ok}건 불러왔습니다.` + (bad?` (${bad}건은 코드가 올바르지 않아 건너뛰었습니다.)`:"");
   if(ok) $("#codeIn").value="";
-  renderTeacher();
+  /* 서버가 있으면 불러온 코드도 시트로 올려 한곳에 모읍니다 */
+  if(SERVER && ok){
+    Promise.all(lines.map(l=>{ try{ const d=dec(l); return (d&&d.name&&d.pick)?callServer("submitReport",d):null; }catch(e){ return null; } }))
+      .then(()=>loadSubs())
+      .catch(()=>{ $("#codeMsg").textContent += " (시트에 올리지 못한 건이 있습니다.)"; loadSubs(); });
+  }else{
+    TSUBS = ls.get(K.sub,[]); renderTeacher();
+  }
 };
-$("#tWipe").onclick=()=>{
+$("#tWipe").onclick=async()=>{
   if(!confirm("제출된 보고서를 모두 지웁니다.\n되돌릴 수 없습니다. 계속할까요?")) return;
   if(!confirm("정말 모두 지울까요?")) return;
-  ls.set(K.sub,[]); renderTeacher();
+  ls.set(K.sub,[]);
+  if(SERVER && TPASS){
+    try{ await callServer("wipeReports", TPASS); }
+    catch(e){ alert("시트에서 지우지 못했습니다.\n" + (e&&e.message?e.message:e)); }
+    loadSubs();
+  }else{ TSUBS=[]; renderTeacher(); }
 };
+/* 서버 모드에서만 보이는 '구글 시트 열기' + 안내 문구 교체 */
+if(SERVER){
+  $("#tNoteStore").innerHTML =
+    `<b style="color:#2f5c39">✅ 제출물이 구글 시트에 모입니다.</b> 학생이 각자 기기에서 ‘제출하기’를 누르면
+     선생님 구글 드라이브의 <b>‘국가유산 탐험대 — 제출 보고서’</b> 시트에 자동으로 쌓입니다.
+     아래 <b>‘📊 구글 시트 열기’</b>로 원본을 바로 볼 수 있습니다.<br>
+     인터넷이 끊겨 제출이 안 될 때만 <b>‘🔑 제출 코드 만들기’</b>와 <b>‘📥 코드로 불러오기’</b>를 쓰세요.`;
+  const b=document.createElement("button");
+  b.className="btn"; b.textContent="📊 구글 시트 열기";
+  b.onclick=async()=>{
+    if(!TPASS) return;
+    try{ const url=await callServer("sheetUrl",TPASS); window.open(url,"_blank","noopener"); }
+    catch(e){ alert("시트 주소를 가져오지 못했습니다."); }
+  };
+  $("#tCsv").insertAdjacentElement("afterend", b);
+}
 function renderTeacher(){
-  const list=ls.get(K.sub,[]).slice().sort((a,b)=>
+  const list=(TSUBS||[]).slice().sort((a,b)=>
     (a.cls-b.cls)||(a.no-b.no)||String(a.at).localeCompare(String(b.at)));
   $("#tCnt").textContent=list.length;
   const t=$("#tTable");
@@ -2435,11 +2521,16 @@ function renderTeacher(){
     window.print();
     setTimeout(syncReport,300);
   });
-  t.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+  t.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{
     const d=list[+b.dataset.del];
     if(!confirm(`${d.cls}반 ${d.no}번 ${d.name}의 보고서를 지울까요?`)) return;
-    const all=ls.get(K.sub,[]).filter(x=>!(x.name===d.name&&x.cls===d.cls&&x.no===d.no&&x.pick===d.pick&&x.at===d.at));
-    ls.set(K.sub,all); renderTeacher();
+    // 이 컴퓨터에 남은 사본은 언제나 함께 지웁니다
+    ls.set(K.sub, ls.get(K.sub,[]).filter(x=>subKey(x)!==subKey(d)));
+    if(SERVER && TPASS){
+      try{ await callServer("deleteReport", TPASS, d.key||subKey(d)); }
+      catch(e){ alert("시트에서 지우지 못했습니다.\n" + (e&&e.message?e.message:e)); }
+      loadSubs();
+    }else{ TSUBS = ls.get(K.sub,[]); renderTeacher(); }
   });
 }
 function viewSub(d){
@@ -2461,7 +2552,7 @@ function viewSub(d){
   $("#modal").classList.add("on"); document.body.style.overflow="hidden";
 }
 $("#tCsv").onclick=()=>{
-  const list=ls.get(K.sub,[]);
+  const list=TSUBS||[];
   if(!list.length){ alert("내려받을 보고서가 없습니다."); return; }
   const cols=[["학년","grade"],["반","cls"],["번호","no"],["이름","name"],["조사한 유산","title"],
     ["학년대","lv"],["푼 문제","asked"],["맞힌 문제","right"],["제출시각","at"],
@@ -2484,6 +2575,7 @@ rebuildTerms();
 loadReport();
 if(!USER){ TOKENS=START_TOKENS; ls.set(K.tok,TOKENS); openGate(); }
 applyLevel();
+TSUBS = ls.get(K.sub,[]);   // 로그인 전에는 이 컴퓨터에 남은 것만 (패널은 아직 잠겨 있음)
 renderTeacher();
 </script>
 </body>
