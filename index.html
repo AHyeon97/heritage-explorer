@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>국가유산 탐험대 — 초등학생을 위한 쉬운 국가유산 탐구 데이터베이스</title>
+<!--
+  국가유산 탐험대  v1.1  (2026-08-09)
+  - 서버 없이 index.html 한 장으로 도는 앱. 모든 자료는 브라우저 localStorage에 저장됩니다.
+  - v1.1 수정: 보고서 유산 선택 복원, 교사 잠그기 버튼 상태, 지역명 검색,
+              빈 낱말 풍선, '보물' 빈 필터, 안내문 문구 모순, 카드 마크업 등
+  - 자세한 내용은 함께 배포한 개발자노트.md 참고
+-->
+<meta name="description" content="초등학생이 국가유산을 스스로 조사하고 탐구 보고서를 쓰는 학습용 웹앱">
+<meta name="color-scheme" content="light">
 <style>
 :root{
   --bg:#fbf7f0; --panel:#ffffff; --ink:#2b2118; --ink2:#6b5b4b;
@@ -115,9 +124,9 @@ p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
 .bigart .phbtn.del{top:44px;color:var(--accent)}
 .bigart .phbtn:hover{background:#fff}
 .artnote{font-size:13px;color:var(--ink2);background:#f5efe4;border-radius:10px;padding:9px 13px;margin:0 0 12px;line-height:1.65}
-.card h3{margin:0;font-size:17.5px;font-weight:800;line-height:1.4}
+.card .nm{display:block;margin:0;font-size:17.5px;font-weight:800;line-height:1.4}
 .card .era{font-size:13.5px;color:var(--accent2);font-weight:700}
-.card .oneline{font-size:14.5px;color:var(--ink2);margin:0;flex:1}
+.card .oneline{display:block;font-size:14.5px;color:var(--ink2);margin:0;flex:1}
 .bigtag{align-self:flex-start;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:9px;padding:4px 11px}
 .card.locked .bigtag{background:var(--ink2)}
 .subtags{font-size:12.5px;color:var(--ink2);line-height:1.6}
@@ -125,6 +134,9 @@ p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
 .lockrow{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:800;border-top:1px dashed var(--line);padding-top:9px}
 .lockrow.lk{color:var(--ink2)} .lockrow.op{color:var(--green)}
 .empty{background:#fff;border:2px dashed var(--line);border-radius:var(--r);padding:44px 20px;text-align:center;color:var(--ink2)}
+#noStore{background:#fdeeee;border:2px solid var(--accent);color:#8f2820;border-radius:var(--r);
+  padding:13px 17px;margin-bottom:16px;font-size:14.5px;line-height:1.7;font-weight:600}
+#noStore b{font-weight:800}
 
 /* ---------- 모달 ---------- */
 .modal{position:fixed;inset:0;background:rgba(43,33,24,.55);display:none;z-index:60;padding:20px;overflow-y:auto}
@@ -373,6 +385,9 @@ p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
 
 <main>
 
+<!-- 브라우저 저장 공간을 못 쓰는 환경(사생활 보호 모드, 쿠키 차단, 일부 iframe)에서만 보입니다 -->
+<div id="noStore" class="noprint" style="display:none"></div>
+
 <!-- ============ 찾아보기 ============ -->
 <section class="view on" id="v-browse">
   <h2 class="sec">유산 찾아보기</h2>
@@ -473,7 +488,7 @@ p.lead{color:var(--ink2);margin:0 0 18px;font-size:14.5px}
         <label id="L5"></label><textarea id="r_unknown"></textarea>
         <div class="hint" id="H5"></div>
       </div>
-      <div class="fld"><label id="L6"></label><textarea id="r_think" placeholder="여기는 불러오기로 채워지지 않아요. 스스로 쓰세요."></textarea></div>
+      <div class="fld"><label id="L6"></label><textarea id="r_think" placeholder="이 칸은 예시를 지우고 반드시 내 말로 써야 제출할 수 있어요."></textarea></div>
       <div class="fld"><label>출처</label><input id="r_src"></div>
       <div id="checklist"></div>
       <div class="fld" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -1486,7 +1501,7 @@ _default:'<rect width="200" height="130" fill="#e2dccf"/><text x="100" y="72" te
 let PHOTOS = {};
 function artOf(h){
   return PHOTOS[h.id]
-    ? `<img src="${PHOTOS[h.id]}" alt="${esc(h.easy)} 사진">`
+    ? `<img src="${esc(PHOTOS[h.id])}" alt="${esc(h.easy)} 사진">`
     : (ART[h.id] ? `<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">${ART[h.id]}</svg>` : ART._default);
 }
 const kindOf = h => PHOTOS[h.id] ? "📷 사진" : "🎨 그림";
@@ -1497,7 +1512,10 @@ const kindOf = h => PHOTOS[h.id] ? "📷 사진" : "🎨 그림";
 const T1 = ["🏛️ 문화유산","🌿 자연유산","🎭 무형유산"];
 const T2 = ["🏰 큰 건물·터","📜 글·그림·책","🗿 돌·금속 물건","🌳 나무·동물·지형","🎶 노래·춤·기술"];
 const T3 = ["⚔️ 나라를 지키는 곳","👑 왕과 궁궐 이야기","🌾 백성들의 생활","🎨 예술과 신앙"];
-const T0 = ["국보","보물","사적","국가무형유산","천연기념물","습지보호지역"];
+/* 종목 칩은 '실제로 그 종목의 유산이 하나라도 있을 때'만 만듭니다.
+   (예전에는 '보물' 칩이 늘 보였는데 해당 유산이 없어 누르면 0건이 나왔습니다.) */
+const T0_ALL = ["국보","보물","사적","국가무형유산","천연기념물","습지보호지역"];
+const T0 = T0_ALL.filter(t => HERITAGE.some(h => (h.jong||[]).includes(t)));
 
 /* =========================================================
    미션
@@ -1572,11 +1590,28 @@ const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const bare = t => String(t).replace(/^\S+\s+/,"");        // 이모지 떼기
+/* 날짜가 비어 있거나 깨진 제출 코드가 들어와도 "Invalid Date"가 보이지 않게 합니다 */
+const fmtDT = v => { const d=new Date(v); return isNaN(d.getTime()) ? "—" : d.toLocaleString("ko-KR"); };
+const fmtD  = v => { const d=new Date(v); return isNaN(d.getTime()) ? "" : d.toLocaleDateString("ko-KR"); };
+/* 교사용 비밀번호. 이 파일은 학생 브라우저로 내려가므로 소스를 보면 알 수 있습니다.
+   '학생이 실수로 못 들어오게' 하는 정도의 잠금이며, 진짜 보안이 아닙니다. */
+const TEACHER_PW = "1155";
 const K = {user:"he-user", tok:"he-token", unl:"he-unlocked", rep:"he-report", sub:"he-submits", quiz:"he-quiz", std:"he-studied", pho:"he-photos"};
 const ls = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 };
+/* 이 앱은 모든 자료를 localStorage에 담습니다. 시크릿 창·쿠키 차단·일부 iframe(예: 앱스스크립트
+   웹앱)에서는 저장이 통째로 막힐 수 있는데, 그러면 아무 말 없이 기록이 사라집니다.
+   조용히 잃어버리는 대신 학생에게 미리 알려 줍니다. */
+const STORAGE_OK = (()=>{ try{ localStorage.setItem("he-probe","1"); localStorage.removeItem("he-probe"); return true; }catch(e){ return false; } })();
+if(!STORAGE_OK){
+  const b=document.getElementById("noStore");
+  b.style.display="";
+  b.innerHTML = "⚠️ <b>이 창에서는 저장이 되지 않습니다.</b> 토큰·보고서·제출 기록이 남지 않고, 창을 닫으면 사라져요.<br>"+
+    "다른 창에서 열거나, 시크릿 모드를 끄거나, 브라우저의 쿠키·사이트 데이터 차단을 풀어 주세요. "+
+    "보고서는 <b>🖨 인쇄 / PDF</b>로 바로 받아 두시면 안전합니다.";
+}
 
 const FRESH_QUIZ = ()=>({asked:0,right:0,streak:0,best:0,wrong:0,locked:false});
 let USER   = ls.get(K.user,null);            // {level, grade, cls, no, name}
@@ -1647,7 +1682,6 @@ function applyLevel(){
     ? "먼저 <b>교과서에서 배우는 세 가지 분류</b>에서 골라 보세요. 자세한 정보를 열려면 탐험 토큰 3개가 필요해요. 토큰은 <b>어휘 탐험</b>에서 모을 수 있어요."
     : "먼저 <b>교과서에서 배우는 세 가지 분류</b>로 좁혀 보세요. 더 잘게 나눈 세부 분류는 아래에서 펼칠 수 있습니다. 자세한 정보를 열려면 탐험 토큰 3개가 필요하고, 토큰은 <b>어휘 탐험</b>에서 문제를 맞혀 모읍니다.";
   $("#reportLead").innerHTML = L().lead;
-  ["l1","l2","l3","l5","l6"].forEach(k=>{ $("#L"+k[1].toUpperCase()) });
   $("#L1").textContent=L().l1; $("#L2").textContent=L().l2; $("#L3").textContent=L().l3;
   $("#L4a").textContent=L().l4a; $("#L4b").textContent=L().l4b;
   $("#L5").textContent=L().l5;  $("#H5").textContent=L().h5; $("#L6").textContent=L().l6;
@@ -1720,7 +1754,8 @@ $("#resetBtn").onclick = () => {
 const one = h => lvl()==="low" ? (h.one34||h.one) : h.one;
 const purposeOf = h => lvl()==="low" ? (h.purpose34||h.purpose) : h.purpose;
 function haystack(h){
-  return [h.name,h.easy,h.era,h.one,h.one34,purposeOf(h),h.now,h.desig,h.unesco,
+  /* h.where·h.year를 넣어야 '종로구', '충청남도', '1395년' 같은 말로도 찾을 수 있습니다 */
+  return [h.name,h.easy,h.era,h.year,h.where,h.one,h.one34,purposeOf(h),h.now,h.desig,h.unesco,
           ...h.t1,...h.t2,...h.t3,...(h.jong||[]),
           ...h.events.map(e=>e.y+" "+e.t),...h.pro,...h.con,...h.unknown].join(" ");
 }
@@ -1755,8 +1790,8 @@ function render(){
       <span class="thumb">${artOf(h)}<i class="kind">${kindOf(h)}</i></span>
       <span class="bigtag">${esc(h.t1[0])}</span>
       <span class="era">${esc(h.era)}</span>
-      <h3>${esc(h.easy)}</h3>
-      <p class="oneline">${esc(one(h))}</p>
+      <span class="nm">${esc(h.easy)}</span>
+      <span class="oneline">${esc(one(h))}</span>
       <span class="subtags">세부 분류 — <b>${esc(top)}</b> 중 ${subs.map(s=>`‘${esc(s)}’`).join(" · ")}</span>
       <span class="lockrow ${open?"op":"lk"}">${open?"🔓 정보를 열어 두었어요":"🔒 열려면 탐험 토큰 "+COST+"개"}</span>
     </button>`;
@@ -1955,6 +1990,8 @@ function markTerms(root){
 const tip=$("#tip");
 function showTip(el){
   const t=el.dataset.t;
+  /* 사전 안내문의 '이렇게 표시된 낱말'처럼 뜻이 없는 예시 표시에는 빈 상자를 띄우지 않습니다 */
+  if(!t || !DICT[t]){ tip.style.display="none"; return; }
   tip.innerHTML = "<b>"+esc(t)+"</b>"+esc(defOf(t));
   tip.style.display="block";
   const r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
@@ -2155,12 +2192,14 @@ function dropExample(id){
   if(!EX.has(id)) return;
   const el=$("#"+id);
   const t=el.dataset.ex||"";
-  el.placeholder = "예시: " + (t.length>70 ? t.slice(0,70)+"…" : t);
+  const ph0=el.dataset.ph0||"";            // 원래 안내 문구는 지우지 않고 함께 둡니다
+  el.placeholder = (ph0?ph0+"\n":"") + "예시: " + (t.length>70 ? t.slice(0,70)+"…" : t);
   el.value=""; el.classList.remove("example"); EX.delete(id);
   syncReport(); save(); updateChecklist();
 }
 EXF.forEach(id=>{
   const el=$("#"+id);
+  el.dataset.ph0 = el.placeholder || "";   // 원래 안내 문구를 기억해 둡니다
   // 누르거나, 옮겨 오거나, 글자를 넣으려 하면 예시를 지웁니다
   ["pointerdown","touchstart","mousedown","focus","keydown","beforeinput","paste"]
     .forEach(ev=>el.addEventListener(ev,()=>dropExample(id)));
@@ -2224,7 +2263,7 @@ function renderSheet(d){
   $("#s_l4").textContent=lb.l4; $("#s_l4a").textContent=lb.s4a; $("#s_l4b").textContent=lb.s4b;
   $("#s_l5").textContent=lb.l5; $("#s_l6").textContent=lb.l6;
   $("#s_who").textContent = d.name ? `${d.grade}학년 ${d.cls}반 ${d.no}번 ${d.name}` : "이름: ____________";
-  $("#s_date").textContent = new Date(d.at||Date.now()).toLocaleDateString("ko-KR");
+  $("#s_date").textContent = fmtD(d.at||Date.now());
   $("#s_title").textContent = d.title || "조사한 국가유산";
   $("#s_why").textContent=d.why; $("#s_event").textContent=d.event; $("#s_now").textContent=d.now;
   $("#s_pro").textContent=d.pro; $("#s_con").textContent=d.con;
@@ -2250,6 +2289,9 @@ function save(){
 }
 function loadReport(){
   const d=ls.get(K.rep,null); if(!d) return;
+  /* 먼저 유산 목록(<option>)을 만들어 두어야 저장해 둔 선택이 되살아납니다.
+     이 줄이 없으면 새로고침할 때마다 '조사한 국가유산'이 비어 제출·인쇄가 막혔습니다. */
+  refreshPicker();
   if(d.pick) $("#r_pick").value=d.pick;
   RF.forEach(k=>{ if(d[k]!=null) $("#"+k).value=d[k]; });
   EX=new Set();
@@ -2264,7 +2306,7 @@ $("#fillBtn").onclick=fillExample;
 $("#editWho").onclick=openGate;
 $("#clearBtn").onclick=()=>{
   if(!confirm("보고서에 쓴 내용을 모두 지울까요?")) return;
-  RF.forEach(k=>{ const el=$("#"+k); el.value=""; el.classList.remove("example"); el.placeholder=""; delete el.dataset.ex; });
+  RF.forEach(k=>{ const el=$("#"+k); el.value=""; el.classList.remove("example"); el.placeholder=el.dataset.ph0||""; delete el.dataset.ex; });
   EX=new Set(); $("#r_pick").value="";
   syncReport(); save(); updateChecklist();
 };
@@ -2320,7 +2362,7 @@ $("#codeBtn").onclick=async()=>{
 $("#pwGo").onclick=checkPw;
 $("#pw").addEventListener("keydown",e=>{ if(e.key==="Enter") checkPw(); });
 function checkPw(){
-  if($("#pw").value==="1155"){
+  if($("#pw").value===TEACHER_PW){
     $("#tLock").style.display="none"; $("#tPanel").style.display="";
     $("#pw").value=""; $("#pwMsg").textContent=""; renderTeacher();
   }else{
@@ -2328,13 +2370,17 @@ function checkPw(){
   }
 }
 $("#tOut").onclick=()=>{
-  teacherMode=false; $("#tPanel").style.display="none"; $("#tLock").style.display="";
-  renderWho(); render(); refreshPicker();
+  /* 잠글 때 토큰 제한도 원래대로 돌려놓고 버튼 글자도 맞춰 줍니다.
+     예전에는 teacherMode만 꺼지고 버튼은 '다시 걸기'로 남아 다음에 반대로 동작했습니다. */
+  teacherMode=false;
+  $("#tUnlockAll").textContent="🔓 토큰 제한 풀기";
+  $("#tPanel").style.display="none"; $("#tLock").style.display="";
+  renderWho(); render(); refreshPicker(); renderQuest(); renderDict($("#dq").value.trim());
 };
 $("#tUnlockAll").onclick=()=>{
   teacherMode=!teacherMode;
   $("#tUnlockAll").textContent = teacherMode?"🔒 토큰 제한 다시 걸기":"🔓 토큰 제한 풀기";
-  renderWho(); render(); refreshPicker();
+  renderWho(); render(); refreshPicker(); renderQuest(); renderDict($("#dq").value.trim());
   alert(teacherMode ? "토큰 제한을 풀었습니다. 모든 유산 정보를 열 수 있습니다.\n(이 창을 닫으면 다시 원래대로 돌아갑니다.)"
                     : "토큰 제한을 다시 걸었습니다.");
 };
@@ -2344,7 +2390,17 @@ $("#tCodeOpen").onclick=()=>{
 $("#tCodeGo").onclick=()=>{
   const lines=$("#codeIn").value.split(/[\r\n]+/).map(s=>s.trim()).filter(Boolean);
   let ok=0,bad=0;
-  lines.forEach(l=>{ try{ const d=dec(l); if(d&&d.name){ addSubmission(d); ok++; } else bad++; }catch(e){ bad++; } });
+  lines.forEach(l=>{
+    try{
+      const d=dec(l);
+      /* 이름·조사한 유산이 없는 코드는 보고서가 아니므로 건너뜁니다.
+         제출 시각이 깨져 있으면 불러온 시각으로 채워 목록이 어긋나지 않게 합니다. */
+      if(d && typeof d==="object" && d.name && d.pick){
+        if(isNaN(new Date(d.at).getTime())) d.at = new Date().toISOString();
+        addSubmission(d); ok++;
+      } else bad++;
+    }catch(e){ bad++; }
+  });
   $("#codeMsg").textContent = `${ok}건 불러왔습니다.` + (bad?` (${bad}건은 코드가 올바르지 않아 건너뛰었습니다.)`:"");
   if(ok) $("#codeIn").value="";
   renderTeacher();
@@ -2367,7 +2423,7 @@ function renderTeacher(){
       <td>${esc(d.cls)}</td><td>${esc(d.no)}</td><td class="nm">${esc(d.name)}</td>
       <td>${esc(d.title||"—")}</td><td>${d.lv==="low"?"3~4학년":"5~6학년"}</td>
       <td>${esc(d.right||0)}/${esc(d.asked||0)}</td>
-      <td>${new Date(d.at).toLocaleString("ko-KR")}</td>
+      <td>${esc(fmtDT(d.at))}</td>
       <td style="white-space:nowrap">
         <button data-view="${i}">보기</button>
         <button data-print="${i}">인쇄</button>
@@ -2389,7 +2445,7 @@ function renderTeacher(){
 function viewSub(d){
   const lb=LABELS[d.lv||"high"];
   $("#m_name").textContent = `${d.cls}반 ${d.no}번 ${d.name}`;
-  $("#m_sub").textContent  = `${d.title} · ${new Date(d.at).toLocaleString("ko-KR")} 제출`;
+  $("#m_sub").textContent  = `${d.title} · ${fmtDT(d.at)} 제출`;
   const sec=(t,v)=>`<div class="blk"><h4>${esc(t)}</h4><p style="white-space:pre-wrap">${esc(v||"(비어 있음)")}</p></div>`;
   $("#m_body").innerHTML =
     sec(lb.l1,d.why)+sec(lb.l2,d.event)+sec(lb.l3,d.now)+
@@ -2401,6 +2457,7 @@ function viewSub(d){
     sec(lb.l6,d.think)+
     `<div class="blk"><h4>📎 출처</h4><p class="src">${esc(d.src||"(비어 있음)")}</p>
       <p class="src">어휘 탐험 ${esc(d.right||0)}/${esc(d.asked||0)} 정답 · 남은 토큰 ${esc(d.tok??"-")}개</p></div>`;
+  markTerms($("#m_body"));   // 학생 글에서도 어려운 낱말 뜻을 바로 볼 수 있게 합니다
   $("#modal").classList.add("on"); document.body.style.overflow="hidden";
 }
 $("#tCsv").onclick=()=>{
