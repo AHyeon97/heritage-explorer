@@ -4,18 +4,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@500;600;700&display=swap">
 <style>
 :root{
-  --ground:#E9EFEB;
-  --surface:#FFFFFF;
-  --surface-2:#F3F7F4;
-  --ink:#16211D;
-  --ink-2:#48594F;
-  --ink-3:#7B8B83;
-  --line:#C6D4CC;
-  --line-soft:#DDE7E1;
-  --accent:#2C6B5C;
-  --accent-soft:#DCEBE4;
-  --hot:#B8402B;
-  --hot-soft:#FAEAE5;
+  --ground:#E9EFEB; --surface:#FFFFFF; --surface-2:#F3F7F4;
+  --ink:#16211D; --ink-2:#48594F; --ink-3:#7B8B83;
+  --line:#C6D4CC; --line-soft:#DDE7E1;
+  --accent:#2C6B5C; --accent-soft:#DCEBE4;
+  --hot:#B8402B; --hot-soft:#FAEAE5;
   --say-bg:#F7FAF8;
   --shadow:0 1px 2px rgba(22,33,29,.05),0 10px 28px rgba(22,33,29,.06);
 }
@@ -25,8 +18,7 @@
     --ink:#E4EEE9; --ink-2:#A8B9B2; --ink-3:#76867E;
     --line:#2E3C37; --line-soft:#242F2B;
     --accent:#72BAA2; --accent-soft:#1D322B;
-    --hot:#E8836A; --hot-soft:#331F1A;
-    --say-bg:#1B2522;
+    --hot:#E8836A; --hot-soft:#331F1A; --say-bg:#1B2522;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);
   }
 }
@@ -35,8 +27,7 @@
   --ink:#E4EEE9; --ink-2:#A8B9B2; --ink-3:#76867E;
   --line:#2E3C37; --line-soft:#242F2B;
   --accent:#72BAA2; --accent-soft:#1D322B;
-  --hot:#E8836A; --hot-soft:#331F1A;
-  --say-bg:#1B2522;
+  --hot:#E8836A; --hot-soft:#331F1A; --say-bg:#1B2522;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
@@ -45,7 +36,7 @@ body{
   font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;
   font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{margin:0;text-wrap:balance}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
 button{font:inherit;color:inherit;cursor:pointer}
 
 .bar{
@@ -61,8 +52,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .bar .spacer{flex:1 1 auto;min-width:6px}
 .btn{
   border:1px solid var(--line);background:var(--surface-2);border-radius:7px;
-  padding:7px 13px;font-size:13px;font-weight:500;
-  transition:background .15s,border-color .15s;
+  padding:7px 13px;font-size:13px;font-weight:500;transition:background .15s,border-color .15s;
 }
 .btn:hover{background:var(--accent-soft);border-color:var(--accent)}
 .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -70,39 +60,35 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 .wrap{max-width:900px;margin:0 auto;padding:26px 16px 80px}
 
-/* ---- overview ---- */
-.hero{margin-bottom:26px}
-.eyebrow{
-  font-family:Archivo,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--accent);
-}
+.hero{margin-bottom:22px}
+.eyebrow{font-family:Archivo,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .hero h2{font-size:clamp(25px,5vw,34px);font-weight:900;letter-spacing:-.02em;margin:6px 0 10px;line-height:1.2}
-.hero p{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
+.hero p{margin:0;color:var(--ink-2);max-width:64ch}
 
 .facts{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;
   background:var(--line-soft);border:1px solid var(--line-soft);border-radius:10px;
-  overflow:hidden;margin:20px 0 26px;
+  overflow:hidden;margin:20px 0 22px;
 }
 .facts div{background:var(--surface);padding:12px 14px}
 .facts b{display:block;font-family:Archivo,sans-serif;font-size:20px;font-weight:700;line-height:1.2}
 .facts span{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
 
+.spine{
+  background:var(--surface);border:1px solid var(--hot);border-radius:12px;
+  padding:16px 18px;margin:0 0 26px;box-shadow:var(--shadow);
+}
+.spine h3{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hot);margin-bottom:9px}
+.spine p{margin:0;font-size:14.5px}
+.spine strong{color:var(--hot)}
+
 .budget{margin:0 0 30px}
 .budget h3{font-size:12px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px;font-family:Archivo,sans-serif}
 .track{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line-soft)}
-.track div{
-  display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;
-  font-family:Archivo,sans-serif;letter-spacing:.03em;overflow:hidden;white-space:nowrap;
-}
+.track div{display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;font-family:Archivo,sans-serif;letter-spacing:.03em;overflow:hidden;white-space:nowrap}
 
-/* ---- phases + beats ---- */
 .phase{margin:34px 0 14px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.phase .tag{
-  font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:#fff;background:var(--accent);
-  padding:3px 9px;border-radius:4px;
-}
+.phase .tag{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;padding:3px 9px;border-radius:4px}
 .phase h3{font-size:19px;font-weight:700;letter-spacing:-.01em}
 .phase .mins{font-family:Archivo,sans-serif;font-size:13px;color:var(--ink-3);font-weight:600}
 
@@ -113,19 +99,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 }
 .beat.cutmark{border-color:var(--hot)}
 .beat .rail{display:flex;flex-direction:column;gap:7px;align-items:flex-start}
-.beat .time{
-  font-family:Archivo,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em;
-  font-variant-numeric:tabular-nums;line-height:1.1;
-}
+.beat .time{font-family:Archivo,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.1}
 .beat .dur{font-family:Archivo,sans-serif;font-size:11.5px;color:var(--ink-3);font-weight:600}
-.beat .chk{
-  width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);
-  background:var(--surface-2);display:grid;place-items:center;font-size:13px;color:transparent;
-  padding:0;
-}
+.beat .chk{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);background:var(--surface-2);display:grid;place-items:center;font-size:13px;color:transparent;padding:0}
 .beat .chk[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .beat.done{opacity:.55}
-
 .beat h4{font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:9px}
 .beat h4 em{
   font-style:normal;font-family:Archivo,sans-serif;font-size:10.5px;font-weight:700;
@@ -138,59 +116,29 @@ button{font:inherit;color:inherit;cursor:pointer}
   background:var(--say-bg);border-left:3px solid var(--accent);
   padding:11px 14px;border-radius:0 7px 7px 0;margin:0 0 9px;color:var(--ink);
 }
-.say + .say{margin-top:-2px}
-.say .who{
-  display:block;font-family:Archivo,sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px;
-}
+.say .who{display:block;font-family:Archivo,sans-serif;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
 .say.kid{border-left-color:var(--ink-3);font-style:italic;color:var(--ink-2);font-size:15.5px}
-.ko{
-  font-family:"Noto Sans KR",sans-serif;font-weight:900;color:var(--hot);
-  font-style:normal;letter-spacing:.01em;
-}
-.rom{
-  font-family:Archivo,sans-serif;font-weight:700;font-size:.86em;letter-spacing:.06em;
-  color:var(--accent);font-style:normal;
-}
+.ko{font-family:"Noto Sans KR",sans-serif;font-weight:900;color:var(--hot);font-style:normal;letter-spacing:.01em}
+.rom{font-family:Archivo,sans-serif;font-weight:700;font-size:.86em;letter-spacing:.06em;color:var(--accent);font-style:normal}
 .acts{margin:9px 0 0;padding-left:18px;font-size:14px;color:var(--ink-2)}
 .acts li{margin-bottom:3px}
 .acts li::marker{color:var(--accent)}
-.cue{
-  margin-top:11px;display:flex;gap:8px;flex-wrap:wrap;
-}
-.cue span{
-  font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:99px;
-  background:var(--accent-soft);color:var(--accent);border:1px solid transparent;
-}
+.cue{margin-top:11px;display:flex;gap:8px;flex-wrap:wrap}
+.cue span{font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);border:1px solid transparent}
 .cue span.mat{background:transparent;border-color:var(--line);color:var(--ink-2)}
-.note{
-  margin-top:11px;padding:9px 12px;border-radius:7px;background:var(--hot-soft);
-  font-size:13.5px;color:var(--ink);border:1px solid var(--hot);
-}
+.note{margin-top:11px;padding:9px 12px;border-radius:7px;background:var(--hot-soft);font-size:13.5px;color:var(--ink);border:1px solid var(--hot)}
 .note b{color:var(--hot)}
 
-/* ---- rules block ---- */
 .rules{margin:9px 0 0;display:grid;gap:7px}
-.rules li{
-  list-style:none;display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:baseline;
-  font-size:14.5px;
-}
-.rules b{
-  font-family:Archivo,sans-serif;font-size:11px;font-weight:700;color:#fff;background:var(--accent);
-  border-radius:4px;text-align:center;padding:2px 0;
-}
+.rules li{list-style:none;display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:baseline;font-size:14.5px}
+.rules b{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:4px;text-align:center;padding:2px 0}
 
-/* ---- tail panels ---- */
-.panel{
-  background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;
-  padding:20px;margin-top:22px;box-shadow:var(--shadow);
-}
+.panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;padding:20px;margin-top:22px;box-shadow:var(--shadow)}
 .panel h3{font-size:12px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-family:Archivo,sans-serif;margin-bottom:12px}
 .tbl{width:100%;border-collapse:collapse;font-size:14px}
 .tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
-.tbl th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.tbl th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700;white-space:nowrap}
 .tbl tr:last-child td{border-bottom:none}
-.tbl td b{font-weight:700}
 .scroll{overflow-x:auto}
 .checklist{margin:0;padding-left:19px;font-size:14.5px;color:var(--ink-2)}
 .checklist li{margin-bottom:5px}
@@ -210,7 +158,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   body{background:#fff;font-size:11pt}
   .bar,.chk,.noprint{display:none!important}
   .wrap{max-width:none;padding:0}
-  .beat,.panel{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+  .beat,.panel,.spine{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
   .phase{break-after:avoid;page-break-after:avoid}
   .say{background:#f6f6f6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
@@ -228,18 +176,25 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div class="wrap">
 
   <section class="hero">
-    <div class="eyebrow">Teacher Script · Grade 4–6 · Canada</div>
-    <h2>재료를 찾아 한식을 완성하라</h2>
-    <p>모둠마다 비밀 음식 카드를 받고, 바구니 속 66장에서 자기 음식의 재료 3장을 찾아 제출하면 미션 성공.
-    학생이 한국어 단어 11개를 <strong>이기기 위한 도구</strong>로 쓰게 만드는 것이 이 수업의 설계 목표입니다.</p>
+    <div class="eyebrow">Teacher Script · Grade 5–6 · Age 9–10 · Canada · 23 students</div>
+    <h2>재료를 먼저 배우고, 음식을 보고, 스스로 맞춘다</h2>
+    <p>재료 8개를 먼저 가르치고 → 음식 3가지를 보여주되 <strong>재료는 알려주지 않고</strong> →
+    모둠이 사진을 보고 재료를 추론해 카드로 제출합니다. 같은 음식을 맡은 두 모둠이 서로를 검증합니다.</p>
   </section>
 
   <div class="facts">
     <div><b>45</b><span>분</span></div>
-    <div><b>6</b><span>모둠 × 4명</span></div>
-    <div><b>6</b><span>음식</span></div>
-    <div><b>11</b><span>한국어 단어</span></div>
-    <div><b>66</b><span>재료 카드</span></div>
+    <div><b>23</b><span>명 · 6모둠</span></div>
+    <div><b>3</b><span>음식 (2모둠씩)</span></div>
+    <div><b>8</b><span>한국어 단어</span></div>
+    <div><b>48</b><span>재료 카드</span></div>
+  </div>
+
+  <div class="spine">
+    <h3>이 수업의 심장</h3>
+    <p><strong>전개 ②에서 재료를 한 마디도 말하지 마세요.</strong>
+    "김치는 배추로 만들어요" 같은 문장이 한 번 나오면 미션이 추론에서 기억력 테스트로 떨어집니다.
+    음식 소개는 <strong>사진 · 이름 · 문화 이야기</strong>만. 재료는 학생이 사진을 보고 알아내야 합니다.</p>
   </div>
 
   <div class="budget">
@@ -250,58 +205,58 @@ button{font:inherit;color:inherit;cursor:pointer}
   <div id="script"></div>
 
   <section class="panel">
+    <h3>모둠 배정 (23명 = 4·4·4·4·4·3)</h3>
+    <div class="scroll">
+      <table class="tbl">
+        <tr><th>모둠</th><th>인원</th><th>음식</th><th>정답</th><th>난이도</th></tr>
+        <tr><td>1 · 2</td><td>4 · 4</td><td>🌶️ <b>떡볶이</b></td><td><span class="ko">떡</span> · <span class="ko">고추</span> · <span class="ko">어묵</span></td><td>중</td></tr>
+        <tr><td>3 · 4</td><td>4 · 4</td><td>🥬 <b>김치</b></td><td><span class="ko">배추</span> · <span class="ko">고추</span> · <span class="ko">마늘</span></td><td>상</td></tr>
+        <tr><td>5 · <b>6</b></td><td>4 · <b>3</b></td><td>🍙 <b>김밥</b></td><td><span class="ko">밥</span> · <span class="ko">김</span> · <span class="ko">달걀</span></td><td>하</td></tr>
+      </table>
+    </div>
+    <div class="note" style="margin-top:14px">
+      <b>3명 모둠에는 가장 쉬운 김밥을 주세요.</b>
+      김밥은 사진 단면에 재료가 다 보여 추론이 쉽고, 김치는 <span class="ko">마늘</span>이 보이지 않아 가장 어렵습니다.
+      인원 부족을 난이도로 상쇄합니다.
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3>단어 8개 · 두 묶음</h3>
+    <div class="scroll">
+      <table class="tbl">
+        <tr><th>묶음</th><th>한국어</th><th>영어 읽기</th><th>뜻</th><th>기억 고리</th></tr>
+        <tr><td rowspan="4">🤍 <b>All White</b></td><td><b class="ko">밥</b></td><td class="rom">BOP</td><td>rice</td><td>Rice makes you <b>bop</b>!</td></tr>
+        <tr><td><b class="ko">떡</b></td><td class="rom">TTUCK</td><td>rice cake</td><td>Too chewy to <b>talk</b></td></tr>
+        <tr><td><b class="ko">달걀</b></td><td class="rom">DOLL-YELL</td><td>egg</td><td>The <b>doll yells</b> — crack!</td></tr>
+        <tr><td><b class="ko">마늘</b></td><td class="rom">MANUAL</td><td>garlic</td><td>Peel it <b>manually</b></td></tr>
+        <tr><td rowspan="4">🔴 <b>Colourful</b></td><td><b class="ko">김</b></td><td class="rom">KIM</td><td>seaweed</td><td>한국에서 가장 흔한 성씨 <b>Kim</b>!</td></tr>
+        <tr><td><b class="ko">고추</b></td><td class="rom">GO-CHOO</td><td>red pepper</td><td><b>Go, choo-choo!</b> 🚂</td></tr>
+        <tr><td><b class="ko">어묵</b></td><td class="rom">UH-MOOK</td><td>fish cake</td><td>Uh… a <b>MOOSE</b>? 🇨🇦</td></tr>
+        <tr><td><b class="ko">배추</b></td><td class="rom">BAE-CHOO</td><td>napa cabbage</td><td><b>Bae</b> says <b>achoo</b> 🤧</td></tr>
+      </table>
+    </div>
+    <div class="note" style="margin-top:14px">
+      <b>묶음이 정답을 노출하지 않습니다.</b>
+      김밥 = 흰색2+색깔1, 떡볶이 = 흰색1+색깔2, 김치 = 흰색1+색깔2.
+      묶음만 봐서는 어떤 음식의 재료인지 알 수 없습니다. 음식별로 묶어 가르치면 이 장치가 무너집니다.
+    </div>
+  </section>
+
+  <section class="panel">
     <h3>수업 전 준비 체크리스트</h3>
     <ul class="checklist">
-      <li>재료 카드 66장 인쇄·재단 (11종 × 6장) — 종류별로 묶어 두지 말고 <strong>전부 섞어</strong> 바구니 1개에</li>
-      <li>바구니를 교실 <strong>정중앙</strong> 책상에 배치 — 모든 모둠에서 같은 거리여야 공평합니다</li>
-      <li>비밀 음식 카드 6장 (김밥 · 비빔밥 · 불고기 · 떡볶이 · 김치 · 삼계탕) — 접어서 배부</li>
-      <li>제출 트레이 6개 (접시·A4 용지·클리어파일 무엇이든)</li>
-      <li>PPT 20장 · 타이머 (PPT 내장 또는 휴대폰)</li>
-      <li>스티커 또는 작은 상품 2종 — <strong>1등 모둠</strong>과 <strong>최다 거래 모둠</strong>용</li>
-      <li>Exit ticket 쪽지 (학생 수만큼)</li>
+      <li><b>재료 카드 48장</b> 인쇄·재단 (8종 × 6장) — 전부 섞어 바구니 1개에</li>
+      <li><b>모둠 추측지 6장</b> — 모둠별 음식이 이미 인쇄되어 있습니다</li>
+      <li>바구니를 교실 <b>정중앙</b> 책상에 — 모든 모둠에서 같은 거리</li>
+      <li>제출 트레이 6개 (접시 · A4 용지 · 클리어파일 무엇이든)</li>
+      <li>PPT · 타이머 · 연필 6자루</li>
+      <li>스티커 2종 — <b>정답 모둠</b>과 <b>가장 잘 설명한 모둠</b>용</li>
+      <li>Exit ticket 쪽지 23장</li>
     </ul>
     <div class="note" style="margin-top:14px">
-      <b>가장 흔한 실패 지점.</b> 바구니 앞 병목입니다. 6모둠이 동시에 달려가면 5초 룰이 무너집니다.
-      <strong>모둠 번호 순서로 출발</strong>시키거나, 바구니를 2개로 나눠 교실 양쪽에 두세요(카드는 33장씩 무작위 분배).
-    </div>
-  </section>
-
-  <section class="panel">
-    <h3>음식별 정답</h3>
-    <div class="scroll">
-      <table class="tbl">
-        <tr><th>음식</th><th>재료 3종</th><th>함정</th></tr>
-        <tr><td><b>김밥</b></td><td><span class="ko">밥</span> · <span class="ko">김</span> · <span class="ko">달걀</span></td><td>밥 ↔ 떡 (그림이 둘 다 흰색)</td></tr>
-        <tr><td><b>비빔밥</b></td><td><span class="ko">밥</span> · <span class="ko">고추</span> · <span class="ko">소고기</span></td><td>고추 ↔ 배추</td></tr>
-        <tr><td><b>불고기</b></td><td><span class="ko">소고기</span> · <span class="ko">간장</span> · <span class="ko">마늘</span></td><td>—</td></tr>
-        <tr><td><b>떡볶이</b></td><td><span class="ko">떡</span> · <span class="ko">고추</span> · <span class="ko">달걀</span></td><td>떡 ↔ 닭, 떡 ↔ 밥</td></tr>
-        <tr><td><b>김치</b></td><td><span class="ko">배추</span> · <span class="ko">고추</span> · <span class="ko">마늘</span></td><td>배추 ↔ 고추</td></tr>
-        <tr><td><b>삼계탕</b></td><td><span class="ko">닭</span> · <span class="ko">인삼</span> · <span class="ko">마늘</span></td><td>닭 ↔ 떡</td></tr>
-      </table>
-    </div>
-    <div class="note" style="margin-top:14px">
-      <b>어느 두 음식도 재료가 1개만 겹칩니다.</b> 2장만 맞으면 답이 확정되므로, 검수 때 학생이 억울해할 여지가 없습니다.
-      가장 쉬운 <strong>불고기</strong>(함정 0개)는 가장 도움이 필요한 모둠에 배정하세요.
-    </div>
-  </section>
-
-  <section class="panel">
-    <h3>단어 11개 · 한눈에</h3>
-    <div class="scroll">
-      <table class="tbl">
-        <tr><th>한국어</th><th>영어 읽기</th><th>뜻</th><th>등장</th></tr>
-        <tr><td><b class="ko">고추</b></td><td class="rom">GO-CHOO</td><td>red pepper</td><td>3회</td></tr>
-        <tr><td><b class="ko">마늘</b></td><td class="rom">MANUAL</td><td>garlic</td><td>3회</td></tr>
-        <tr><td><b class="ko">밥</b></td><td class="rom">BOP</td><td>rice</td><td>2회</td></tr>
-        <tr><td><b class="ko">달걀</b></td><td class="rom">DOLL-YELL</td><td>egg</td><td>2회</td></tr>
-        <tr><td><b class="ko">소고기</b></td><td class="rom">SO-GO-GEE</td><td>beef</td><td>2회</td></tr>
-        <tr><td><b class="ko">김</b></td><td class="rom">KIM</td><td>seaweed</td><td>1회</td></tr>
-        <tr><td><b class="ko">간장</b></td><td class="rom">GAN-JANG</td><td>soy sauce</td><td>1회</td></tr>
-        <tr><td><b class="ko">떡</b></td><td class="rom">TTUCK</td><td>rice cake</td><td>1회</td></tr>
-        <tr><td><b class="ko">배추</b></td><td class="rom">BAE-CHOO</td><td>napa cabbage</td><td>1회</td></tr>
-        <tr><td><b class="ko">닭</b></td><td class="rom">DOCK</td><td>chicken</td><td>1회</td></tr>
-        <tr><td><b class="ko">인삼</b></td><td class="rom">IN-SAM</td><td>ginseng</td><td>1회</td></tr>
-      </table>
+      <b>가장 흔한 실패 지점.</b> 학생들이 추측지를 쓰기 전에 바구니로 달려갑니다.
+      전개 ③에서 <strong>"추측지를 다 쓴 모둠만 출발"</strong>을 반드시 못 박으세요. 이 순서가 깨지면 수업 전체가 무의미해집니다.
     </div>
   </section>
 
@@ -309,192 +264,176 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <script>
 const PHASES = [
-  { tag:"도입", name:"만나기 · 미션 예고", mins:5,  color:"#2C6B5C" },
-  { tag:"전개 ①", name:"음식 6가지와 재료 11개", mins:11, color:"#3A7F6B" },
-  { tag:"전개 ②", name:"함정 훈련", mins:3,  color:"#4A9179" },
-  { tag:"전개 ③", name:"미션 브리핑", mins:5,  color:"#8A6A3A" },
-  { tag:"전개 ④", name:"재료 사냥", mins:11, color:"#B8402B" },
-  { tag:"전개 ⑤", name:"검수와 시상", mins:7,  color:"#8A5A4A" },
-  { tag:"정리",   name:"문화 한 스푼 · 마무리", mins:3, color:"#2C6B5C" },
+  { tag:"도입",    name:"만나기 · 미션 예고",           mins:4,  color:"#2C6B5C" },
+  { tag:"전개 ①",  name:"재료 8개만 배우기",            mins:12, color:"#3A7F6B" },
+  { tag:"전개 ②",  name:"음식 3가지 — 재료는 비밀",      mins:7,  color:"#8A6A3A" },
+  { tag:"전개 ③",  name:"맞춰봐! 추측과 수집",          mins:14, color:"#B8402B" },
+  { tag:"전개 ④",  name:"두 모둠 비교",                mins:6,  color:"#8A5A4A" },
+  { tag:"정리",    name:"문화 한 스푼 · 마무리",        mins:2,  color:"#2C6B5C" },
 ];
 
-const K  = s => '<span class="ko">' + s + '</span>';
-const R  = s => '<span class="rom">' + s + '</span>';
-const W  = (ko, rom) => K(ko) + ' ' + R(rom);
+const K = s => '<span class="ko">' + s + '</span>';
+const R = s => '<span class="rom">' + s + '</span>';
+const W = (k, r) => K(k) + ' ' + R(r);
 
 const BEATS = [
-/* ===== 도입 ===== */
-{ p:0, t:"0:00", d:"1분", title:"인사",
-  say:[["교사","<span class='ko'>안녕하세요!</span> — that is 'hello' in Korean. Everybody: " + K("안녕하세요") + "!"],
-       ["교사","Three times. Louder. " + K("안녕하세요") + "!"]],
-  acts:["고개를 살짝 숙이며 인사 동작을 함께 보여준다","반 전체 → 왼쪽 절반 → 오른쪽 절반 순서로 3회"],
+/* ===== 도입 4분 ===== */
+{ p:0, t:"0:00", d:"2분", title:"인사",
+  say:[["교사", K("안녕하세요") + "! — that is 'hello' in Korean. Everybody: " + K("안녕하세요") + "!"],
+       ["교사","Today we are going to Korea. Not by plane — <strong>by food</strong>."]],
+  acts:["고개를 살짝 숙이는 인사 동작을 함께 보여준다","반 전체 → 왼쪽 절반 → 오른쪽 절반, 3회"],
   cue:["슬라이드 1"] },
 
-{ p:0, t:"1:00", d:"1분", title:"바구니 공개",
-  say:[["교사","Look at this basket. There are <strong>66 cards</strong> inside. Every single card is a Korean food ingredient — and every card is written in Korean."],
-       ["교사","By the end of this class, you will be able to read them. All of them."]],
-  acts:["바구니를 들어 올려 카드를 한 줌 집어 보여준다 (아직 배부하지 않는다)"],
-  cue:["슬라이드 2","바구니 1개"] },
+{ p:0, t:"2:00", d:"2분", title:"바구니 공개 + 미션 선언",
+  say:[["교사","There are <strong>48 cards</strong> in this basket. Every card is a Korean ingredient."],
+       ["교사","Later, your team gets <strong>one</strong> Korean dish. And you must find what is inside it."],
+       ["교사","But here is the thing — <strong>I will not tell you the ingredients.</strong> You have to figure it out yourselves. So first, we learn the words."]],
+  acts:["실제 바구니를 들어 카드를 한 줌 보여준다 (배부하지 않는다)","\"I will not tell you\"를 천천히, 강조해서 말한다 — 학생의 주의력이 여기서 올라간다"],
+  cue:["슬라이드 2","바구니"],
+  note:"<b>이 한 문장이 수업 전체의 동기입니다.</b> \"안 알려준다\"고 선언하면 학생은 음식 사진을 훨씬 열심히 봅니다." },
 
-{ p:0, t:"2:00", d:"2분", title:"워밍업 — 먹어 봤나요?",
-  say:[["교사","Six foods. Raise your hand if you have eaten it. Ready?"],
-       ["교사","Which one looks the spiciest? Which one have you never seen before?"]],
-  acts:["6장을 한 장씩 넘기며 손든 수를 소리내어 센다 — \"Six people! Nine people!\"","가장 손이 적게 올라간 음식을 기억해 둔다 (전개 ①에서 시간을 더 쓸 음식)"],
-  student:["학생","Kimchi! I had that! / What's that soup?"],
-  cue:["슬라이드 4"] },
+/* ===== 전개 ① 12분 ===== */
+{ p:1, t:"4:00", d:"4분", title:"🤍 흰색 네 장 — 밥 · 떡 · 달걀 · 마늘",
+  say:[["교사","Four Korean ingredients. And look — <strong>all four are white</strong>."],
+       ["교사", W("밥","BOP") + " — rice. Rice makes you <strong>bop</strong>! " +
+                W("떡","TTUCK") + " — rice cake. So chewy you cannot <strong>talk</strong>!"],
+       ["교사", W("달걀","DOLL-YELL") + " — egg. The <strong>doll yells</strong> when it cracks! " +
+                W("마늘","MANUAL") + " — garlic. You peel it <strong>manually</strong>!"],
+       ["교사","White, white, white, white. The picture will <strong>not</strong> help you. You must read the word."]],
+  acts:["단어당 약 55초: 그림 → 한글 → 영어 읽기 → 3회 따라 말하기","밥에서 어깨 흔들기 · 떡에서 입 오물거리기 · 달걀에서 깨는 동작 · 마늘 껍질 벗기기","네 장을 나란히 붙여 \"all white\"를 눈으로 확인시킨다"],
+  cue:["슬라이드 3","슬라이드 4"],
+  note:"<b>흰색 네 개를 한 묶음으로 가르치는 것이 곧 함정 훈련입니다.</b> 별도 함정 슬라이드가 필요 없습니다." },
 
-{ p:0, t:"4:00", d:"1분", title:"미션 예고",
-  say:[["교사","Here is today's mission. Your team gets <strong>one secret dish</strong>. You must find its <strong>three ingredients</strong> in that basket."],
-       ["교사","But the cards are in Korean. So first — we learn the words. Eleven words. Let's go."]],
-  cue:["슬라이드 2 재사용"] },
-
-/* ===== 전개 ① ===== */
-{ p:1, t:"5:00", d:"1분 50초", title:"① 김밥",
-  say:[["교사",K("김밥") + " — " + R("GIM-BAP") + ". Say it! " + K("김밥") + "!"],
-       ["교사","Rice rolled in seaweed. Like sushi — but no raw fish. Koreans take " + K("김밥") + " on picnics."],
-       ["교사","Three ingredients. " + W("밥","BOP") + " — rice. Rice makes you <strong>BOP</strong>! " + W("김","KIM") + " — seaweed. Do you know anyone named <strong>Kim</strong>? It is the most common family name in Korea. Same word! " + W("달걀","DOLL-YELL") + " — egg. The <strong>doll yells</strong> when the egg cracks!"]],
-  acts:["음식 이름 3회 → 재료 3개 각 2회 따라 말하기","밥에서 어깨를 흔들고, 달걀에서 손으로 깨는 동작"],
+{ p:1, t:"8:00", d:"2분", title:"확인 게임 ① — 그림만, 글자만",
+  say:[["교사","Pictures only. No words. I say it in Korean — you point. " + K("떡") + "!"],
+       ["교사","Now the opposite. Words only, no pictures. You read. Together!"]],
+  acts:["1단계: 그림 4장만 띄우고 교사가 한국어로 → 학생이 손가락으로 가리킴","2단계: 한글 4장만 띄우고 학생이 영어 읽기로 소리내기","틀리는 쌍을 기억해 둔다 (대개 밥 ↔ 떡)"],
   cue:["슬라이드 5"] },
 
-{ p:1, t:"6:50", d:"1분 50초", title:"② 비빔밥",
-  say:[["교사",K("비빔밥") + ". Listen — " + K("비빔") + " means <strong>MIX</strong>. Say " + K("비빔") + "!"],
-       ["교사","You get a bowl. You add the red sauce. And then you <strong>mix</strong> everything together. One bowl, many colours."],
-       ["교사",W("밥","BOP") + " — we already know this one! " + W("고추","GO-CHOO") + " — red pepper. <strong>Go, choo-choo!</strong> A red train! " + W("소고기","SO-GO-GEE") + " — beef. <strong>So, go, gee!</strong>"]],
-  acts:["섞는 동작을 크게 보여준다","밥이 두 번째 등장임을 지적 — \"Again! 밥!\""],
-  cue:["슬라이드 6"] },
+{ p:1, t:"10:00", d:"4분", title:"🔴 색깔 네 장 — 김 · 고추 · 어묵 · 배추",
+  say:[["교사","Four more. These ones you can see. Black, red, brown, green."],
+       ["교사", W("김","KIM") + " — seaweed. Do you know anyone named <strong>Kim</strong>? Most common family name in Korea. Same word! " +
+                W("고추","GO-CHOO") + " — red pepper. <strong>Go, choo-choo!</strong> A red train."],
+       ["교사", W("어묵","UH-MOOK") + " — fish cake. Sounds like… <strong>'uh, a moose?'</strong> " +
+                W("배추","BAE-CHOO") + " — cabbage. <strong>Bae</strong> says <strong>achoo</strong>!"],
+       ["교사","Careful! " + K("고추") + " and " + K("배추") + ". Both end in <strong>-CHOO</strong>. Here the picture saves you."]],
+  acts:["단어당 약 50초","고추/배추를 나란히 붙여 끝소리가 같음을 짚고, 그림이 전혀 다름을 보여준다","어묵의 'moose'에서 학생 웃음을 유도 — 캐나다 학생에게 가장 잘 먹히는 고리"],
+  cue:["슬라이드 6","슬라이드 7"] },
 
-{ p:1, t:"8:40", d:"1분 50초", title:"③ 불고기",
-  say:[["교사",K("불고기") + ". Two parts. " + K("불") + " means <strong>FIRE</strong>. " + K("고기") + " means <strong>MEAT</strong>. Fire meat!"],
-       ["교사","Thin beef, sweet sauce, cooked fast on a hot pan."],
-       ["교사",W("소고기","SO-GO-GEE") + " — again! " + W("간장","GAN-JANG") + " — soy sauce. Dark like <strong>jam in a can</strong>. " + W("마늘","MANUAL") + " — garlic. You peel it <strong>manually</strong>!"]],
-  acts:["마늘 껍질 벗기는 손동작","\"마늘 is coming back twice more. Remember it.\""],
-  cue:["슬라이드 7"] },
+{ p:1, t:"14:00", d:"2분", title:"확인 게임 ② — 여덟 개 전부", cut:true,
+  say:[["교사","Now all eight. Quick! Team one — " + K("배추") + "! Team two — " + K("어묵") + "!"]],
+  acts:["8개 그리드를 띄우고 모둠별로 빠르게 지목","맞힌 모둠에 손뼉 1회 — 점수는 매기지 않는다","이 시점에 8개 전부 '들으면 아는' 수준이면 충분하다 (쓰기는 요구하지 않는다)"],
+  cue:["슬라이드 8"],
+  note:"40분 수업이면 <b>1분</b>으로 — 모둠당 1개씩만 지목합니다." },
 
-{ p:1, t:"10:30", d:"1분 50초", title:"④ 떡볶이",
-  say:[["교사",K("떡볶이") + " — " + R("TTEOK-BOK-KI") + ". This is what Korean kids eat after school. Every day. And it is <strong>spicy</strong>."],
-       ["교사",W("떡","TTUCK") + " — rice cake. So chewy you cannot <strong>talk</strong>! " + W("고추","GO-CHOO") + " — again, third time soon. " + W("달걀","DOLL-YELL") + " — a boiled egg on top."]],
-  acts:["떡을 씹는 흉내 — 입을 오물거리며 말이 안 나오는 연기","매움 지수 손가락으로 표시하고 학생에게 물어본다"],
-  student:["학생","I've seen that on YouTube!"],
-  cue:["슬라이드 8"] },
+/* ===== 전개 ② 7분 ===== */
+{ p:2, t:"16:00", d:"2분 20초", title:"🍙 김밥 — 재료는 말하지 않는다", cut:true,
+  say:[["교사","Food number one. What do you think this is?"],
+       ["교사", K("김밥") + " — " + R("GIM-BAP") + ". Say it! " + K("김밥") + "!"],
+       ["교사","Korean kids take " + K("김밥") + " on picnics and school trips. Mum wakes up early and rolls it, then cuts it into circles. Look how pretty the circles are."],
+       ["교사","Now — <strong>look very carefully</strong>. Remember what you see. You will need it later."]],
+  acts:["사진 20초 → 이름 3회 20초 → 문화 이야기 60초 → <b>관찰 40초</b>","관찰 40초 동안 아무 말도 하지 않는다 — 학생이 사진을 훑을 시간","단면 사진(썰어 놓은 것)을 쓴다 — 재료가 보이는 각도여야 추론이 가능하다"],
+  student:["학생","Is that sushi? / I see white and black and yellow!"],
+  cue:["슬라이드 9"],
+  note:"<b>재료 이름을 절대 말하지 마세요.</b> \"밥이 들어 있죠\" 한 마디면 이 수업은 끝납니다.<br>40분 수업이면 문화 이야기를 30초로 줄여 <b>1분 50초</b>." },
 
-{ p:1, t:"12:20", d:"1분 50초", title:"⑤ 김치",
-  say:[["교사",K("김치") + ". You have heard this one. Cabbage, red pepper, garlic — and then you <strong>wait</strong>. It ferments."],
-       ["교사","In November, whole families make kimchi together. It is called " + K("김장") + ". Grandmother, mother, children — everybody. And they give it to the neighbours."],
-       ["교사",W("배추","BAE-CHOO") + " — napa cabbage. <strong>Bae</strong> says <strong>achoo</strong>! " + W("고추","GO-CHOO") + " — third time! " + W("마늘","MANUAL") + " — again!"]],
-  acts:["배추/고추를 나란히 짚으며 \"Careful. These two sound almost the same.\" — 전개 ②의 예고"],
-  cue:["슬라이드 9"] },
+{ p:2, t:"18:20", d:"2분 20초", title:"🌶️ 떡볶이 — 재료는 말하지 않는다", cut:true,
+  say:[["교사", K("떡볶이") + " — " + R("TTEOK-BOK-KI") + ". Say it! " + K("떡볶이") + "!"],
+       ["교사","This is what Korean kids eat after school. Every day. You go to a little shop with your friends, and it is <strong>spicy</strong> — how spicy? This spicy. 🌶️🌶️🌶️"],
+       ["교사","Look very carefully. What do you see in there?"]],
+  acts:["매움 지수를 손가락으로 표시하고 학생에게 물어본다","K-드라마·유튜브에서 본 학생이 있는지 손들기 — 인지도 확인","관찰 40초"],
+  student:["학생","I saw that on YouTube! / Those white tubes, what are they?"],
+  cue:["슬라이드 10"],
+  note:"40분 수업이면 <b>1분 50초</b>." },
 
-{ p:1, t:"14:10", d:"1분 50초", title:"⑥ 삼계탕",
-  say:[["교사",K("삼계탕") + ". Look at the name. " + K("삼") + " = ginseng. " + K("계") + " = chicken. " + K("탕") + " = soup. <strong>The name IS the recipe!</strong>"],
-       ["교사","And here is the strange part. Koreans eat this on the <strong>hottest day of the year</strong>. Plus 35 degrees. Hot soup. Why? " + K("이열치열") + " — fight heat with heat."],
-       ["교사",W("닭","DOCK") + " — chicken at the <strong>dock</strong>. " + W("인삼","IN-SAM") + " — ginseng. <strong>Sam is IN</strong> the soup! " + W("마늘","MANUAL") + " — third time!"],
-       ["교사","One more thing. Ontario grows the most North American ginseng <strong>in the world</strong>. Over 150 farms. Your province grows " + K("인삼") + "!"]],
-  acts:["삼/계/탕 세 글자를 하나씩 짚으며 분해","\"On the hottest day, what do you eat?\"로 먼저 물어 아이스크림 답을 받은 뒤 반전"],
-  student:["학생","Ice cream! / Cold water!"],
-  cue:["슬라이드 10","슬라이드 10-a 복날","슬라이드 10-b 온타리오 인삼"] },
+{ p:2, t:"20:40", d:"2분 20초", title:"🥬 김치 — 재료는 말하지 않는다",
+  say:[["교사", K("김치") + " — " + R("KIM-CHI") + ". You have heard this one!"],
+       ["교사","In November, whole families make kimchi together. Grandmother, mother, children — everybody. It is called " + K("김장") + ", and UNESCO put it on its heritage list. Then they give jars of it to the neighbours."],
+       ["교사","Look very carefully. It is red — but what is <strong>under</strong> the red?"]],
+  acts:["김장 사진(여러 사람이 함께 담그는 장면)을 쓴다","\"under the red\"로 배추를 유도하되 <b>이름은 말하지 않는다</b>","관찰 40초"],
+  cue:["슬라이드 11"],
+  note:"<b>김치가 가장 어렵습니다.</b> " + K("마늘") + "이 사진에 보이지 않기 때문입니다. 3·4모둠이 막히면 전개 ③에서 힌트를 주세요." },
 
-/* ===== 전개 ② ===== */
-{ p:2, t:"16:00", d:"1분 30초", title:"함정 A — 소리로는 못 푼다",
-  say:[["교사","Before the mission — a warning. Look at these two."],
-       ["교사",K("고추") + ". " + K("배추") + ". " + R("GO-CHOO") + ". " + R("BAE-CHOO") + ". Same ending. <strong>-CHOO</strong>."],
-       ["교사","Which one is the red pepper? You <strong>cannot</strong> tell from the sound. You must look at the <strong>picture</strong>."]],
-  acts:["두 단어를 글자와 영어만 크게 띄우고 그림은 가린다","답을 받은 뒤 그림을 공개한다"],
-  cue:["슬라이드 12 상단"] },
-
-{ p:2, t:"17:30", d:"1분 30초", title:"함정 B — 그림으로는 못 푼다", cut:true,
-  say:[["교사","Now the opposite. Two pictures. Both <strong>white</strong>."],
-       ["교사","Which is rice? Which is rice cake? You cannot tell from the picture. You must <strong>read</strong>. " + K("밥") + " or " + K("떡") + "?"],
-       ["교사","So: picture <strong>and</strong> word. Both. Every single time."]],
-  acts:["밥/떡 사진만 글자 없이 띄운다","정답 공개 후 \"Picture and word. Say it with me — picture AND word!\""],
-  cue:["슬라이드 13"],
-  note:"40분 수업이면 이 단계를 <b>30초</b>로 줄이세요 — 사진 2장만 띄우고 \"You must read\" 한 문장으로 마칩니다." },
-
-/* ===== 전개 ③ ===== */
-{ p:3, t:"19:00", d:"2분", title:"모둠 편성 · 비밀 카드",
-  say:[["교사","Four people per team. Six teams."],
-       ["교사","Each team gets <strong>one secret card</strong>. Open it — and do <strong>not</strong> show any other team. This is your dish."]],
-  acts:["접힌 비밀 음식 카드를 모둠별로 배부","불고기(함정 0개)는 가장 도움이 필요한 모둠에","모둠별로 카드 내용을 확인했는지 눈으로 점검"],
-  cue:["비밀 음식 카드 6장","제출 트레이 6개"] },
-
-{ p:3, t:"21:00", d:"1분", title:"역할 정하기",
-  say:[["교사","In your team of four: <strong>three hunters</strong>, <strong>one trader</strong>."],
-       ["교사","Hunters — each of you takes <strong>one</strong> ingredient. Say your ingredient out loud to your team, in Korean, right now."],
-       ["교사","Trader — you do not go to the basket. You fix mistakes. You are the most important person."]],
-  acts:["모둠별로 \"Hunter 1, 2, 3 — Trader!\" 손들어 확인","5명 모둠은 재료 1개를 2인 1조로"],
-  cue:["슬라이드 15"] },
-
-{ p:3, t:"22:00", d:"2분", title:"규칙 + 한 문장",
+/* ===== 전개 ③ 14분 ===== */
+{ p:3, t:"23:00", d:"3분", title:"모둠 배정 + 규칙",
+  say:[["교사","Six teams. Each team gets one dish — and <strong>two teams share the same dish</strong>."],
+       ["교사","You are <strong>not</strong> competing with your partner team. You are <strong>checking</strong> each other. At the end we compare your answers."],
+       ["교사","One sentence you will need: " + K("바꿔 주세요") + " — " + R("BA-KKWO JU-SE-YO") + " — 'Please trade!' Everybody, three times!"]],
   rules:[
-    "One hunter at a time goes to the basket.",
-    "You get <strong>5 seconds</strong>. Take <strong>one</strong> card. Come back.",
-    "Three hunters = three cards.",
-    "Wrong card? The <strong>trader</strong> fixes it.",
-    "Three correct cards on the tray = <strong>MISSION COMPLETE</strong>."
+    "Talk in your team. Guess <strong>3</strong> ingredients.",
+    "Write them on your sheet — <strong>in Korean</strong>.",
+    "<strong>Only then</strong> go to the basket.",
+    "One person at a time. One card each.",
+    "Three cards on the tray. Want to change? " + K("바꿔 주세요") + "!"
   ],
-  say:[["교사","And you need one Korean sentence. Only one. " + K("바꿔 주세요") + " — " + R("BA-KKWO JU-SE-YO") + ". It means <strong>'Please trade!'</strong>"],
-       ["교사","Everybody, three times: " + K("바꿔 주세요") + "!"]],
-  acts:["규칙 5줄을 손가락으로 하나씩 세며 읽는다","\"바꿔 주세요\"는 반드시 전체 3회 — 이 문장이 Round 2를 굴린다","모둠 번호 순서로 출발한다고 미리 정한다"],
-  cue:["슬라이드 15"] },
+  acts:["모둠 추측지를 배부 — 음식이 이미 인쇄되어 있다","떡볶이 1·2모둠 / 김치 3·4모둠 / 김밥 5·6모둠 (3명 모둠에 김밥)","규칙 3번을 두 번 읽는다 — 가장 자주 무너지는 규칙"],
+  cue:["슬라이드 12","모둠 추측지 6장","제출 트레이 6개"] },
 
-/* ===== 전개 ④ ===== */
-{ p:4, t:"24:00", d:"5분", title:"Round 1 — 릴레이 수집",
-  say:[["교사","Hunters, line up. Team one first. Ready… <strong>GO!</strong>"],
-       ["교사","Five — four — three — two — one — <strong>BACK!</strong> Next!"]],
-  acts:["5초를 <strong>소리내어</strong> 센다 — 이게 실수를 만들고, 실수가 Round 2를 만든다","바구니 앞이 막히면 즉시 모둠 순서로 정리","\"Team 3, your trader is hunting! Sit down!\"처럼 역할 위반만 바로잡는다","정답을 알려주지 않는다 — 틀린 카드도 그냥 통과시킨다"],
-  student:["학생","Wait, is this 밥 or 떡?!"],
-  cue:["슬라이드 16 타이머 05:00","바구니"],
-  note:"<b>여기서 개입하지 마세요.</b> 틀린 카드를 바로잡아 주면 Round 2가 죽습니다. 5초 카운트만 정확히 하세요." },
+{ p:3, t:"26:00", d:"4분", title:"⭐ 모둠 추측 — 종이에 먼저 쓴다", cut:true,
+  say:[["교사","Nobody goes to the basket yet. <strong>Talk first.</strong> Look at your dish picture on the screen."],
+       ["교사","What is white in there? What is red? Use your eight words."],
+       ["교사","Stuck? Raise your hand. I will give you <strong>one</strong> hint — free, no penalty."]],
+  acts:["음식 사진 3장을 화면에 계속 띄워 둔다 — 이게 유일한 단서다","순회하며 추측지에 <b>한국어로</b> 3개 썼는지 확인","힌트 요청에는 정답을 주지 말고 질문으로 되돌린다 — \"Is it white or red?\"","김치 모둠(3·4)이 " + K("마늘") + "에서 막히면 \"Something white. You peel it.\" 정도로"],
+  student:["학생","The white tubes must be 떡! / Is the green one 배추?"],
+  cue:["슬라이드 13"],
+  note:"<b>이 4분이 수업의 목적 그 자체입니다.</b> 여기서 바구니로 보내면 추론이 사라지고 손놀림 게임이 됩니다.<br>40분 수업이면 <b>3분</b>." },
 
-{ p:4, t:"29:00", d:"4분", title:"Round 2 — 거래", cut:true,
-  say:[["교사","Hunters, sit. <strong>Traders, stand up.</strong>"],
-       ["교사","You may now walk and talk to other teams. One sentence. " + K("바꿔 주세요") + "!"],
-       ["교사","You may also return a card to the basket and take a new one — 5 seconds, same rule."]],
-  acts:["거래가 안 터지면 마중물: \"Who needs " + K("고추") + "? Three teams need it!\"","교실을 돌며 \"바꿔 주세요\"를 실제로 말했는지 듣는다 — 말한 모둠을 기억해 둔다(최다 거래 시상용)","2분 남았을 때 \"Two minutes!\" 고지"],
-  cue:["슬라이드 17 타이머 04:00"],
-  note:"40분 수업이면 <b>3분</b>으로. 마중물 발화를 1분 일찍 넣으세요." },
+{ p:3, t:"30:00", d:"5분", title:"카드 수집",
+  say:[["교사","Sheets done? <strong>Now go.</strong> One person at a time. Bring one card."],
+       ["교사","Got all three? Check them together. Not sure? Swap it — " + K("바꿔 주세요") + "!"]],
+  acts:["추측지를 다 쓴 모둠부터 출발시킨다","바구니 앞이 막히면 모둠 번호 순서로 정리","<b>정답을 알려주지 않는다</b> — 틀린 카드도 그냥 통과시킨다","교환은 자유롭게 허용 (바구니에 반납 후 새로 1장)"],
+  cue:["슬라이드 14 타이머 05:00","바구니"],
+  note:"<b>여기서 개입하지 마세요.</b> 틀린 답이 전개 ④의 가장 좋은 수업 자료가 됩니다." },
 
-{ p:4, t:"33:00", d:"2분", title:"제출",
-  say:[["교사","Time! Three cards on your tray. Bring it to the front."],
-       ["교사","When I call your team, <strong>each person reads their own card</strong> — in Korean."]],
-  acts:["트레이를 순서대로 줄 세워 받는다","카드 수가 3장이 아닌 모둠은 그 자리에서 조정"],
+{ p:3, t:"35:00", d:"2분", title:"제출",
+  say:[["교사","Time! Three cards on your tray, sheet underneath. Bring it to the front."],
+       ["교사","When I call your dish, <strong>both teams</strong> come up together."]],
+  acts:["트레이와 추측지를 함께 받는다 (추측지가 근거 자료다)","카드가 3장이 아닌 모둠은 그 자리에서 조정"],
   cue:["제출 트레이 6개"] },
 
-/* ===== 전개 ⑤ ===== */
-{ p:5, t:"35:00", d:"6분", title:"검수 — 모둠당 1분", cut:true,
-  say:[["교사","Team one. Hunters, read your cards."],
-       ["교사",K("밥") + ", " + K("김") + ", " + K("달걀") + " — everybody, what dish is that?"],
-       ["교사","<span class='ko'>정답!</span> " + K("김밥") + "! Well done."]],
-  acts:["학생이 <strong>직접</strong> 읽게 한다 — 교사가 대신 읽으면 언어 목표가 사라진다","읽기 어려워하면 영어 읽기 줄을 손가락으로 짚어 준다","정답표를 모둠별로 한 줄씩 공개","틀린 모둠에는 \"Which one is wrong? Read it again.\"으로 스스로 찾게 한다"],
-  student:["학생","밥… 김… 달걀! Gimbap!"],
-  cue:["슬라이드 18 정답표"],
-  note:"40분 수업이면 <b>4분</b>으로 — 모둠당 40초, 정답표를 한 번에 공개하고 확인만 합니다." },
+/* ===== 전개 ④ 6분 ===== */
+{ p:4, t:"37:00", d:"2분", title:"🍙 김밥 — 5모둠 vs 6모둠",
+  say:[["교사","Team five and team six — both of you had " + K("김밥") + ". Come up. Stand side by side."],
+       ["교사","Team five, read your cards. Team six, read yours."],
+       ["교사","Class — <strong>what is different?</strong> Who do you think is right? Hands up for team five… team six…"],
+       ["교사","The answer is… " + K("밥") + ", " + K("김") + ", " + K("달걀") + "!"]],
+  acts:["두 모둠을 <b>나란히</b> 세운다 — 마주보게 하지 않는다 (대결이 아니다)","학생이 <b>직접</b> 읽게 한다","다른 카드가 있으면 \"Why did you choose that?\"을 반드시 묻는다","가장 쉬운 김밥을 먼저 해서 비교 방식을 익히게 한다"],
+  student:["학생","밥… 김… 달걀!"],
+  cue:["슬라이드 15"],
+  note:"<b>틀린 답을 칭찬하세요.</b> \"어묵이라고 생각했어? 왜?\" → \"빨간 국물에 있었어요\" → <strong>\"That's 떡볶이! Good thinking, wrong dish.\"</strong> 이게 이 수업 최고의 학습 순간입니다." },
 
-{ p:5, t:"41:00", d:"1분", title:"시상 — 상은 두 개",
-  say:[["교사","First place — <strong>Team ___</strong>! And one more prize."],
-       ["교사","<strong>Best traders.</strong> The team that said " + K("바꿔 주세요") + " the most. Because that is the team that actually <strong>spoke Korean</strong>."]],
-  acts:["1등 모둠 + 최다 거래 모둠 각각 시상","최다 거래 시상이 핵심 — 속도보다 발화를 보상한다는 메시지"],
-  cue:["슬라이드 19","스티커 2종"] },
+{ p:4, t:"39:00", d:"2분", title:"🌶️ 떡볶이 — 1모둠 vs 2모둠",
+  say:[["교사","Team one, team two — " + K("떡볶이") + ". Read them."],
+       ["교사","The answer is… " + K("떡") + ", " + K("고추") + ", " + K("어묵") + "!"]],
+  acts:["어묵을 못 맞힌 모둠이 많을 것 — 사진에서 어묵이 떡과 섞여 있기 때문","\"The flat brown ones — that's 어묵, fish cake!\"로 사진을 다시 짚어 준다"],
+  cue:["슬라이드 16"] },
 
-/* ===== 정리 ===== */
-{ p:6, t:"42:00", d:"2분", title:"Korean red = 고추", cut:true,
-  say:[["교사","Last thing. <strong>Stand up if your dish had " + K("고추") + ".</strong>"],
-       ["교사","Three teams out of six. Look at their dishes on the screen — " + K("비빔밥") + ", " + K("떡볶이") + ", " + K("김치") + ". All <strong>red</strong>."],
-       ["교사","In Korea, when food is red, it is " + K("고추") + ". Now you know why half of Korean food looks like that."]],
-  acts:["기립한 3모둠을 손으로 가리키며 화면의 빨간 음식 3장과 연결","\"And " + K("마늘") + " was in three dishes too — 불고기, 김치, 삼계탕.\"를 덧붙여도 좋다"],
-  cue:["슬라이드 19 하단"],
-  note:"40분 수업이면 <b>1분</b>으로 — 기립만 시키고 \"Korean red = 고추\" 한 문장으로 마칩니다." },
+{ p:4, t:"41:00", d:"2분", title:"🥬 김치 — 3모둠 vs 4모둠", cut:true,
+  say:[["교사","Team three, team four — " + K("김치") + ". The hardest one. Read them."],
+       ["교사","The answer is… " + K("배추") + ", " + K("고추") + ", and… " + K("마늘") + "!"],
+       ["교사","You could <strong>not</strong> see " + K("마늘") + " in the picture. Nobody could. But it is in there. Korean food almost always has " + K("마늘") + "."]],
+  acts:["마늘을 맞힌 모둠이 있으면 크게 칭찬 — \"How did you know?!\"","아무도 못 맞혔으면 그게 정상이라고 분명히 말해준다","\"보이지 않아도 들어 있다\"가 이 화면의 문화 메시지"],
+  cue:["슬라이드 17"],
+  note:"40분 수업이면 세 비교를 각 <b>1분 30초</b>로 — 정답을 먼저 공개하고 차이만 짚습니다." },
 
-{ p:6, t:"44:00", d:"1분", title:"맛있어요 · Exit ticket",
+/* ===== 정리 2분 ===== */
+{ p:5, t:"43:00", d:"1분", title:"Korean red = 고추",
+  say:[["교사","<strong>Stand up if " + K("고추") + " was in your dish.</strong>"],
+       ["교사","Four teams out of six! Two foods out of three. Look at them — " + K("떡볶이") + " and " + K("김치") + ". Both <strong>red</strong>."],
+       ["교사","In Korea, when food is red, it is " + K("고추") + ". Now you know why."]],
+  acts:["기립한 4모둠(1·2·3·4)을 손으로 가리키며 화면의 빨간 음식 2장과 연결","\"And 마늘 — you can't see it, but it's everywhere.\"를 한 줄 덧붙인다"],
+  cue:["슬라이드 18"] },
+
+{ p:5, t:"44:00", d:"1분", title:"맛있어요 · Exit ticket",
   say:[["교사","One last word — the best one. " + K("맛있어요") + " — " + R("MA-SHI-SSO-YO") + ". It means <strong>DELICIOUS</strong>."],
        ["교사","Three times, loud: " + K("맛있어요") + "!"],
        ["교사","On your paper: write <strong>three</strong> Korean words you remember. Korean letters or English letters — either is fine. " + K("안녕히 계세요") + "!"]],
-  acts:["Exit ticket 배부 → 나가면서 제출","3개를 못 쓰는 학생이 많으면 다음 차시에 복습 5분을 추가한다"],
-  cue:["슬라이드 20","Exit ticket 쪽지"] },
+  acts:["Exit ticket을 나가면서 제출","8개 중 3개를 못 쓰는 학생이 절반을 넘으면 다음 차시에 복습 5분을 배치한다"],
+  cue:["슬라이드 19","Exit ticket 23장"] },
 ];
 
-/* ---------- render ---------- */
 const $ = id => document.getElementById(id);
-const KEY = "kfood-script-done-v1";
+const KEY = "kfood-script-done-v2";
 let done = {};
 try { const raw = localStorage.getItem(KEY); if (raw) done = JSON.parse(raw) || {}; } catch (e) { done = {}; }
 function persist(){ try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
@@ -503,43 +442,24 @@ function renderTrack(){
   const total = PHASES.reduce((s, p) => s + p.mins, 0);
   $("track").innerHTML = PHASES.map(p =>
     '<div style="flex:' + p.mins + ';background:' + p.color + '" title="' + p.tag + ' ' + p.mins + '분">' +
-      (p.mins >= 4 ? p.tag + " " + p.mins + "'" : p.mins + "'") +
-    '</div>'
-  ).join("");
+      (p.mins >= 4 ? p.tag + " " + p.mins + "'" : p.mins + "'") + '</div>').join("");
   $("clock").textContent = total + "분";
 }
 
 function beatHTML(b, i){
   const cls = "beat" + (done[i] ? " done" : "") + (b.cut ? " cutmark" : "");
   let h = '<article class="' + cls + '" id="beat' + i + '">';
-  h += '<div class="rail">' +
-         '<span class="time">' + b.t + '</span>' +
-         '<span class="dur">' + b.d + '</span>' +
-         '<button class="chk noprint" data-chk="' + i + '" aria-pressed="' + (done[i] ? "true" : "false") +
-           '" aria-label="' + b.title + ' 완료 표시">✓</button>' +
-       '</div>';
+  h += '<div class="rail"><span class="time">' + b.t + '</span><span class="dur">' + b.d + '</span>' +
+       '<button class="chk noprint" data-chk="' + i + '" aria-pressed="' + (done[i] ? "true" : "false") +
+       '" aria-label="' + b.title + ' 완료 표시">✓</button></div>';
   h += '<div class="body"><h4>' + b.title + (b.cut ? ' <em>40분 모드 단축</em>' : '') + '</h4>';
-
-  if (b.rules){
-    h += '<ul class="rules">' + b.rules.map((r, n) =>
-      '<li><b>' + (n + 1) + '</b><span>' + r + '</span></li>').join("") + '</ul>';
-  }
-  (b.say || []).forEach(s => {
-    h += '<p class="say"><span class="who">' + s[0] + '</span>' + s[1] + '</p>';
-  });
-  if (b.student){
-    h += '<p class="say kid"><span class="who">' + b.student[0] + ' 예상 반응</span>' + b.student[1] + '</p>';
-  }
-  if (b.acts){
-    h += '<ul class="acts">' + b.acts.map(a => '<li>' + a + '</li>').join("") + '</ul>';
-  }
-  if (b.cue){
-    h += '<div class="cue">' + b.cue.map(c =>
-      '<span' + (/슬라이드/.test(c) ? '' : ' class="mat"') + '>' + c + '</span>').join("") + '</div>';
-  }
+  (b.say || []).forEach(s => { h += '<p class="say"><span class="who">' + s[0] + '</span>' + s[1] + '</p>'; });
+  if (b.rules) h += '<ul class="rules">' + b.rules.map((r, n) => '<li><b>' + (n + 1) + '</b><span>' + r + '</span></li>').join("") + '</ul>';
+  if (b.student) h += '<p class="say kid"><span class="who">' + b.student[0] + ' 예상 반응</span>' + b.student[1] + '</p>';
+  if (b.acts) h += '<ul class="acts">' + b.acts.map(a => '<li>' + a + '</li>').join("") + '</ul>';
+  if (b.cue) h += '<div class="cue">' + b.cue.map(c => '<span' + (/슬라이드/.test(c) ? '' : ' class="mat"') + '>' + c + '</span>').join("") + '</div>';
   if (b.note) h += '<div class="note">' + b.note + '</div>';
-  h += '</div></article>';
-  return h;
+  return h + '</div></article>';
 }
 
 function render(){
@@ -554,6 +474,9 @@ function render(){
     h += beatHTML(b, i);
   });
   $("script").innerHTML = h;
+  document.querySelectorAll(".beat.cutmark .note").forEach(n => {
+    n.hidden = $("btnPlanB").getAttribute("aria-pressed") !== "true";
+  });
 }
 
 document.addEventListener("click", e => {
@@ -574,13 +497,9 @@ $("btnPlanB").addEventListener("click", e => {
   document.querySelectorAll(".beat.cutmark .note").forEach(n => { n.hidden = !on; });
   $("clock").textContent = on ? "40분" : "45분";
 });
-
-$("btnReset").addEventListener("click", () => {
-  done = {}; persist(); render();
-});
+$("btnReset").addEventListener("click", () => { done = {}; persist(); render(); });
 $("btnPrint").addEventListener("click", () => window.print());
 
 renderTrack();
 render();
-document.querySelectorAll(".beat.cutmark .note").forEach(n => { n.hidden = true; });
 </script>
