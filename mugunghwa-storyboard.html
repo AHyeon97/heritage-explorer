@@ -1,0 +1,556 @@
+<title>무궁화 꽃이 피었습니다</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Archivo:wght@500;600;700&display=swap">
+<style>
+:root{
+  --ground:#EDEAF0; --surface:#FFFFFF; --surface-2:#F6F3F8;
+  --ink:#1D1722; --ink-2:#544C5C; --ink-3:#877F90;
+  --line:#CFC6D6; --line-soft:#E3DCE8;
+  --accent:#6B3A7A; --accent-soft:#EADDEE;
+  --flower:#A63A6E; --flower-soft:#FAE5EE;
+  --warn:#B06B1E; --warn-soft:#FBEEDC;
+  --slide-bg:#FCFBFD; --slide-line:#DAD2E0; --box:#F1ECF4;
+  --shadow:0 1px 2px rgba(29,23,34,.05),0 10px 28px rgba(29,23,34,.07);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#120E15; --surface:#1C1721; --surface-2:#241E2A;
+    --ink:#EDE7F0; --ink-2:#B4AABB; --ink-3:#847C8C;
+    --line:#382F40; --line-soft:#2A2430;
+    --accent:#BC92C9; --accent-soft:#2B1F31;
+    --flower:#E183AC; --flower-soft:#331C26;
+    --warn:#E0A75E; --warn-soft:#332619;
+    --slide-bg:#211B26; --slide-line:#3B3244; --box:#292231;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#120E15; --surface:#1C1721; --surface-2:#241E2A;
+  --ink:#EDE7F0; --ink-2:#B4AABB; --ink-3:#847C8C;
+  --line:#382F40; --line-soft:#2A2430;
+  --accent:#BC92C9; --accent-soft:#2B1F31;
+  --flower:#E183AC; --flower-soft:#331C26;
+  --warn:#E0A75E; --warn-soft:#332619;
+  --slide-bg:#211B26; --slide-line:#3B3244; --box:#292231;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+  font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer}
+
+.bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:11px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+}
+.bar h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.bar .pill{font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;color:var(--flower);padding:3px 9px;border:1px solid var(--flower);border-radius:99px}
+.bar .spacer{flex:1 1 auto;min-width:6px}
+.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:7px;padding:7px 13px;font-size:13px;font-weight:500;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--accent-soft);border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:26px 16px 80px}
+.hero{margin-bottom:20px}
+.eyebrow{font-family:Archivo,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.hero h2{font-size:clamp(25px,5vw,34px);font-weight:900;letter-spacing:-.02em;margin:6px 0 10px;line-height:1.2}
+.hero p{margin:0;color:var(--ink-2);max-width:64ch}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;margin:20px 0 22px}
+.facts div{background:var(--surface);padding:12px 14px}
+.facts b{display:block;font-family:Archivo,sans-serif;font-size:20px;font-weight:700;line-height:1.2}
+.facts span{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
+
+.alert{background:var(--surface);border:1px solid var(--warn);border-radius:12px;padding:16px 18px;margin:0 0 16px;box-shadow:var(--shadow)}
+.alert h3{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--warn);margin-bottom:9px}
+.alert p{margin:0 0 8px;font-size:14.5px}
+.alert p:last-child{margin-bottom:0}
+.alert strong{color:var(--warn)}
+.alert.f{border-color:var(--flower)}
+.alert.f h3{color:var(--flower)}
+.alert.f strong{color:var(--flower)}
+
+.flow{margin:12px 0 34px;background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.flow h3{font-family:Archivo,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.flowtrack{display:flex;gap:3px;overflow-x:auto;padding-bottom:4px}
+.fstep{flex:0 0 auto}
+.fstep .cap{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 9px;border-radius:5px 5px 0 0;color:#fff;font-family:Archivo,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.07em;white-space:nowrap}
+.fstep .cap i{font-style:normal;opacity:.75;font-weight:600}
+.fstep .nums{display:flex;gap:3px;padding:7px;background:var(--surface-2);border:1px solid var(--line-soft);border-top:none;border-radius:0 0 5px 5px}
+.fstep .nums a{width:23px;height:23px;display:grid;place-items:center;border-radius:4px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink-2);font-family:Archivo,sans-serif;font-size:11px;font-weight:700}
+.fstep .nums a:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.phase{margin:36px 0 14px;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.phase .tag{font-family:Archivo,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;padding:3px 9px;border-radius:4px}
+.phase h3{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.phase .mins{font-family:Archivo,sans-serif;font-size:13px;color:var(--ink-3);font-weight:600}
+
+.deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.sc{background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);scroll-margin-top:70px}
+.sc.key{border-color:var(--flower)}
+.schead{display:flex;align-items:center;gap:9px;padding:10px 13px;border-bottom:1px solid var(--line-soft);background:var(--surface-2)}
+.schead .no{font-family:Archivo,sans-serif;font-size:13px;font-weight:700;color:#fff;background:var(--accent);min-width:26px;height:24px;display:grid;place-items:center;border-radius:5px}
+.sc.key .schead .no{background:var(--flower)}
+.schead .ttl{font-size:14.5px;font-weight:700;letter-spacing:-.01em;flex:1;min-width:0}
+.schead .tm{font-family:Archivo,sans-serif;font-size:11.5px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.wf{aspect-ratio:16/9;background:var(--slide-bg);border-bottom:1px solid var(--line-soft);padding:9px 11px;display:flex;flex-direction:column;gap:5px;overflow:hidden;container-type:inline-size}
+.wf-bar{font-family:Archivo,sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);line-height:1.2;flex:0 0 auto;font-size:min(11px,2.9cqw)}
+.wf-row{display:flex;gap:5px;flex:1 1 auto;min-height:0;align-items:stretch}
+.wf-col{display:flex;flex-direction:column;gap:5px;flex:1 1 auto;min-height:0;min-width:0}
+.wf-img{flex:1 1 auto;min-height:0;min-width:0;background:var(--box);border:1px dashed var(--slide-line);border-radius:4px;display:grid;place-items:center;gap:2px;text-align:center;padding:3px}
+.wf-img .ico{font-size:min(30px,8cqw);line-height:1}
+.wf-img .cap{font-size:min(9.5px,2.5cqw);color:var(--ink-3);line-height:1.25}
+.wf-ko{flex:0 0 auto;text-align:center;font-weight:900;letter-spacing:.02em;line-height:1.12;font-size:min(26px,6.4cqw);color:var(--ink)}
+.wf-ko small{display:block;font-family:Archivo,sans-serif;font-weight:700;letter-spacing:.08em;font-size:min(11px,2.9cqw);color:var(--flower);margin-top:2px}
+.wf-big{flex:1 1 auto;display:grid;place-items:center;font-family:Archivo,sans-serif;font-weight:700;font-size:min(42px,11cqw);letter-spacing:-.02em;color:var(--flower);line-height:1;text-align:center}
+.wf-note{flex:0 0 auto;font-size:min(10.5px,2.7cqw);color:var(--ink-2);line-height:1.35}
+.wf-grid{display:grid;gap:4px;flex:1 1 auto;min-height:0}
+.wf-cell{background:var(--box);border:1px solid var(--slide-line);border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px;overflow:hidden;min-height:0}
+.wf-cell .ic{font-size:min(19px,4.8cqw);line-height:1}
+.wf-cell b{font-size:min(11px,2.9cqw);font-weight:900;line-height:1.1;text-align:center}
+.wf-cell i{font-style:normal;font-family:Archivo,sans-serif;font-weight:700;letter-spacing:.04em;font-size:min(7.5px,2cqw);color:var(--accent);line-height:1.15;text-align:center}
+.wf-chips{display:flex;gap:3px;flex-wrap:wrap;flex:0 0 auto}
+.wf-chips span{font-size:min(9.5px,2.5cqw);padding:1px 6px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600;white-space:nowrap}
+.wf-chips span.f{background:var(--flower-soft);color:var(--flower)}
+.wf-chips span.w{background:var(--warn-soft);color:var(--warn)}
+
+/* play-field diagram */
+.wf-field{
+  flex:1 1 auto;min-height:0;position:relative;overflow:hidden;
+  border:1px solid var(--slide-line);border-radius:4px;background:var(--box);
+  display:flex;align-items:center;
+}
+.wf-field .wall{
+  flex:0 0 auto;width:min(13px,3.4cqw);align-self:stretch;
+  background:repeating-linear-gradient(45deg,var(--slide-line) 0 3px,transparent 3px 6px);
+  border-right:1.5px solid var(--slide-line);
+}
+.wf-field .zone{flex:1 1 auto;display:flex;align-items:center;justify-content:space-between;gap:min(5px,1.3cqw);padding:0 min(7px,1.8cqw);min-width:0}
+.wf-field .who{display:flex;flex-direction:column;align-items:center;gap:1px;flex:0 0 auto}
+.wf-field .who .f{font-size:min(20px,5.2cqw);line-height:1}
+.wf-field .who .l{font-size:min(7.5px,2cqw);color:var(--ink-3);white-space:nowrap;font-weight:700}
+.wf-field .pack{display:flex;gap:min(3px,.9cqw);align-items:flex-end}
+.wf-field .mid{font-family:Archivo,sans-serif;font-size:min(12px,3.1cqw);font-weight:700;color:var(--flower);white-space:nowrap;text-align:center;line-height:1.2}
+.wf-field .base{flex:0 0 auto;width:0;align-self:stretch;border-left:1.5px dashed var(--slide-line)}
+
+/* beat strip */
+.wf-beats{flex:0 0 auto;display:flex;gap:min(6px,1.5cqw);justify-content:center;align-items:flex-end}
+.wf-beats .chunk{display:flex;flex-direction:column;align-items:center;gap:2px}
+.wf-beats .cells{display:flex;gap:min(2px,.6cqw)}
+.wf-beats .cells span{
+  width:min(21px,5.4cqw);height:min(24px,6.2cqw);border-radius:3px;
+  background:var(--flower-soft);border:1px solid var(--flower);
+  display:grid;place-items:center;font-size:min(11px,2.9cqw);font-weight:900;color:var(--flower);
+}
+.wf-beats .lab{font-family:Archivo,sans-serif;font-size:min(7.5px,2cqw);font-weight:700;letter-spacing:.05em;color:var(--ink-3)}
+
+.wf-steps{flex:1 1 auto;display:flex;flex-direction:column;gap:3px;justify-content:center;min-height:0}
+.wf-steps div{font-size:min(10.5px,2.7cqw);display:flex;gap:6px;align-items:baseline;line-height:1.3}
+.wf-steps div b{font-family:Archivo,sans-serif;font-size:min(8px,2.1cqw);color:#fff;background:var(--accent);border-radius:3px;min-width:13px;text-align:center;flex:0 0 auto}
+.wf-steps div.w b{background:var(--warn)}
+
+.scbody{padding:12px 13px 14px}
+.scbody .say{font-size:13.5px;color:var(--ink);background:var(--surface-2);border-left:3px solid var(--accent);padding:8px 11px;border-radius:0 6px 6px 0;margin:0 0 9px}
+.scbody .say b{color:var(--flower)}
+.scbody ul{margin:0;padding-left:17px;font-size:13px;color:var(--ink-2)}
+.scbody li{margin-bottom:3px}
+.scbody li::marker{color:var(--accent)}
+.scbody .flag{margin-top:10px;padding:8px 11px;border-radius:6px;background:var(--flower-soft);border:1px solid var(--flower);font-size:12.5px;color:var(--ink)}
+.scbody .flag b{color:var(--flower)}
+.scbody .flag.w{background:var(--warn-soft);border-color:var(--warn)}
+.scbody .flag.w b{color:var(--warn)}
+
+.panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;padding:20px;margin-top:26px;box-shadow:var(--shadow)}
+.panel h3{font-family:Archivo,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.scroll{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.tbl th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.ko{font-weight:900;color:var(--flower)}
+.rom{font-family:Archivo,sans-serif;font-weight:700;font-size:.88em;letter-spacing:.05em;color:var(--accent)}
+.checklist{margin:0;padding-left:19px;font-size:14.5px;color:var(--ink-2)}
+.checklist li{margin-bottom:5px}
+.checklist li::marker{color:var(--accent)}
+
+@media (max-width:600px){ .wrap{padding:18px 16px 60px} .deck{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  :root{padding:0}
+  body{background:#fff;font-size:10.5pt}
+  .bar,.noprint{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .deck{grid-template-columns:1fr 1fr}
+  .sc,.panel,.flow,.alert{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+  .phase{break-after:avoid}
+}
+</style>
+
+<header class="bar">
+  <h1>무궁화 꽃이 피었습니다</h1>
+  <span class="pill">20장 · 45분</span>
+  <span class="spacer"></span>
+  <button class="btn" id="btnPrint">인쇄</button>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">Storyboard · 20 slides · Grade 5–6 · Age 9–10 · 23 students</div>
+    <h2>문장 하나를 외치며 노는 법</h2>
+    <p>한국 초등학생이 운동장에서 실제로 하는 놀이입니다. 10음절 한국어 문장 한 개를 리듬으로 통째 익히고,
+    규칙을 여섯 단계로 나눠 배운 뒤 연습 라운드를 거쳐 본 게임에 들어갑니다.
+    설명에 <strong>22분</strong>, 게임에 <strong>15분</strong>을 씁니다.</p>
+  </section>
+
+  <div class="facts">
+    <div><b>45</b><span>분</span></div>
+    <div><b>23</b><span>명 · 전체 1게임</span></div>
+    <div><b>10</b><span>음절 문장 1개</span></div>
+    <div><b>6</b><span>단계 규칙</span></div>
+    <div><b>15~20</b><span>m 직선 공간</span></div>
+  </div>
+
+  <div class="alert">
+    <h3>먼저 읽어 주세요 — 오징어 게임 대응</h3>
+    <p>Grade 5–6 학생이라면 <strong>"Squid Game!"이라고 외칠 것이 거의 확실합니다.</strong>
+    부정하지 말고 인정하되, 바로 되돌리세요.</p>
+    <p>👉 <em>"Yes! You know it from that show. But that show is for adults — and this game is
+    <strong>much, much older</strong>. Korean kids have played this at school for a hundred years.
+    Today we play the real one."</strong></em></p>
+    <p>PPT에는 <strong>오징어 게임 이미지·로고·인물을 절대 넣지 마세요.</strong>
+    저작권 문제이고, 15세 이상 시청가 콘텐츠를 만 9~10세 수업 자료에 쓰는 것이 됩니다.
+    학생이 먼저 꺼낼 때만 말로 짧게 받아넘기는 것이 안전합니다.</p>
+  </div>
+
+  <div class="alert f">
+    <h3>이 수업의 심장</h3>
+    <p><strong>규칙을 말로만 설명하면 반드시 실패합니다.</strong>
+    슬라이드 10~15로 여섯 단계를 하나씩 보여주고, <strong>슬라이드 17의 연습 라운드</strong>에서
+    달리기 없이 한 번 돌려 보세요. 이 5분을 아끼면 본 게임 10분이 전부 혼란으로 날아갑니다.</p>
+  </div>
+
+  <section class="flow">
+    <h3>전체 흐름 — 단계별 슬라이드 배치</h3>
+    <div class="flowtrack" id="flow"></div>
+  </section>
+
+  <div id="deck"></div>
+
+  <section class="panel">
+    <h3>문장 하나 · 10음절</h3>
+    <div class="scroll">
+      <table class="tbl">
+        <tr><th>덩이</th><th>한국어</th><th>영어 읽기</th><th>박</th><th>뜻</th></tr>
+        <tr><td>1</td><td><b class="ko">무궁화</b></td><td class="rom">MOO-GOONG-HWA</td><td>3</td><td>the mugunghwa flower</td></tr>
+        <tr><td>2</td><td><b class="ko">꽃이</b></td><td class="rom">KKOTCH-EE</td><td>2</td><td>flower (subject)</td></tr>
+        <tr><td>3</td><td><b class="ko">피었습니다</b></td><td class="rom">PEE-UT-SUM-NEE-DA</td><td>5</td><td>has bloomed</td></tr>
+        <tr><td>=</td><td><b class="ko">무궁화 꽃이 피었습니다</b></td><td class="rom">10 beats</td><td><b>10</b></td><td>The mugunghwa flower has bloomed.</td></tr>
+      </table>
+    </div>
+    <div class="alert f" style="margin:14px 0 0;box-shadow:none">
+      <h3>왜 이 문장인가</h3>
+      <p>재료 단어 8개와 달리 이번에는 <strong>문장 하나</strong>입니다. 10음절을 3-2-5 세 덩이로 쪼개
+      박수로 익히면, 학생은 한국어의 <strong>리듬</strong>을 몸으로 기억합니다. 단어 열 개보다 문장 한 개가
+      오래 남고, 놀이가 끝나도 복도에서 계속 외칩니다.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3>규칙 여섯 단계 — 한눈에</h3>
+    <div class="scroll">
+      <table class="tbl">
+        <tr><th>#</th><th>규칙</th><th>학생이 하는 것</th><th>슬라이드</th></tr>
+        <tr><td><b>1</b></td><td>술래는 벽을 보고 선다</td><td>출발선에 한 줄로 선다</td><td>10</td></tr>
+        <tr><td><b>2</b></td><td>술래가 외치는 동안 걷는다</td><td>술래 쪽으로 <b>걷기</b></td><td>11</td></tr>
+        <tr><td><b>3</b></td><td>외침이 끝나면 <b>얼음</b></td><td>그 자리에서 멈춘다</td><td>12</td></tr>
+        <tr><td><b>4</b></td><td>움직이면 잡힌다</td><td>술래와 손을 잡고 사슬이 된다</td><td>13</td></tr>
+        <tr><td><b>5</b></td><td>사슬을 끊으면 모두 자유</td><td>잡힌 손 사이를 손으로 끊는다</td><td>14</td></tr>
+        <tr><td><b>6</b></td><td>도망! 잡히면 다음 술래</td><td>출발선까지 달린다</td><td>15</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3>수업 전 준비 체크리스트</h3>
+    <ul class="checklist">
+      <li><b>공간 15~20m 직선</b> — 체육관 · 강당 · 운동장. 교실이면 복도나 체육관으로 이동 (이동 시간 별도 확보)</li>
+      <li><b>벽 또는 나무</b> 하나 — 술래가 등지고 설 곳</li>
+      <li><b>출발선 표시</b> — 마스킹테이프 · 라인마커 · 콘 4개</li>
+      <li>장애물 제거 확인 (의자 · 가방 · 젖은 바닥)</li>
+      <li>학생 <b>신발</b> 확인 — 실내화 끈, 슬리퍼 금지</li>
+      <li>PPT를 띄울 수 있는 곳에서 <b>슬라이드 1~16까지 먼저</b> 설명하고 이동하는 것도 방법</li>
+      <li>선택: 무궁화 실물 사진 또는 화분, 한국 학교 운동장 사진</li>
+    </ul>
+    <div class="alert" style="margin:14px 0 0;box-shadow:none">
+      <h3>23명 운영 — 전체 한 게임을 권합니다</h3>
+      <p>둘로 쪼개면 교사가 양쪽 안전을 동시에 볼 수 없습니다. <strong>23명 전원 한 게임</strong>으로 하고,
+      교사는 술래를 하지 않는 라운드에는 <strong>안전만 봅니다.</strong> 움직임 판정은 술래의 권한으로 두세요 —
+      억울한 판정도 놀이의 일부이고, 교사가 개입하면 술래가 힘을 잃습니다.</p>
+      <p>단 <strong>안전 위반은 즉시 개입</strong>합니다: 뛰기(6단계 전), 밀기, 손 잡아당기기.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const PH = [
+  { tag:"도입",   name:"무궁화를 만나다",        mins:5,  color:"#6B3A7A", slides:[1,2,3,4] },
+  { tag:"전개 ①", name:"문장 배우기 · 10박",     mins:10, color:"#8A4A8F", slides:[5,6,7,8,9] },
+  { tag:"전개 ②", name:"규칙 여섯 단계",         mins:8,  color:"#A63A6E", slides:[10,11,12,13,14,15] },
+  { tag:"전개 ③", name:"안전 규칙 · 술래 뽑기",   mins:4,  color:"#B06B1E", slides:[16] },
+  { tag:"전개 ④", name:"연습 라운드",            mins:5,  color:"#8A5A4A", slides:[17] },
+  { tag:"전개 ⑤", name:"본 게임",               mins:10, color:"#A63A6E", slides:[18] },
+  { tag:"정리",   name:"무궁 = 끝이 없다",        mins:3,  color:"#6B3A7A", slides:[19,20] },
+];
+
+const bar   = t => '<div class="wf-bar">' + t + '</div>';
+const note  = t => '<div class="wf-note">' + t + '</div>';
+const big   = t => '<div class="wf-big">' + t + '</div>';
+const img   = (ic, cap) => '<div class="wf-img"><span class="ico">' + ic + '</span>' + (cap ? '<span class="cap">' + cap + '</span>' : '') + '</div>';
+const ko    = (k, e) => '<div class="wf-ko">' + k + (e ? '<small>' + e + '</small>' : '') + '</div>';
+const chips = a => '<div class="wf-chips">' + a.map(c =>
+  Array.isArray(c) ? '<span class="' + (c[1] || "f") + '">' + c[0] + '</span>' : '<span>' + c + '</span>').join("") + '</div>';
+const cell  = (ic, k, e) => '<div class="wf-cell">' + (ic ? '<span class="ic">' + ic + '</span>' : '') +
+  (k ? '<b>' + k + '</b>' : '') + (e ? '<i>' + e + '</i>' : '') + '</div>';
+const grid  = (c, r, cs) => '<div class="wf-grid" style="grid-template-columns:repeat(' + c + ',1fr);grid-template-rows:repeat(' + r + ',1fr)">' + cs.join("") + '</div>';
+const row   = i => '<div class="wf-row">' + i.join("") + '</div>';
+const col   = i => '<div class="wf-col">' + i.join("") + '</div>';
+const steps = a => '<div class="wf-steps">' + a.map((s, i) =>
+  '<div' + (s[1] ? ' class="w"' : '') + '><b>' + (s[1] || (i + 1)) + '</b><span>' + s[0] + '</span></div>').join("") + '</div>';
+
+/* play field: tagger at the wall, players near the base line */
+function field(o){
+  const pack = (o.players || []).map(p => '<span>' + p + '</span>').join("");
+  return '<div class="wf-field"><div class="wall"></div><div class="zone">' +
+    '<div class="who"><span class="f">' + o.tagger + '</span><span class="l">' + o.tlabel + '</span></div>' +
+    '<div class="mid">' + (o.mid || "") + '</div>' +
+    '<div class="who"><span class="f pack">' + pack + '</span><span class="l">' + (o.plabel || "") + '</span></div>' +
+    '</div><div class="base"></div></div>';
+}
+
+/* 10-beat strip, chunked 3 / 2 / 5 */
+function beats(active){
+  const g = [["무","궁","화"], ["꽃","이"], ["피","었","습","니","다"]];
+  const lab = ["MOO-GOONG-HWA", "KKOTCH-EE", "PEE-UT-SUM-NEE-DA"];
+  return '<div class="wf-beats">' + g.map((c, i) =>
+    '<div class="chunk"><div class="cells">' +
+      c.map(ch => '<span style="' + (active !== undefined && active !== i ? "opacity:.28" : "") + '">' + ch + '</span>').join("") +
+    '</div><div class="lab">' + lab[i] + ' · ' + c.length + '</div></div>').join("") + '</div>';
+}
+
+const SLIDES = [
+/* ===== 도입 5분 ===== */
+{ n:1, p:0, t:"0:00", d:"1분", title:"표지 — 무궁화 꽃이 피었습니다",
+  wf:[ bar("A Korean Playground Game"),
+       ko("무궁화 꽃이 피었습니다", "MOO-GOONG-HWA KKOTCH-EE PEE-UT-SUM-NEE-DA"),
+       note("10 syllables. One sentence. You will shout it today.") ].join(""),
+  say:"Ten syllables. One Korean sentence. By the end of class you will shout it — <b>loud</b>.",
+  acts:["아직 발음을 시키지 않는다 — 5번 슬라이드부터","문장이 길다는 것을 오히려 강조: \"Long? Yes. Easy? Also yes.\""] },
+
+{ n:2, p:0, t:"1:00", d:"1분 30초", title:"무궁화 = 나라꽃 🇰🇷 vs 🍁 🇨🇦", key:true,
+  wf:[ bar("Korea's flower · Canada's leaf"),
+       row([ col([ img("🌺", "무궁화 실물 사진"), note("🇰🇷 <b>무궁화</b>") ]),
+             col([ img("🍁", "maple leaf"), note("🇨🇦 <b>maple leaf</b>") ]) ]),
+       note("Every country has one. What is Canada's? Yes — the maple leaf!") ].join(""),
+  say:"Canada has the maple leaf. Korea has this flower — <b>무궁화</b>. You see it on Korean coins, passports, and government buildings.",
+  acts:["캐나다 학생이 아는 것(단풍잎)에서 출발해 무궁화로 연결 — 소속감 확보","무궁화 실물 사진 필수: 연분홍 꽃잎 + 진한 자홍색 중심"],
+  flag:"법으로 정해진 국화는 아니지만 <b>사실상의 나라꽃</b>입니다. 국가 상징·여권·정부 문양에 쓰입니다. \"official\"보다 <b>\"Korea's national flower\"</b> 정도로 말하는 것이 정확합니다." },
+
+{ n:3, p:0, t:"2:30", d:"1분 30초", title:"무궁 = 끝이 없다", key:true,
+  wf:[ bar("What the name means"),
+       grid(3, 1, [cell("♾️","무궁","ENDLESS"), cell("🌸","화","FLOWER"), cell("📅","7~10월","every day, a new one")]),
+       note("<b>무궁화</b> = the flower <b>without end</b>. From July to October a new flower opens every single morning.") ].join(""),
+  say:"<b>무궁</b> means <b>endless</b>. <b>화</b> means <b>flower</b>. Every morning for four months, a brand new flower opens.",
+  acts:["'endless flower'라는 이름의 뜻이 실제 식물 습성에서 왔음을 짚는다 — 사실이라 설득력이 있다","정리(19번)에서 이 이야기로 되돌아온다"] },
+
+{ n:4, p:0, t:"4:00", d:"1분", title:"한국 아이들의 운동장 놀이",
+  wf:[ bar("Where Korean kids play it"),
+       img("🏫", "한국 초등학교 운동장 사진"),
+       chips([["운동장"], ["쉬는 시간"], ["100년 넘게", "w"]]) ].join(""),
+  say:"Korean kids play this at school — at recess, in the schoolyard. For <b>over a hundred years</b>.",
+  acts:["한국 초등학교 운동장 사진 1장 (아이들이 노는 장면)","학생이 \"Squid Game!\"을 외치면 여기서 짧게 받아넘긴다 — 상단 안내 참고"],
+  flag:"<b>오징어 게임 이미지는 넣지 마세요.</b> 학생이 먼저 말할 때만 말로 받고, \"that show is for adults, this game is much older\"로 되돌립니다." },
+
+/* ===== 전개 ① 10분 ===== */
+{ n:5, p:1, t:"5:00", d:"1분", title:"문장 전체 보기 — 10박",
+  wf:[ bar("One sentence · ten beats"),
+       beats(),
+       note("Three chunks: <b>3</b> beats + <b>2</b> beats + <b>5</b> beats = <b>10</b>.") ].join(""),
+  say:"Ten beats. We learn it in three pieces. Clap with me — just clap, no words yet.",
+  acts:["먼저 <b>박수만</b> 10번 (3-2-5 묶음) — 말 없이 리듬부터","학생이 리듬을 잡으면 글자를 얹는다"],
+  flag:"<b>리듬을 먼저, 말을 나중에.</b> 10음절을 한 번에 읽히려 하면 무너집니다." },
+
+{ n:6, p:1, t:"6:00", d:"2분", title:"덩이 ① 무궁화 — 3박",
+  wf:[ bar("Chunk 1 of 3"), beats(0),
+       ko("무궁화", "MOO-GOONG-HWA"),
+       note("MOO 🐄 · GOONG · HWA — three claps.") ].join(""),
+  say:"<b>MOO</b> — like a cow! <b>GOONG</b>. <b>HWA</b>. 무궁화! Three times!",
+  acts:["MOO에서 소 울음 흉내 — 첫 음절이 잡히면 나머지가 붙는다","박수 3번과 함께 5회 반복"] },
+
+{ n:7, p:1, t:"8:00", d:"1분 30초", title:"덩이 ② 꽃이 — 2박",
+  wf:[ bar("Chunk 2 of 3"), beats(1),
+       ko("꽃이", "KKOTCH-EE"),
+       note("Sounds like <b>\"coach-y\"</b> — two claps.") ].join(""),
+  say:"<b>꽃이</b> — KKOTCH-EE. Like saying <b>'coach-y'</b>. Two claps!",
+  acts:["ㄲ 된소리는 완벽을 요구하지 않는다 — 'coach'로 충분","덩이 1 + 2를 이어서 5박으로 연습"] },
+
+{ n:8, p:1, t:"9:30", d:"2분", title:"덩이 ③ 피었습니다 — 5박",
+  wf:[ bar("Chunk 3 of 3"), beats(2),
+       ko("피었습니다", "PEE-UT-SUM-NEE-DA"),
+       note("Five claps. The longest one — slow first, then fast.") ].join(""),
+  say:"Five beats: <b>PEE-UT-SUM-NEE-DA</b>. Slowly first. Now faster. Now <b>fast</b>!",
+  acts:["가장 어려운 덩이 — 느리게 3회 → 보통 3회 → 빠르게 3회","손가락 5개를 펴서 하나씩 접으며 박을 센다"],
+  flag:"여기서 <b>2분을 확실히 쓰세요.</b> 이 5박이 되면 문장 전체가 됩니다." },
+
+{ n:9, p:1, t:"11:30", d:"3분 30초", title:"합치기 — 느리게 → 빠르게", key:true,
+  wf:[ bar("All ten · slow → fast"), beats(),
+       chips([["🐢 SLOW"], ["🚶 NORMAL"], ["🐇 FAST"], ["🔥 SUPER FAST", "w"]]),
+       note("The faster the tagger says it, the less time you have to move!") ].join(""),
+  say:"Now all ten. Slow… normal… fast… <b>super fast</b>! And here is the secret — <b>the tagger decides the speed</b>.",
+  acts:["4단 속도로 반복 — 느리게/보통/빠르게/아주 빠르게","<b>속도가 곧 전략</b>임을 미리 알려준다 — 게임 이해가 확 빨라진다","반을 둘로 나눠 주고받기(교사 → 학생 / 왼쪽 → 오른쪽)"],
+  flag:"<b>\"술래가 속도를 정한다\"를 이 슬라이드에서 미리 말해 두세요.</b> 규칙 설명이 훨씬 쉬워지고, 술래가 된 학생이 곧바로 재미를 느낍니다." },
+
+/* ===== 전개 ② 8분 — 규칙 ===== */
+{ n:10, p:2, t:"15:00", d:"1분 20초", title:"규칙 ① 술래는 벽을 보고 선다",
+  wf:[ bar("Rule 1 of 6 · Set up"),
+       field({ tagger:"🙈", tlabel:"술래 (TAGGER)", mid:"← 15–20 m →", players:["🧍","🧍","🧍","🧍","🧍"], plabel:"출발선 (START LINE)" }),
+       note("Tagger faces the wall. Eyes covered. Everyone else lines up at the start line.") ].join(""),
+  say:"One person is the <b>술래</b> — the tagger. Face the wall. <b>Cover your eyes.</b> No peeking!",
+  acts:["교사가 직접 술래 자리에 서서 몸으로 보여준다","출발선을 손으로 가리켜 확인시킨다","\"술래\"를 3회 따라 말하게 한다 (SOOL-LEH)"] },
+
+{ n:11, p:2, t:"16:20", d:"1분 20초", title:"규칙 ② 외치는 동안 걷는다",
+  wf:[ bar("Rule 2 of 6 · Move"),
+       field({ tagger:"🙈", tlabel:"외친다", mid:"🚶 🚶 🚶 →", players:["🚶","🚶","🚶"], plabel:"걷기만!" }),
+       ko("무궁화 꽃이 피었습니다", ""),
+       chips([["WALK only — no running", "w"]]) ].join(""),
+  say:"While the tagger shouts the sentence, you <b>walk</b> toward the wall. <b>Walk</b> — not run!",
+  acts:["걷기와 달리기를 몸으로 대조해 보여준다","\"달리기는 6단계에서만\"이라고 미리 예고","23명이 동시에 움직이니 '옆으로 밀지 않기'를 같이 말한다"],
+  flag:"<b>달리기 금지를 여기서 못 박으세요.</b> 규칙 6의 도망 단계 전까지는 전부 걷기입니다." },
+
+{ n:12, p:2, t:"17:40", d:"1분 20초", title:"규칙 ③ 끝나면 얼음!", key:true,
+  wf:[ bar("Rule 3 of 6 · FREEZE"),
+       row([ col([ note("…<b>피었습니다</b>"), big("🧊") ]),
+             col([ field({ tagger:"👀", tlabel:"돌아본다!", mid:"STOP", players:["🧊","🧊","🧊"], plabel:"얼음" }) ]) ]),
+       note("The instant the sentence ends, the tagger turns around. <b>Everybody freeze.</b>") ].join(""),
+  say:"The moment the sentence ends — the tagger <b>turns around</b>. And you… <b>FREEZE!</b> 🧊",
+  acts:["교사가 문장을 외치고 확 돌아보는 동작을 두 번 시범","\"FREEZE\"를 크게 함께 외치게 한다 — 이 단어가 게임의 신호가 된다","얼음 자세는 아무 자세나 괜찮다고 알려준다 (웃긴 자세 환영)"],
+  flag:"<b>이 슬라이드가 게임의 핵심입니다.</b> 여기서 학생들이 'freeze'를 몸으로 한 번 해 보게 하세요 — 앉은 자리에서라도." },
+
+{ n:13, p:2, t:"19:00", d:"1분 20초", title:"규칙 ④ 움직이면 잡힌다",
+  wf:[ bar("Rule 4 of 6 · Caught"),
+       field({ tagger:"👀", tlabel:"술래", mid:"🤝 사슬 CHAIN", players:["🧍","🧊","🧊"], plabel:"" }),
+       steps([ ["Tagger sees you move → <b>\"You moved!\"</b>"],
+               ["You walk up and <b>hold the tagger's pinky</b>"],
+               ["Now you are part of the <b>chain</b> 🤝"] ]) ].join(""),
+  say:"If the tagger sees you move, you are caught. You come up and <b>hold their little finger</b>. Now you are part of the chain.",
+  acts:["<b>새끼손가락</b>으로 잡게 한다 — 위생·거리감 모두 편하다","잡힌 학생도 계속 놀이 중이라는 것을 분명히 말해준다 (소외 방지)","판정은 술래가 한다 — 억울해도 받아들이는 것이 규칙"],
+  flag:"손 대신 <b>짧은 줄이나 리본</b>을 쥐게 해도 됩니다. 접촉이 불편한 학생이 있을 때 유용합니다." },
+
+{ n:14, p:2, t:"20:20", d:"1분 20초", title:"규칙 ⑤ 사슬을 끊으면 모두 자유", key:true,
+  wf:[ bar("Rule 5 of 6 · Cut the chain"),
+       field({ tagger:"👀", tlabel:"술래", mid:"✂️ CUT!", players:["🤝","🤝","🏃"], plabel:"자유 플레이어" }),
+       note("A free player chops between two joined hands → <b>everyone in the chain is free!</b>") ].join(""),
+  say:"A free player can <b>chop</b> between two joined hands. Then <b>everyone</b> in the chain is free!",
+  acts:["손날로 내려치는 동작을 시범 — 세게 치지 않기를 함께 말한다","이 규칙 덕분에 잡힌 학생도 계속 희망이 있다","사슬이 길어지면 끊기 쉬워진다는 점을 알려준다 (균형 장치)"],
+  flag:"<b>\"부드럽게\"를 반드시 붙이세요.</b> 손날 치기는 흥분하면 세집니다. \"Gently — like cutting soft cake.\"" },
+
+{ n:15, p:2, t:"21:40", d:"1분 20초", title:"규칙 ⑥ 도망! 잡히면 다음 술래",
+  wf:[ bar("Rule 6 of 6 · RUN"),
+       field({ tagger:"🏃", tlabel:"술래가 쫓는다", mid:"← ← ← RUN!", players:["🏃","🏃","🏃"], plabel:"출발선으로" }),
+       chips([["NOW you may run", "w"], ["잡힌 사람 = 다음 술래"]]) ].join(""),
+  say:"Chain cut? <b>RUN!</b> Back to the start line. The tagger chases. Whoever gets tagged becomes the <b>next 술래</b>.",
+  acts:["<b>이 단계에서만 달린다</b>는 것을 다시 강조","출발선을 손으로 가리켜 도착 지점을 명확히","아무도 안 잡히면 같은 술래가 한 번 더 한다고 정해 둔다"],
+  flag:"학생이 술래에게 <b>먼저 도달해 손으로 터치</b>해도 사슬이 끊어집니다. 원래 규칙이니 알려주되, 첫 수업에서는 굳이 강조하지 않아도 됩니다." },
+
+/* ===== 전개 ③ 4분 ===== */
+{ n:16, p:3, t:"23:00", d:"4분", title:"⚠️ 안전 규칙 4 + 술래 뽑기", key:true,
+  wf:[ bar("Safety first · then pick the tagger"),
+       steps([ ["<b>Walk</b> — running only in step 6", "!"],
+               ["<b>One direction</b> — toward the wall. No pushing sideways.", "!"],
+               ["<b>Gentle hands</b> — pinky only. Never pull.", "!"],
+               ["<b>Caught = still playing.</b> The chain is part of the fun.", "!"] ]),
+       chips([["가위바위보 · KA-WI BA-WI BO"], ["교사가 첫 술래"]]) ].join(""),
+  say:"Four safety rules. Say them with me. And the first tagger is… <b>me</b>! I will show you how.",
+  acts:["안전 규칙 4개를 <b>학생이 따라 말하게</b> 한다 — 읽어주기만 하면 안 지킨다","<b>첫 술래는 교사</b>가 한다 — 시범과 속도 조절을 동시에","이후 술래는 잡힌 사람 / 또는 가위바위보"],
+  flag:"<b>보너스 30초 — 가위바위보.</b> Rock-paper-scissors와 완전히 같아서 공짜로 얻는 표현입니다. \"<b>가위</b> scissors, <b>바위</b> rock, <b>보</b> paper!\" 술래 뽑기에 바로 씁니다." },
+
+/* ===== 전개 ④ 5분 ===== */
+{ n:17, p:4, t:"27:00", d:"5분", title:"연습 라운드 — 달리기 없음", key:true,
+  wf:[ bar("Practice round · no running"),
+       field({ tagger:"🧑‍🏫", tlabel:"교사가 술래", mid:"1 · 2 · 3 only", players:["🚶","🚶","🚶","🚶"], plabel:"" }),
+       chips([["규칙 1–3만"], ["사슬 없음"], ["도망 없음"], ["2~3회 반복"]]),
+       note("Walk · freeze · caught? just sit down where you are. That is all — for now.") ].join(""),
+  say:"Practice round! Only rules <b>one, two, three</b>. Walk, freeze. If I catch you, just <b>sit down</b> where you are. No chain, no running.",
+  acts:["<b>규칙 1~3만</b>으로 2~3회 돌린다 — 잡히면 제자리에 앉기","교사가 속도를 바꿔 가며 리듬 감각을 붙인다","전원이 freeze를 정확히 하면 4~6단계를 추가한다고 예고","여기서 문장을 학생들이 <b>함께 외치게</b> 한다 — 술래 혼자 외치지 않는다"],
+  flag:"<b>이 5분을 절대 건너뛰지 마세요.</b> 규칙 6개를 한 번에 넣고 시작하면 23명이 전부 헤맵니다. 3개로 성공을 맛본 뒤 3개를 더합니다." },
+
+/* ===== 전개 ⑤ 10분 ===== */
+{ n:18, p:5, t:"32:00", d:"10분", title:"본 게임 — 3~4라운드",
+  wf:[ bar("The real game"),
+       big("ROUND 1"),
+       field({ tagger:"🙈", tlabel:"술래", mid:"🤝 ✂️ 🏃", players:["🧍","🧊","🤝"], plabel:"" }),
+       chips([["규칙 1–6 전부"], ["술래 = 잡힌 사람"], ["3~4 라운드"]]) ].join(""),
+  say:"Now everything. All six rules. <b>Round one — 시작!</b>",
+  acts:["라운드마다 술래를 바꾼다 — 가능하면 4명이 술래를 경험","교사는 <b>안전만</b> 본다. 움직임 판정은 술래의 권한","1라운드가 3분 넘게 늘어지면 사슬 규칙을 잠시 빼고 회전을 빠르게","남은 시간을 보며 라운드 수를 줄인다 — 정리 3분은 반드시 남긴다"],
+  flag:"<b>술래 판정에 개입하지 마세요.</b> \"선생님, 저 안 움직였어요!\"는 반드시 나옵니다. \"The tagger decides. Next round!\"로 넘기는 것이 놀이를 살립니다." },
+
+/* ===== 정리 3분 ===== */
+{ n:19, p:6, t:"42:00", d:"2분", title:"무궁 = 끝이 없다 (되돌아오기)",
+  wf:[ bar("Back to the flower"),
+       row([ img("🌺", "무궁화 클로즈업"),
+             col([ ko("무궁화", "ENDLESS FLOWER"),
+                   note("A new flower every morning, July to October. That is why Koreans chose it."),
+                   chips([["끝이 없다"], ["다시, 또 다시"]]) ]) ]),
+       note("You shouted its name about thirty times today.") ].join(""),
+  say:"You shouted this flower's name about <b>thirty times</b> today. <b>무궁</b> — endless. A new flower every morning. That is why Koreans chose it.",
+  acts:["3번 슬라이드의 이야기로 되돌아온다 — 수업의 처음과 끝이 닫힌다","오늘 몇 번 외쳤을지 학생에게 추측하게 해도 좋다"] },
+
+{ n:20, p:6, t:"44:00", d:"1분", title:"마무리 — 재미있었어요!",
+  wf:[ bar("One last word"),
+       ko("재미있었어요!", "JAE-MI-IT-SS-EO-YO"),
+       note("= <b>That was fun!</b>"),
+       chips([["안녕히 계세요!"], ["Exit: draw the flower 🌺"]]) ].join(""),
+  say:"One last word — <b>재미있었어요</b>. It means <b>'That was fun!'</b> Three times, loud!",
+  acts:["Exit ticket: 무궁화 꽃을 그리고 그 위에 문장을 (한글이든 영어 소리든) 적기","<b>한 줄이라도 쓰게 하면 문장이 남습니다</b> — 말로만 끝내지 않는다"],
+  flag:"문장을 오래 남기려면 <b>쪽지 한 장</b>이 큰 차이를 만듭니다. 그림이 있으면 집에 가져가 부모에게 보여줍니다." },
+];
+
+const $ = id => document.getElementById(id);
+
+$("flow").innerHTML = PH.map(p =>
+  '<div class="fstep"><div class="cap" style="background:' + p.color + '">' + p.tag + '<i>' + p.mins + "'</i></div>" +
+  '<div class="nums">' + p.slides.map(n => '<a href="#s' + n + '">' + n + '</a>').join("") + '</div></div>').join("");
+
+let html = "", cur = -1;
+SLIDES.forEach((s, idx) => {
+  if (s.p !== cur){
+    cur = s.p;
+    const p = PH[cur];
+    html += '<div class="phase"><span class="tag" style="background:' + p.color + '">' + p.tag +
+            '</span><h3>' + p.name + '</h3><span class="mins">' + p.mins + '분 · 슬라이드 ' +
+            p.slides[0] + (p.slides.length > 1 ? "–" + p.slides[p.slides.length - 1] : "") + '</span></div><div class="deck">';
+  }
+  html += '<article class="sc' + (s.key ? " key" : "") + '" id="s' + s.n + '">' +
+    '<div class="schead"><span class="no">' + s.n + '</span><span class="ttl">' + s.title + '</span>' +
+    '<span class="tm">' + s.t + ' · ' + s.d + '</span></div>' +
+    '<div class="wf">' + s.wf + '</div>' +
+    '<div class="scbody"><p class="say">' + s.say + '</p>' +
+    '<ul>' + s.acts.map(a => '<li>' + a + '</li>').join("") + '</ul>' +
+    (s.flag ? '<div class="flag' + (/안전|달리기|부드럽게/.test(s.flag) ? " w" : "") + '">' + s.flag + '</div>' : '') +
+    '</div></article>';
+  const next = SLIDES[idx + 1];
+  if (!next || next.p !== cur) html += '</div>';
+});
+$("deck").innerHTML = html;
+$("btnPrint").addEventListener("click", () => window.print());
+</script>
